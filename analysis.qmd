@@ -1,0 +1,75 @@
+---
+title: "Two Mode Networks and Relational Similarity"
+author: "Omar Lizardo"
+date: "`r Sys.Date()`"
+---
+
+# Setup
+```{r setup}
+    knitr::opts_chunk$set(include = TRUE, 
+                          echo = FALSE, 
+                          warning = FALSE, 
+                          message = FALSE)
+    library(here)
+    library(patchwork)
+```
+
+# Data
+```{r Southern women data}
+    A <- matrix(
+         c(
+          1, 1, 1, 1, 1,  1, 0, 1, 1,  0, 0, 0, 0, 0, 
+          1, 1, 1, 0, 1,  1, 1, 1, 0,  0, 0, 0, 0, 0, 
+          0, 1, 1, 1, 1,  1, 1, 1, 1,  0, 0, 0, 0, 0, 
+          1, 0, 1, 1, 1,  1, 1, 1, 0,  0, 0, 0, 0, 0, 
+          0, 0, 1, 1, 1,  0, 1, 0, 0,  0, 0, 0, 0, 0, 
+          0, 0, 1, 1, 1,  1, 0, 1, 0,  0, 0, 0, 0, 0, 
+          0, 0, 0, 1, 1,  1, 1, 1, 0,  0, 0, 0, 0, 0, 
+          0, 0, 0, 1, 1,  0, 1, 1, 1,  0, 0, 0, 0, 0, 
+          
+          0, 0, 0, 0, 0,  0, 1, 1, 1,  0, 0, 1, 0, 0, 
+          0, 0, 0, 0, 0,  0, 0, 1, 1,  1, 0, 1, 0, 0, 
+          0, 0, 0, 0, 0,  0, 0, 1, 1,  1, 0, 1, 1, 1,
+          0, 0, 0, 0, 0,  0, 1, 1, 1,  1, 0, 1, 1, 1,
+          0, 0, 0, 0, 0,  0, 1, 0, 1,  1, 1, 1, 1, 1,
+          0, 0, 0, 0, 0,  0, 1, 1, 0,  1, 1, 1, 0, 0,
+          0, 0, 0, 0, 0,  0, 0, 0, 1,  0, 1, 0, 0, 0,
+          0, 0, 0, 0, 0,  0, 0, 0, 1,  0, 1, 0, 0, 0, 
+          
+          0, 0, 0, 0, 0,  1, 0, 1, 1,  0, 0, 0, 0, 0,
+          0, 0, 0, 0, 0,  0, 0, 1, 1,  0, 0, 0, 0, 0),
+          ncol = 14, byrow = TRUE)
+     w <- c("EVELYN", "LAURA", "THERESA", "BRENDA", "CHARLOTTE", "FRANCES", "ELEANOR", "RUTH", "VERNE", "MYRA", "KATHERINE", "SYLVIA", "NORA", "HELEN", "OLIVIA", "FLORA", "PEARL", "DOROTHY")
+     e <- paste("E", c(1:14), sep = "")
+     rownames(A) <- w
+     colnames(A) <- e
+```
+
+# Analysis
+```{r}
+    source("Functions/TwoModeCA.R")
+    tmCA.res <- TwoModeCA(A, k.r = 6, k.c = 3, d.r = 12, d.c = 12)
+    a <- tmCA.res$A.plot + theme(axis.text.x = element_text(angle = 0, 
+                                                            size = 9,
+                                                            vjust = -3))
+    b <- tmCA.res$corr.plot
+    c <- tmCA.res$sim.plot.r
+    d <- tmCA.res$sim.plot.c + theme(axis.text.x = element_text(angle = 0))
+    e <- tmCA.res$eigvec.plot.r
+    f <- tmCA.res$eigvec.plot.c
+    g <- tmCA.res$eigval.plot.r
+    h <- tmCA.res$eigval.plot.c
+    e <- e + inset_element(g, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
+    f <- f + inset_element(h, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
+    png(file = here("Plots", "main.png"), width=950, height=1200)
+        (a | e | f) / (c | d) / b
+    dev.off() 
+```
+
+
+```{r}
+    source("Functions/TwoModeCA.R")
+    res <- TwoModeCA(A)
+```
+
+
