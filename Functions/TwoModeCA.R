@@ -167,6 +167,10 @@ TwoModeCA <- function(x, k.r = 2, k.c = 2, d.r = 2, d.c = 2) {
                 sim.plot.r = sim.plot.r,
                 sim.plot.c = sim.plot.c,
                 km.r = km.r,
-                km.c = km.c)
+                km.c = km.c,
+                eigvec.r = eigvec.r,
+                eigvec.c = eigvec.c,
+                eigval.r = CA.r$d,
+                eigval.c = CA.c$d)
                )
         }

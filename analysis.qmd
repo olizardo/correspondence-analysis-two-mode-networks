@@ -10,8 +10,14 @@ date: "`r Sys.Date()`"
                           echo = FALSE, 
                           warning = FALSE, 
                           message = FALSE)
+    library(cowplot)
     library(here)
     library(patchwork)
+    library(dplyr)
+    library(ggbump)
+    library(ggplot2)
+    library(ggrepel)
+    library(pals)
 ```
 
 # Data
@@ -46,8 +52,72 @@ date: "`r Sys.Date()`"
 ```
 
 # Analysis
-```{r}
-    source("Functions/TwoModeCA.R")
+```{r Reflections Bump Charts}
+   source(here("Functions", "reflections.R"))
+   source(here("Functions", "ref.long.dat.R"))
+   evens <- function(x) subset(x, x %% 2 == 0)
+   odds <- function(x) subset(x, x %% 2 != 0)
+   a <- reflections(A, iter = 26)
+   p.e.r <- a$p.r[, evens(1:20)]
+   p.o.r <- a$p.r[, odds(1:20)]
+   p.o.r <- p.o.r[, -1]
+   b <- ref.long.dat(a = a$p.r, b = a$g.r, max.iter = 26)
+   plot.dat <- b$person$even
+   p <- ggplot(data = filter(plot.dat, n.iter < 22),
+               mapping = aes(x = n.iter, y = ref, color = person))
+   # geoms
+   p <- p + geom_bump(linewidth = 1, smooth = 8, alpha = 0.4)
+   p <- p + geom_point(size = 4, alpha = 0.8)
+   p <- p + geom_text_repel(data = filter(plot.dat, n.iter == 2), 
+                                    aes(x = n.iter, label = person), 
+                                    size = 4, nudge_x = -3)
+   p <-    p <- p + geom_text(data = filter(plot.dat, n.iter == 22), 
+                              aes(x = n.iter, label = person), 
+                              size = 4, nudge_x = 0.5)
+
+   # fixings
+   p <- p + theme_minimal_grid(font_size = 14, line_size = 0)
+   p <- p + scale_x_continuous(limits = c(-4, 30), breaks = evens(2:22))
+   p <- p + labs(x = "Reflection")
+   p <- p + scale_y_reverse()
+   p <- p + theme(legend.position = "none",
+        panel.grid.major = element_blank(),
+        axis.text.y = element_blank(),
+        axis.title.y = element_blank()
+        )
+   p1 <- p + scale_color_manual(values=as.vector(cols25(18)))
+
+   
+   plot.dat <- b$group$even
+   p <- ggplot(data = filter(plot.dat, n.iter < 22),
+               mapping = aes(x = n.iter, y = ref, color = group))
+   #geoms
+   p <- p + geom_bump(linewidth = 1, smooth = 8, alpha = 0.4)
+   p <- p + geom_point(size = 4, alpha = 1)
+   p <-    p <- p + geom_text(data = filter(plot.dat, n.iter == 24), 
+                              aes(x = n.iter, label = group), 
+                              size = 4, nudge_x = -2)
+   p <-    p <- p + geom_text_repel(data = filter(plot.dat, n.iter == 2), 
+                                    aes(x = n.iter, label = group), 
+                                    size = 4, nudge_x = -1)
+   #fixings
+   p <- p + theme_minimal_grid(font_size = 14, line_size = 0)
+   p <- p + scale_x_continuous(limits = c(-4, 30), breaks = evens(2:20))
+   p <- p + labs(x = "Reflection")
+   p <- p + scale_y_reverse()
+   p <- p + theme(legend.position = "none",
+        panel.grid.major = element_blank(),
+        axis.text.y = element_blank(),
+        axis.title.y = element_blank()
+        )
+   p2 <- p + scale_color_manual(values=as.vector(cols25(15)))
+   png(file = here("Plots", "pg-reflections.png"), width=750, height=950)
+   p1 / p2
+   dev.off()
+```
+
+```{r Main Plot}
+   source(here("Functions", "TwoModeCA.R"))
     tmCA.res <- TwoModeCA(A, k.r = 6, k.c = 3, d.r = 12, d.c = 12)
     a <- tmCA.res$A.plot + theme(axis.text.x = element_text(angle = 0, 
                                                             size = 9,
@@ -66,10 +136,5 @@ date: "`r Sys.Date()`"
     dev.off() 
 ```
 
-
-```{r}
-    source("Functions/TwoModeCA.R")
-    res <- TwoModeCA(A)
-```
 
 
