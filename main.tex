@@ -1,0 +1,541 @@
+%% 
+%% Copyright 2019-2020 Elsevier Ltd
+%% 
+%% This file is part of the 'CAS Bundle'.
+%% --------------------------------------
+%% 
+%% It may be distributed under the conditions of the LaTeX Project Public
+%% License, either version 1.2 of this license or (at your option) any
+%% later version.  The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.2 or later is part of all distributions of LaTeX
+%% version 1999/12/01 or later.
+%% 
+%% The list of all files belonging to the 'CAS Bundle' is
+%% given in the file `manifest.txt'.
+%% 
+%% Template article for cas-dc documentclass for 
+%% double column output.
+
+%\documentclass[a4paper,fleqn,longmktitle]{cas-dc}
+\documentclass[a4paper,fleqn]{cas-sc}
+
+%\usepackage[numbers]{natbib}
+%\usepackage[authoryear]{natbib}
+\usepackage[authoryear,longnamesfirst]{natbib}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+
+%%%Author definitions
+\def\tsc#1{\csdef{#1}{\textsc{\lowercase{#1}}\xspace}}
+\tsc{WGM}
+\tsc{QE}
+\tsc{EP}
+\tsc{PMS}
+\tsc{BEC}
+\tsc{DE}
+%%%
+
+% Uncomment and use as if needed
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newdefinition{rmk}{Remark}
+%\newproof{pf}{Proof}
+%\newproof{pot}{Proof of Theorem \ref{thm}}
+
+\begin{document}
+\let\WriteBookmarks\relax
+\def\floatpagepagefraction{1}
+\def\textpagefraction{.001}
+
+% Short title
+\shorttitle{Correspondence Analysis of Two-Mode Networks}
+
+% Short author
+%\shortauthors{O. Lizardo}
+
+% Main title of the paper
+\title [mode = title]{The Correspondence Analysis of Two-Mode Networks: Applications to Centrality and Positional Analysis}                      
+% Title footnote mark
+% eg: \tnotemark[1]
+%\tnotemark[1,2]
+
+% Title footnote 1.
+% eg: \tnotetext[1]{Title footnote text}
+% \tnotetext[<tnote number>]{<tnote text>} 
+%\tnotetext[1]{}
+
+%\tnotetext[2]{.}
+
+
+% First author
+%
+% Options: Use if required
+% eg: \author[1,3]{Author Name}[type=editor,
+%       style=chinese,
+%       auid=000,
+%       bioid=1,
+%       prefix=Sir,
+       %orcid=0000-0002-5405-3007,
+%       facebook=<facebook id>,
+%       twitter=<twitter id>,
+%       linkedin=<linkedin id>,
+%       gplus=<gplus id>]
+\author[1]{Omar Lizardo}[orcid=0000-0001-7511-2910]
+
+% Corresponding author indication
+\cormark[1]
+
+% Footnote of the first author
+\fnmark[1]
+
+% Email id of the first author
+\ead{olizardo@soc.ucla.edu}
+
+% URL of the first author
+\ead[url]{http://olizardo.bol.ucla.edu/}
+
+%  Credit authorship
+\credit{Conceptualization of this study, Methodology, Software}
+
+%Address/affiliation
+\affiliation[1]{organization={University of California, Los Angeles},
+    addressline={264 Haines Hall}, 
+    city={Los Angeles},
+    %citysep={},  Uncomment if no comma needed between city and postcode
+     postcode={90095}, 
+     state={CA},
+     country={USA}}
+
+ %Corresponding author text
+\cortext[cor1]{Corresponding author}
+%\cortext[cor2]{Principal corresponding author}
+
+%Footnote text
+\fntext[fn1]{This paper was written while the author was partially supported by National Science Foundation grant HNDS-R \#2214215.}
+ % author as well.}
+%\fntext[fn2]{Another author footnote, this is a very long footnote and
+ % it should be a really long footnote. But this footnote is not yet
+ % sufficiently long enough to make two lines of footnote text.}
+
+% For a title note without a number/mark
+%\nonumnote{This note has no numbers. In this work we demonstrate $a_b$
+%  the formation Y\_1 of a new type of polariton on the interface
+ % between a cuprous oxide slab and a polystyrene micro-sphere placed
+ % on the slab.
+ % }
+% Here goes the abstract
+\begin{abstract}
+Lorem...
+\end{abstract}
+
+% Use if graphical abstract is present
+% \begin{graphicalabstract}
+% \includegraphics{figs/grabs.pdf}
+% \end{graphicalabstract}
+
+%Research highlights
+\begin{highlights}
+    \item 
+    \item 
+    \item 
+\end{highlights}
+
+% Keywords
+% Each keyword is separated by \sep
+\begin{keywords}
+Generalized similarity \sep Duality \sep Two-mode networks \sep Correspondence Analysis
+\end{keywords}
+
+
+\maketitle
+\newpage
+
+\section{Introduction}
+While not particularly common, using Correspondence Analysis---hereafter CA---in analyzing two-mode network data has had a somewhat rocky career in the social networks literature. Initially dismissed by \citet{borgatti1997network} as a relatively limited and perhaps even inapplicable tool, CA has found various proponents who see it as an important component of the SNA arsenal for two-mode network data analysis, particularly regarding its ability to economically provide synoptic visualizations of structural connectivity patterns across the two-modes \citep{roberts2000correspondence, breiger2000tool, faust2005using}. 
+
+This paper contributes to the stream of previous work applying CA to analyze two-mode data. Still, it departs from the aforementioned previous efforts in emphasizing aspects of CA for two-mode data analysis in SNA that have not been centered or treated in detail before. 
+
+Particularly, I show that CA can be thought of as computing a kind of \textit{centrality} score on both modes---one related to but not mathematically equivalent to the Bonacich \citeyearpar{bonacich1991simultaneous} two-mode centrality----an approach that, as noted by \citet{van2021correspondence}, has been recently re-invented in some corners of network science under the guise of the ``economic complexity index'' \citep{hidalgo2009building, mealy2019interpreting}. I argue that this is a rather restricted interpretation of a more general ``dual centrality'' score that connects to the use of CA in some disciplines (e.g., ecology) as a method of \textit{ordination}---e.g., the discovery of latent linear orderings. 
+
+I also show that CA can be interpreted as providing \textit{positional} information on both modes. First, I show that there is a clear link between the scores obtained from the first dimension of the CA of the two-mode affiliation matrix (the aforementioned dual centrality score) and recent work on ``generalized relational similarity" in two-mode networks \citep{kovacs2010generalized, lizardo2024two}. Second, drawing on recent work by \citet{van2021correspondence}, I show that the first two dimensions provide information on the degree-weighted similarity of nodes in the same mode with respect to their connections to nodes in the other mode. Thus, CA can be used as an approach to indirect ``clique'' identification in two-mode networks that connect to the use of CA in some disciplines (e.g., computer and information science) as a \textit{clustering} method--- e.g., the discovery of maximally similar subsets of entities. 
+
+\subsection{Organization of the Paper}
+The rest of the paper is organized as follows. In the next section, I motivate the use of CA as producing a type of Bonacich-style dual centrality via weighted iteration across the two modes of the affiliation matrix. This leads naturally to an abbreviated way of computing the same scores via singular value decomposition (SVD) of the (inverse degree-weighted) one-mode projection of the affiliation matrix, which is computationally and mathematically equivalent to the CA of the affiliation matrix. I then draw on recent work by \citet{van2021correspondence} to show the links between the ordering of nodes along the first CA dimension and Kovacs's generalized relational similarity, and the distance of nodes in the space formed by the first two dimensions and the connectivity-similarity between nodes across modes. I close by providing some pointers as to how CA can be used as a method of structural analysis (e.g., centrality and positional analysis), independently of the usual emphasis on visualization. 
+
+\section{Reflective Centralities in Two-Mode Networks}
+In a highly cited piece, \citet{hidalgo2009building} motivated what they saw at the time as a novel way of ranking nodes in a two-mode network---effectively computing a version of two-mode centrality---using what they called at the time a ``reflective'' approach to iterated centralities. Hidalgo and Hausmann's original empirical application was to the two-mode country-by-product networks, hence the original baptizing of their approach as ``economic complexity.'' Subsequent shows that there is no logical connection between the formal method and this particular application. As such, I introduce it here using the more intuitive---and classical---case of the duality of persons and groups \citep{breiger1974duality}. 
+
+If we are going to compute the centrality of nodes in a two-mode network, the most natural place to start is with the good old \textit{degree centrality} \citep{faust1997centrality}. A two-mode network composed of a set of people $P$ and their affiliation relations to a set of groups $P$ can be represented by an affiliation matrix $\mathbf{A}$ of dimensions $|P| \times |G|$ with people along the rows and groups across the columns, where $|P|$ is the cardinality of the people set and $|G|$ is the cardinality of the group set, with cell entries $a_{pg}= 1$ if person \textit{p} is affiliated with group \textit{g} and $a_{pg}= 0$ otherwise.
+
+\begin{equation}
+    C^R_p(1) = \sum_g a_{pg}
+    \label{eq:R1_p}
+\end{equation}
+
+
+And for groups:
+
+\begin{equation}
+   C^R_g(1) = \sum_p a_{pg}
+  \label{eq:R1_g}
+\end{equation}
+
+The key to the reflective approach is the observation that, once we have these first-order quantities, it is possible to compute ``second order centralities" for both people and groups using the centralities of the other mode. 
+
+For people, this is:
+
+\begin{equation}
+    C^R_p(2) = \frac{1}{C^R_p(1)}\sum_g a_{pg}C^R_g(1)
+    \label{eq:R2_p}
+\end{equation}
+
+And for groups:
+
+\begin{equation}
+   C^R_g(2) = \frac{1}{C^R_g(1)}\sum_p a_{pg}C^R_p(1)
+    \label{eq:R2_g}
+\end{equation}
+
+Equation \ref{eq:R1_p} says ``people are more central when the average sum of the memberships of the groups they belong to is large'' (e.g., whenever $a_{pg} = 1$ and $C^R_g(1)$ is a big number). Equation \ref{eq:R2_g} says ``groups are more central when the average sum of the number of memberships of their members is large'' (e.g., whenever $a_{pg} = 1$ and $C^R_p(1)$ is a big number).
+
+Of course, we can keep on going and define third-order reflections. For the people these are:
+
+\begin{equation}
+   C^R_p(3) = \frac{1}{C^R_p(1)}\sum_g a_{pg}C^R_g(2)
+   \label{eq:R3_p}
+\end{equation}
+
+And for groups:
+
+\begin{equation}
+   C^R_g(3) = \frac{1}{C^R_g(1)}\sum_p a_{pg}C^R_p(2)
+   \label{eq:R3_g}
+\end{equation}
+
+Equation \ref{eq:R3_p} says something like ``people are more central when the average of the average number of memberships of the members of the groups they belong to is large'' (e.g., $a_{pg} = 1$ and $C^R_g(2)$ is a big number). Equation \ref{eq:R3_g} says something like ``groups are more central when the average of the average number of members of the groups their members belong to is large.'' (e.g., $a_{pg} = 1$ and $C^R_p(2)$ is a big number).
+
+Note that for the people, the even-numbered reflection $C^R_p(2)$ assigns centrality based on a formal feature of the \textit{groups} they belong to (in this case, their degree centrality). On the other hand, the odd-numbered reflection $C^R_p(3)$ assigns centrality based on a formal feature of the \textit{members of the groups} they belong to. In the same way, for the groups, the even-numbered reflection $C^R_g(2)$ assigns centrality based on a formal feature of the \textit{people} who belong to them (in this case, their degree centrality). On the other hand, the odd-numbered reflection $C^R_g(3)$ assigns centrality based on a formal feature of the \textit{groups their members belong to}.
+
+More generally, \citet{hidalgo2009building} show that we can define a series of reflective quantities for people and groups (whose verbal and substantive interpretation becomes more complex as the number of iterations increases):
+
+\begin{equation}   
+    C^R_p(q) = \frac{1}{C^R_p(1)}\sum_g a_{pg}C^R_g(q-1) 
+   \label{eq:Rq_p}
+\end{equation}
+
+\begin{equation}
+   C^R_g(q) = \frac{1}{C^R_g(1)}\sum_p a_{pg}C^R_p(q-1)
+   \label{eq:Rq_g}
+\end{equation}
+
+\section{Correspondence Analysis and Dual Centralities}
+
+%% Loading bibliography style file
+%\bibliographystyle{model1-num-names}
+\bibliographystyle{cas-model2-names}
+% Loading bibliography database
+\bibliography{ca.bib}
+\end{document}
+
+
+The Elsevier cas-dc class is based on the
+standard article class and supports almost all of the functionality of
+that class. In addition, it features commands and options to format the
+\begin{itemize} \item document style \item baselineskip \item front
+matter \item keywords and MSC codes \item theorems, definitions and
+proofs \item labels of enumerations \item citation style and labeling.
+\end{itemize}
+
+This class depends on the following packages
+for its proper functioning:
+
+\begin{enumerate}
+\itemsep=0pt
+\item {natbib.sty} for citation processing;
+\item {geometry.sty} for margin settings;
+\item {fleqn.clo} for left aligned equations;
+\item {graphicx.sty} for graphics inclusion;
+\item {hyperref.sty} optional packages if hyperlinking is
+  required in the document;
+\end{enumerate}  
+
+All the above packages are part of any
+standard \LaTeX{} installation.
+Therefore, the users need not be
+bothered about downloading any extra packages.
+
+\section{Installation}
+
+The package is available at author resources page at Elsevier
+(\url{http://www.elsevier.com/locate/latex}).
+The class may be moved or copied to a place, usually,\linebreak
+\verb+$TEXMF/tex/latex/elsevier/+, %$%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+or a folder which will be read                   
+by \LaTeX{} during document compilation.  The \TeX{} file
+database needs updation after moving/copying class file.  Usually,
+we use commands like \verb+mktexlsr+ or \verb+texhash+ depending
+upon the distribution and operating system.
+
+\section{Front matter}
+
+The author names and affiliations could be formatted in two ways:
+\begin{enumerate}[(1)]
+\item Group the authors per affiliation.
+\item Use footnotes to indicate the affiliations.
+\end{enumerate}
+See the front matter of this document for examples. 
+You are recommended to conform your choice to the journal you 
+are submitting to.
+
+\section{Bibliography styles}
+
+There are various bibliography styles available. You can select the
+style of your choice in the preamble of this document. These styles are
+Elsevier styles based on standard styles like Harvard and Vancouver.
+Please use Bib\TeX\ to generate your bibliography and include DOIs
+whenever available.
+
+Here are two sample references: 
+\cite{Fortunato2010}
+\cite{Fortunato2010,NewmanGirvan2004}
+\cite{Fortunato2010,Vehlowetal2013}
+
+\section{Floats}
+{Figures} may be included using the command,\linebreak 
+\verb+\includegraphics+ in
+combination with or without its several options to further control
+graphic. \verb+\includegraphics+ is provided by {graphic[s,x].sty}
+which is part of any standard \LaTeX{} distribution.
+{graphicx.sty} is loaded by default. \LaTeX{} accepts figures in
+the postscript format while pdf\LaTeX{} accepts {*.pdf},
+{*.mps} (metapost), {*.jpg} and {*.png} formats. 
+pdf\LaTeX{} does not accept graphic files in the postscript format. 
+
+\begin{figure}
+	\centering
+		\includegraphics[scale=.75]{figs/Fig1.pdf}
+	\caption{The evanescent light - $1S$ quadrupole coupling
+	($g_{1,l}$) scaled to the bulk exciton-photon coupling
+	($g_{1,2}$). The size parameter $kr_{0}$ is denoted as $x$ and
+	the \PMS is placed directly on the cuprous oxide sample ($\delta
+	r=0$, See also Table \protect\ref{tbl1}).}
+	\label{FIG:1}
+\end{figure}
+
+
+The \verb+table+ environment is handy for marking up tabular
+material. If users want to use {multirow.sty},
+{array.sty}, etc., to fine control/enhance the tables, they
+are welcome to load any package of their choice and
+{cas-dc.cls} will work in combination with all loaded
+packages.
+
+\begin{table}[width=.9\linewidth,cols=4,pos=h]
+\caption{This is a test caption. This is a test caption. This is a test
+caption. This is a test caption.}\label{tbl1}
+\begin{tabular*}{\tblwidth}{@{} LLLL@{} }
+\toprule
+Col 1 & Col 2 & Col 3 & Col4\\
+\midrule
+12345 & 12345 & 123 & 12345 \\
+12345 & 12345 & 123 & 12345 \\
+12345 & 12345 & 123 & 12345 \\
+12345 & 12345 & 123 & 12345 \\
+12345 & 12345 & 123 & 12345 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\section[Theorem and ...]{Theorem and theorem like environments}
+
+{cas-dc.cls} provides a few shortcuts to format theorems and
+theorem-like environments with ease. In all commands the options that
+are used with the \verb+\newtheorem+ command will work exactly in the same
+manner. {cas-dc.cls} provides three commands to format theorem or
+theorem-like environments: 
+
+\begin{verbatim}
+ \newtheorem{theorem}{Theorem}
+ \newtheorem{lemma}[theorem]{Lemma}
+ \newdefinition{rmk}{Remark}
+ \newproof{pf}{Proof}
+ \newproof{pot}{Proof of Theorem \ref{thm2}}
+\end{verbatim}
+
+
+The \verb+\newtheorem+ command formats a
+theorem in \LaTeX's default style with italicized font, bold font
+for theorem heading and theorem number at the right hand side of the
+theorem heading.  It also optionally accepts an argument which
+will be printed as an extra heading in parentheses. 
+
+\begin{verbatim}
+  \begin{theorem} 
+   For system (8), consensus can be achieved with 
+   $\|T_{\omega z}$ ...
+     \begin{eqnarray}\label{10}
+     ....
+     \end{eqnarray}
+  \end{theorem}
+\end{verbatim}  
+
+
+\newtheorem{theorem}{Theorem}
+
+\begin{theorem}
+For system (8), consensus can be achieved with 
+$\|T_{\omega z}$ ...
+\begin{eqnarray}\label{10}
+....
+\end{eqnarray}
+\end{theorem}
+
+The \verb+\newdefinition+ command is the same in
+all respects as its \verb+\newtheorem+ counterpart except that
+the font shape is roman instead of italic.  Both
+\verb+\newdefinition+ and \verb+\newtheorem+ commands
+automatically define counters for the environments defined.
+
+The \verb+\newproof+ command defines proof environments with
+upright font shape.  No counters are defined. 
+
+
+\section[Enumerated ...]{Enumerated and Itemized Lists}
+{cas-dc.cls} provides an extended list processing macros
+which makes the usage a bit more user friendly than the default
+\LaTeX{} list macros.   With an optional argument to the
+\verb+\begin{enumerate}+ command, you can change the list counter
+type and its attributes.
+
+\begin{verbatim}
+ \begin{enumerate}[1.]
+ \item The enumerate environment starts with an optional
+   argument `1.', so that the item counter will be suffixed
+   by a period.
+ \item You can use `a)' for alphabetical counter and '(i)' 
+  for roman counter.
+  \begin{enumerate}[a)]
+    \item Another level of list with alphabetical counter.
+    \item One more item before we start another.
+    \item One more item before we start another.
+    \item One more item before we start another.
+    \item One more item before we start another.
+\end{verbatim}
+
+Further, the enhanced list environment allows one to prefix a
+string like `step' to all the item numbers.  
+
+\begin{verbatim}
+ \begin{enumerate}[Step 1.]
+  \item This is the first step of the example list.
+  \item Obviously this is the second step.
+  \item The final step to wind up this example.
+ \end{enumerate}
+\end{verbatim}
+
+\section{Cross-references}
+In electronic publications, articles may be internally
+hyperlinked. Hyperlinks are generated from proper
+cross-references in the article.  For example, the words
+\textcolor{black!80}{Fig.~1} will never be more than simple text,
+whereas the proper cross-reference \verb+\ref{tiger}+ may be
+turned into a hyperlink to the figure itself:
+\textcolor{blue}{Fig.~1}.  In the same way,
+the words \textcolor{blue}{Ref.~[1]} will fail to turn into a
+hyperlink; the proper cross-reference is \verb+\cite{Knuth96}+.
+Cross-referencing is possible in \LaTeX{} for sections,
+subsections, formulae, figures, tables, and literature
+references.
+
+\section{Bibliography}
+
+Two bibliographic style files (\verb+*.bst+) are provided ---
+{model1-num-names.bst} and {model2-names.bst} --- the first one can be
+used for the numbered scheme. This can also be used for the numbered
+with new options of {natbib.sty}. The second one is for the author year
+scheme. When  you use model2-names.bst, the citation commands will be
+like \verb+\citep+,  \verb+\citet+, \verb+\citealt+ etc. However when
+you use model1-num-names.bst, you may use only \verb+\cite+ command.
+
+\verb+thebibliography+ environment.  Each reference is a\linebreak
+\verb+\bibitem+ and each \verb+\bibitem+ is identified by a label,
+by which it can be cited in the text:
+
+\noindent In connection with cross-referencing and
+possible future hyperlinking it is not a good idea to collect
+more that one literature item in one \verb+\bibitem+.  The
+so-called Harvard or author-year style of referencing is enabled
+by the \LaTeX{} package {natbib}. With this package the
+literature can be cited as follows:
+
+\begin{enumerate}[\textbullet]
+\item Parenthetical: \verb+\citep{WB96}+ produces (Wettig \& Brown, 1996).
+\item Textual: \verb+\citet{ESG96}+ produces Elson et al. (1996).
+\item An affix and part of a reference:\break
+\verb+\citep[e.g.][Ch. 2]{Gea97}+ produces (e.g. Governato et
+al., 1997, Ch. 2).
+\end{enumerate}
+
+In the numbered scheme of citation, \verb+\cite{<label>}+ is used,
+since \verb+\citep+ or \verb+\citet+ has no relevance in the numbered
+scheme.  {natbib} package is loaded by {cas-dc} with
+\verb+numbers+ as default option.  You can change this to author-year
+or harvard scheme by adding option \verb+authoryear+ in the class
+loading command.  If you want to use more options of the {natbib}
+package, you can do so with the \verb+\biboptions+ command.  For
+details of various options of the {natbib} package, please take a
+look at the {natbib} documentation, which is part of any standard
+\LaTeX{} installation.
+
+\appendix
+\section{My Appendix}
+Appendix sections are coded under \verb+\appendix+.
+
+\verb+\printcredits+ command is used after appendix sections to list 
+author credit taxonomy contribution roles tagged using \verb+\credit+ 
+in frontmatter.
+
+\printcredits
+
+
+
+
+%\vskip3pt
+
+\bio{}
+Author biography without author photo.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+\endbio
+
+\bio{figs/pic1}
+Author biography with author photo.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+\endbio
+
+\bio{figs/pic1}
+Author biography with author photo.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+\endbio
+
