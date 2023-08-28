@@ -217,7 +217,7 @@ And for groups:
 
 Equation \ref{eq:R3_p} says something like ``people are more central when the average of the average number of memberships of the members of the groups they belong to is large'' (e.g., $a_{pg} = 1$ and $C^R_g(2)$ is a big number). Equation \ref{eq:R3_g} says something like ``groups are more central when the average of the average number of members of the groups their members belong to is large.'' (e.g., $a_{pg} = 1$ and $C^R_p(2)$ is a big number).
 
-Note that for the people, the even-numbered reflection $C^R_p(2)$ assigns centrality based on a formal feature of the \textit{groups} they belong to (in this case, their degree centrality). On the other hand, the odd-numbered reflection $C^R_p(3)$ assigns centrality based on a formal feature of the \textit{members of the groups} they belong to. In the same way, for the groups, the even-numbered reflection $C^R_g(2)$ assigns centrality based on a formal feature of the \textit{people} who belong to them (in this case, their degree centrality). On the other hand, the odd-numbered reflection $C^R_g(3)$ assigns centrality based on a formal feature of the \textit{groups their members belong to}.
+Note that for the people, the even-numbered reflection $C^R_p(2)$ assigns centrality based on a formal feature of the \textit{groups} they belong to (in this case, their degree centrality). On the other hand, the odd-numbered reflection $C^R_p(3)$ assigns centrality based on a formal feature of the \textit{members of the groups} they belong to. In the same way, for the groups, the even-numbered reflection $C^R_g(2)$ assigns centrality based on a formal feature of the \textit{people} who belong to them (in this case, their degree centrality). On the other hand, the odd-numbered reflection $C^R_g(3)$ assigns centrality based on a formal feature of the \textit{groups their members belong to}. While these are distinct metrics, in practice the order of nodes in each mode ends up being identical when the ranks ``freeze'' after some number of iterations (proportional to the size of the network). 
 
 More generally, \citet{hidalgo2009building} show that we can define a series of reflective quantities for people and groups (whose verbal and substantive interpretation becomes more complex as the number of iterations increases):
 
@@ -231,6 +231,14 @@ More generally, \citet{hidalgo2009building} show that we can define a series of 
    \label{eq:Rq_g}
 \end{equation}
 
+Figure~\ref{fig:pg-reflections} shows the trajectory of reflective centralities for persons and groups in the Southern Women data \citep{davis1941}. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\textwidth]{Plots/pg-reflections.png}
+    \caption{Reflective centrality trajectories of persons and groups (even reflections).}
+    \label{fig:pg-reflections}
+\end{figure}
 \section{Correspondence Analysis and Dual Centralities}
 
 %% Loading bibliography style file
