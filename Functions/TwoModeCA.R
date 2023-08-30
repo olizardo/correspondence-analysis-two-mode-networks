@@ -72,10 +72,17 @@ TwoModeCA <- function(x, k.r = 2, k.c = 2, d.r = 2, d.c = 2) {
         A <- x[ , colSums(x) != 0, drop = FALSE]
         A <- Matrix(A, sparse = TRUE)
         At <- t(A)
+        
         iDr <- matrix(0, nrow(A), nrow(A))
         iDc <- matrix(0, ncol(A), ncol(A))
         diag(iDr) <- 1/rowSums(A)
         diag(iDc) <- 1/colSums(A)
+        
+        iDs.r <- matrix(0, nrow(A), nrow(A))
+        iDs.c <- matrix(0, ncol(A), ncol(A))
+        diag(iDs.r) <- 1/sqrt(rowSums(A))
+        diag(iDs.c) <- 1/sqrt(colSums(A))
+        
         r <- nrow(A)
         c <- ncol(A)
         rn <- rownames(A)
@@ -100,6 +107,13 @@ TwoModeCA <- function(x, k.r = 2, k.c = 2, d.r = 2, d.c = 2) {
         colnames(S.r) <- rn
         rownames(S.c) <- cn
         colnames(S.c) <- cn
+        
+        CA.res <- iDs.r %*% A %*% iDs.c
+        CA.res <- svd(CA.res) #row and column CA
+        
+        bon.res <- svd(A) #Bonacich dual eigenvector centrality
+        bon.eigvec.r <- bon.res$u
+        bon.eigvec.c <- bon.res$v
         
         # K-means clustering of similarity matrix
         S.r.dat <- data.frame(svd(S.r[, 1:d.r])$u)
@@ -131,12 +145,19 @@ TwoModeCA <- function(x, k.r = 2, k.c = 2, d.r = 2, d.c = 2) {
         eigvec.rc <- cbind(eigvec.rc, km.dat.rc)
         corr.plot <- corr.scatter(eigvec.rc)
         
-        # Affiliation matrix plot
+        # Affiliation matrix plot (CA ordering)
         A.ord <- as.matrix(A[order(eigvec.r[, 1]), order(eigvec.c[, 1])])
         A.plot <- ggcorrplot(t(A.ord)) 
         A.plot <- A.plot + scale_x_discrete(position = "top")
-        A.plot <- A.plot + theme(legend.position = "none",
-                                 axis.text.x = element_text(hjust = -0.2)) 
+        A.plot1 <- A.plot + theme(legend.position = "none",
+                                 axis.text.x = element_text(hjust = -0.2))
+        
+        # Affiliation matrix plot (Bonacich ordering)
+        A.ord <- as.matrix(A[order(bon.eigvec.r[, 1]), order(bon.eigvec.c[, 1])])
+        A.plot <- ggcorrplot(t(A.ord)) 
+        A.plot <- A.plot + scale_x_discrete(position = "top")
+        A.plot2 <- A.plot + theme(legend.position = "none",
+                                  axis.text.x = element_text(hjust = -0.2)) 
         
         # Eigenvalue Plots
         eig.dat.r <- data.frame(k = 1:nrow(A), value = S.r.eigval) %>% 
@@ -156,7 +177,8 @@ TwoModeCA <- function(x, k.r = 2, k.c = 2, d.r = 2, d.c = 2) {
         
         return(list(
                 A.ord = A.ord,
-                A.plot = A.plot,
+                A.plot.ca = A.plot1,
+                A.plot.bon = A.plot2,
                 eigval.plot.r = eigval.plot.r,
                 eigval.plot.c = eigval.plot.c,
                 eigvec.plot.r = eigvec.plot.r,
@@ -171,6 +193,7 @@ TwoModeCA <- function(x, k.r = 2, k.c = 2, d.r = 2, d.c = 2) {
                 eigvec.r = eigvec.r,
                 eigvec.c = eigvec.c,
                 eigval.r = CA.r$d,
-                eigval.c = CA.c$d)
+                eigval.c = CA.c$d,
+                CA.res = CA.res)
                )
         }
