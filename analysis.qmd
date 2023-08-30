@@ -56,16 +56,6 @@ date: "`r Sys.Date()`"
 ```
 
 # Analysis
-```{r}
-   source(here("Functions", "TwoModeCA.R"))
-   a <- TwoModeCA(A)
-   b <- CA(A, graph = FALSE)
-   c <- round(a$CA.res$u[, 2], 3)
-   d <- round(b$row$coord[, 1], 3)
-   e <- data.frame(c, d)
-   ggscatter(e, x = "c", y = "d", label = rownames(A), repel = TRUE)
-```
-
 ```{r Reflections Bump Charts}
    evens <- function(x) subset(x, x %% 2 == 0)
    odds <- function(x) subset(x, x %% 2 != 0)
@@ -128,42 +118,35 @@ date: "`r Sys.Date()`"
    dev.off()
 ```
 
-```{r Comparative scatters}
-   library(Matrix)
-   library(FactoMineR)
-   AAt <- A %*% t(A)
-   AtA <- t(A) %*% A
-   bon.res.r <- svd(AAt)$u[, 1]
-   bon.res.c <- svd(AtA)$u[, 1]
-   names(bon.res.r) <- rownames(A)
-   names(bon.res.c) <- colnames(A)
-   van.res.r <- TwoModeCA(A)$eigvec.r[, 1]
-   van.res.c <- TwoModeCA(A)$eigvec.c[, 1]
-   ref.res.r <- scale(reflections(A, iter = 30)$p.r[, 26])
-   ref.res.c <- scale(reflections(A, iter = 30)$p.c[, 26])
-   ca.res.r <- CA(A, graph = FALSE)$row$coord[, 1]
-   ca.res.c <- CA(A, graph = FALSE)$col$coord[, 1]
-   dat.r <- data.frame(cbind(a = bon.res.r, b = van.res.r, 
-                  c = as.vector(ref.res.r), d = ca.res.r))
-
+```{r CA versus Bonacich Re-ordered Affiliation Matrices}
+   source(here("Functions", "TwoModeCA.R"))
+   a <- TwoModeCA(A)
+   b <- a$A.plot.ca
+   c <- a$A.plot.bon
+   png(file = here("Plots", "ca-v-bon-reord.png"), width=1000, height=700)
+      (b | c) + plot_annotation(tag_levels = "a")
+   dev.off() 
 ```
 
 ```{r Main Plot}
-    tmCA.res <- TwoModeCA(A, k.r = 6, k.c = 3, d.r = 12, d.c = 12)
-    a <- tmCA.res$A.plot + theme(axis.text.x = element_text(angle = 0, 
-                                                            size = 9,
-                                                            vjust = -3))
-    b <- tmCA.res$corr.plot
-    c <- tmCA.res$sim.plot.r
-    d <- tmCA.res$sim.plot.c + theme(axis.text.x = element_text(angle = 0))
-    e <- tmCA.res$eigvec.plot.r
-    f <- tmCA.res$eigvec.plot.c
-    g <- tmCA.res$eigval.plot.r
-    h <- tmCA.res$eigval.plot.c
-    e <- e + inset_element(g, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
-    f <- f + inset_element(h, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
-    png(file = here("Plots", "main.png"), width=950, height=1200)
-        (a | e | f) / (c | d) / b
+   source(here("Functions", "TwoModeCA.R"))
+    tmCA.res <- TwoModeCA(A, k.r = 5, k.c = 5, d.r = 9, d.c = 9)
+    a <- tmCA.res$eigvec.plot.r + theme(axis.text = element_blank())
+    b <- tmCA.res$eigvec.plot.c 
+    c <- tmCA.res$eigval.plot.r
+    d <- tmCA.res$eigval.plot.c
+    a <- a + inset_element(c, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
+    b <- b + inset_element(d, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
+    e <- tmCA.res$sim.plot.r + theme(axis.text.x = element_blank())
+    f <- tmCA.res$sim.plot.c + theme(axis.text.x = element_blank())
+    g <- tmCA.res$corr.plot
+    
+    png(file = here("Plots", "eigvec.png"), width=1000, height=600)
+        (a | b) + plot_annotation(tag_levels = "a")
+    dev.off() 
+    
+    png(file = here("Plots", "sim.png"), width=950, height=700)
+        (e | f) / g + plot_annotation(tag_levels = "a")
     dev.off() 
 ```
 
