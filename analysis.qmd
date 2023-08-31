@@ -128,9 +128,21 @@ date: "`r Sys.Date()`"
    dev.off() 
 ```
 
+```{r}
+   source(here("Functions", "TwoModeCA.R"))
+    tmCA.res <- TwoModeCA(A, k.r = 6, k.c = 6, d.r = 6, d.c = 6, b.r = 4, b.c = 4)
+    a <- tmCA.res$bon.sim.plot.r + theme(axis.text.x = element_blank())
+    b <- tmCA.res$bon.sim.plot.c + theme(axis.text.x = element_blank())
+    c <- tmCA.res$bon.corr.plot
+    
+    png(file = here("Plots", "bon-sim.png"), width=950, height=700)
+        (a | b) / c + plot_annotation(tag_levels = "a")
+    dev.off() 
+```
+
 ```{r Main Plot}
    source(here("Functions", "TwoModeCA.R"))
-    tmCA.res <- TwoModeCA(A, k.r = 7, k.c = 5, d.r = 9, d.c = 9)
+    tmCA.res <- TwoModeCA(A, k.r = 6, k.c = 6, d.r = 9, d.c = 9)
     a <- tmCA.res$eigvec.plot.r + theme(axis.text = element_blank())
     b <- tmCA.res$eigvec.plot.c 
     c <- tmCA.res$eigval.plot.r
