@@ -46,7 +46,7 @@ TwoModeCA <- function(x, k.r = 2, k.c = 2, d.r = 2, d.c = 2) {
                           y = "d2", 
                           point = FALSE,
                           color = "cluster",
-                          palette = "Dark2",
+                          palette = "uchicago",
                           font.label =  10,
                           label = rownames(x), 
                           repel = TRUE)
