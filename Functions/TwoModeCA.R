@@ -135,6 +135,10 @@ TwoModeCA <- function(x,
         bon.eigvec.c <- as.matrix(eigen(AtA)$vectors) #column eigenvectors
         bon.eigval.r <- as.matrix(eigen(AAt)$values)  #row eigenvalues
         bon.eigval.c <- as.matrix(eigen(AtA)$values)  #row eigenvalues
+        bon.eigvec.r[, 1] <- bon.eigvec.r[, 1] * -1 #positive values more centrality
+        bon.eigvec.c[, 1] <- bon.eigvec.c[, 1] * -1 #positive values more centrality
+        bon.eigvec.r[, 2] <- bon.eigvec.r[, 2] * -1 #positive values more centrality
+        bon.eigvec.c[, 2] <- bon.eigvec.c[, 2] * -1 #positive values more centrality
         
         # Normalizing row and column vectors
         norm.r <- function(x) {
