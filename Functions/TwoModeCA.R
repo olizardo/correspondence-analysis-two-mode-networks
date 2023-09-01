@@ -99,42 +99,55 @@ TwoModeCA <- function(x,
         A <- x[ , colSums(x) != 0, drop = FALSE]
         A <- Matrix(A, sparse = TRUE)
         At <- t(A)
-        
-        iDr <- matrix(0, nrow(A), nrow(A))
-        iDc <- matrix(0, ncol(A), ncol(A))
-        diag(iDr) <- 1/rowSums(A)
-        diag(iDc) <- 1/colSums(A)
-        
-        iDs.r <- matrix(0, nrow(A), nrow(A))
-        iDs.c <- matrix(0, ncol(A), ncol(A))
-        diag(iDs.r) <- 1/sqrt(rowSums(A))
-        diag(iDs.c) <- 1/sqrt(colSums(A))
-        
-        r <- nrow(A)
-        c <- ncol(A)
+        r <- nrow(A) # number of rows
+        c <- ncol(A) # number of columns
         rn <- rownames(A)
         cn <- colnames(A)
+        u.r <- matrix(1, nrow = r, ncol = 1)
+        u.c <- matrix(1, nrow = c, ncol = 1)
+
         
         # Derived matrices and vectors
-        CA.r <- svd(iDr %*% A %*% iDc %*% At) #row CA
-        CA.c <- svd(iDc %*% At %*% iDr %*% A) #column CA
-        CA.res <- svd(iDs.r %*% A %*% iDs.c) #row and column CA
-        bon.res <- svd(A) #Bonacich eigenvector centrality
-        
+        AAt <- A %*% At #row projection
+        AtA <- At %*% A #column projection
+        N <- as.numeric(t(u.r) %*% A %*% u.c)
+        D.r <- diag(as.vector(A %*% u.c), r, r)
+        D.c <- diag(as.vector(At %*% u.r), c, c)
+        iDr <- solve(D.r)
+        iDc <- solve(D.c)
         S.r <- A %*% iDc %*% At #degree-normalized similarity matrix for rows
         S.c <- At %*% iDr %*% A #degree-normalized similarity matrix for columns
         
-        Su.r <- A %*% At #raw similarity matrix for rows
-        Su.c <- At %*% A #raw similarity matrix for columns
+        # Spectral matrices
+        CA.r <- eigen(iDr %*% A %*% iDc %*% At) #row CA
+        CA.c <- eigen(iDc %*% At %*% iDr %*% A) #column CA
+        S.r.eig <- eigen(S.r) #eigendecomposition of row similarity matrix
+        S.c.eig <- eigen(S.c) #eigendecomposition of column similarity matrix
+        eigvec.r <- as.matrix(CA.r$vectors[, 2:r]) #row coordinates
+        eigvec.c <- as.matrix(CA.c$vectors[, 2:c]) #column coordinates
+        eigval.r <- as.matrix(CA.r$values)[2:r]
+        eigval.c <- as.matrix(CA.c$values)[2:c]
+        eigvec.S.r <- S.r.eig$vectors #row similarity eigenvectors
+        eigvec.S.c <- S.c.eig$vectors #column similarity eigenvectors
+        eigval.S.r <- S.r.eig$values #row similarity eigenvectors 
+        eigval.S.c <- S.c.eig$values #column similarity eigenvectors
+        bon.eigvec.r <- as.matrix(eigen(AAt)$vectors) #row eigenvectors
+        bon.eigvec.c <- as.matrix(eigen(AtA)$vectors) #column eigenvectors
+        bon.eigval.r <- as.matrix(eigen(AAt)$values)  #row eigenvalues
+        bon.eigval.c <- as.matrix(eigen(AtA)$values)  #row eigenvalues
         
-        S.r.eigval <- svd(S.r)$d #eigenvalues of normalized row similarity matrix
-        S.c.eigval <- svd(S.c)$d #eigenvalues of normalized column similarity matrix
-        
-        eigvec.r <- as.matrix(CA.r$u[, 2:r]) #row coordinates
-        eigvec.c <- as.matrix(CA.c$u[, 2:c]) #column coordinates
-        
-        bon.eigvec.r <- bon.res$u #row eigenvectors
-        bon.eigvec.c <- bon.res$v #row eigenvectors
+        # Normalizing row and column vectors
+        norm.r <- function(x) {
+                den <- t(x) %*% iDr %*% x
+                x <- sqrt(N / den) %*% x
+                }
+        norm.c <- function(x) {
+                x <- sqrt((N / (t(x) %*% iDc %*% x))) %*% x
+                }
+        #eigvec.r <- apply(eigvec.r, 2, norm.r)
+        #eigvec.c <- apply(eigvec.c, 2, norm.c)
+        #eigvec.r <- sqrt(eigval.r) * eigvec.r
+        #eigvec.c <- sqrt(eigval.c) * eigvec.c
         
         #row and column names
         rownames(eigvec.r) <- rn
@@ -145,63 +158,50 @@ TwoModeCA <- function(x,
         b <- c - 1
         colnames(eigvec.r) <- paste("d", 1:a, sep = "")
         colnames(eigvec.c) <- paste("d", 1:b, sep = "")
-        colnames(bon.eigvec.r) <- paste("e", 1:c, sep = "")
+        colnames(bon.eigvec.r) <- paste("e", 1:r, sep = "")
         colnames(bon.eigvec.c) <- paste("e", 1:c, sep = "")
         rownames(S.r) <- rn
         colnames(S.r) <- rn
         rownames(S.c) <- cn
         colnames(S.c) <- cn
-        rownames(Su.r) <- rn
-        colnames(Su.r) <- rn
-        rownames(Su.c) <- cn
-        colnames(Su.c) <- cn
         
-        # K-means clustering of weighted similarity matrices
-        S.r.dat <- data.frame(svd(S.r[, 1:d.r])$u)
-        S.c.dat <- data.frame(svd(S.c[, 1:d.c])$u)
-        rownames(S.r.dat) <- rn
-        rownames(S.c.dat) <- cn
-        km.r <- hkmeans(S.r.dat, k.r)
-        km.c <- hkmeans(S.c.dat, k.c)
-        km.dat.r <- data.frame(lab = rn, cluster = factor(km.r$cluster))
-        km.dat.c <- data.frame(lab = cn, cluster = factor(km.c$cluster))
-        
-        # K-means clustering of unweighted similarity matrices
-        Su.r.dat <- data.frame(svd(Su.r[, 1:d.r])$u)
-        Su.c.dat <- data.frame(svd(Su.c[, 1:d.c])$u)
-        rownames(Su.r.dat) <- rn
-        rownames(Su.c.dat) <- cn
-        km.r <- hkmeans(Su.r.dat, b.r)
-        km.c <- hkmeans(Su.c.dat, b.c)
-        bon.km.dat.r <- data.frame(lab = rn, cluster = factor(km.r$cluster))
-        bon.km.dat.c <- data.frame(lab = cn, cluster = factor(km.c$cluster))
+        #k-means similarity-based clustering
+        km.r <- hkmeans(data.frame(eigvec.S.r[, 1:d.r]), k.r)
+        km.c <- hkmeans(data.frame(eigvec.S.c[, 1:d.c]), k.c)
+        bon.km.r <- hkmeans(data.frame(bon.eigvec.r[, 1:d.r]), b.r)
+        bon.km.c <- hkmeans(data.frame(bon.eigvec.c[, 1:d.c]), b.c)
         
         # Main Eigenvector Plot
         eigvec.dat.r <- data.frame(rank = rank(eigvec.r[, 1]), 
-                                   value = eigvec.r[, 1],
-                                   lab = rn) %>% 
-                left_join(km.dat.r)
+                                   value = as.numeric(eigvec.r[, 1]),
+                                   lab = rn,
+                                   cluster = factor(km.r$cluster))
         eigvec.dat.c <- data.frame(rank = rank(eigvec.c[, 1]), 
-                                   value = eigvec.c[, 1],
-                                   lab = cn)  %>% 
-                left_join(km.dat.c)
+                                   value = as.numeric(eigvec.c[, 1]),
+                                   lab = cn,
+                                   cluster = factor(km.c$cluster))
         eigvec.plot.r <- eigvec.scatter(eigvec.dat.r)
         eigvec.plot.c <- eigvec.scatter(eigvec.dat.c)
         
-        # Correspondence Plots (CA)
-        corr.plot.r <- corr.scatter(eigvec.r)
-        corr.plot.c <- corr.scatter(eigvec.c)
-        eigvec.rc <- rbind(eigvec.r[, 1:2], eigvec.c[, 1:2])
-        km.dat.rc <- rbind(km.dat.r, km.dat.c)
-        eigvec.rc <- cbind(eigvec.rc, km.dat.rc)
-        corr.plot <- corr.scatter(eigvec.rc)
+        # Correspondence Plot (CA)
+        a <- rbind(eigvec.r[, 1:2], eigvec.c[, 1:2])
+        rn.a <- rownames(a)
+        a <- apply(a, 2, as.numeric)
+        b <- c(km.r$cluster, km.c$cluster)
+        c <- data.frame(cbind(a, cluster = b))
+        c$cluster <- factor(c$cluster)
+        rownames(c) <- rn.a
+        corr.plot <- corr.scatter(c)
         
-        # Correspondence Plot (Eigenvector)
-        bon.eigvec.rc <- rbind(bon.eigvec.r[, 1:2], bon.eigvec.c[, 1:2])
-        bon.eigvec.rc[, 1] <- bon.eigvec.rc[, 1] * -1
-        bon.km.dat.rc <- rbind(bon.km.dat.r, bon.km.dat.c)
-        bon.eigvec.rc <- cbind(bon.eigvec.rc, bon.km.dat.rc)
-        bon.corr.plot <- bon.corr.scatter(bon.eigvec.rc)
+        # Correspondence Plot (Bonacich)
+        a <- rbind(bon.eigvec.r[, 1:2], bon.eigvec.c[, 1:2])
+        rn.a <- rownames(a)
+        a <- apply(a, 2, as.numeric)
+        b <- c(bon.km.r$cluster, bon.km.c$cluster)
+        c <- data.frame(cbind(a, cluster = b))
+        c$cluster <- factor(c$cluster)
+        rownames(c) <- rn.a
+        bon.corr.plot <- bon.corr.scatter(c)
         
         # Affiliation matrix plot (CA ordering)
         A.ord <- as.matrix(A[order(eigvec.r[, 1]), order(eigvec.c[, 1])])
@@ -216,15 +216,7 @@ TwoModeCA <- function(x,
         A.plot <- A.plot + scale_x_discrete(position = "top")
         A.plot2 <- A.plot + theme(legend.position = "none",
                                   axis.text.x = element_text(hjust = -0.2)) 
-        
-        # Eigenvalue Plots
-        eig.dat.r <- data.frame(k = 1:nrow(A), value = S.r.eigval) %>% 
-                mutate(value = value / max(value))
-        eig.dat.c <- data.frame(k = 1:ncol(A), value = S.c.eigval) %>% 
-                mutate(value = value / max(value))
-        eigval.plot.r <- eigval.scatter(eig.dat.r) #row eigenvalue plot 
-        eigval.plot.c <- eigval.scatter(eig.dat.c) #column eigenvalue plot
-        
+
         # Similarity matrix plot (weighted by degree)
         norm.sim.r <- as.matrix(S.r/max(S.r))
         norm.sim.c <- as.matrix(S.c/max(S.c))
@@ -234,34 +226,41 @@ TwoModeCA <- function(x,
         sim.plot.c <- sim.plot(norm.sim.c) #column similarity plot
         
         # Similarity matrix plot (unweighted)
-        norm.sim.r <- as.matrix(Su.r/max(Su.r))
-        norm.sim.c <- as.matrix(Su.c/max(Su.c))
+        norm.sim.r <- as.matrix(AAt/max(AAt))
+        norm.sim.c <- as.matrix(AtA/max(AtA))
         norm.sim.r <- norm.sim.r[order(bon.eigvec.r[, 1]), order(bon.eigvec.r[, 1])]
         norm.sim.c <- norm.sim.c[order(bon.eigvec.c[, 1]), order(bon.eigvec.c[, 1])]
         bon.sim.plot.r <- sim.plot(norm.sim.r) #row similarity plot
         bon.sim.plot.c <- sim.plot(norm.sim.c) #column similarity plot
         
+        # Eigenvalue Plots
+        eig.dat.r <- data.frame(k = 1:nrow(A), value = as.numeric(eigval.S.r)) %>% 
+                mutate(value = value / max(value))
+        eig.dat.c <- data.frame(k = 1:ncol(A), value = as.numeric(eigval.S.c)) %>% 
+                mutate(value = value / max(value))
+        eigval.plot.r <- eigval.scatter(eig.dat.r) #row eigenvalue plot 
+        eigval.plot.c <- eigval.scatter(eig.dat.c) #column eigenvalue plot
+        
+        
         return(list(
-                A.plot.ca = A.plot1,
-                A.plot.bon = A.plot2,
+                ca.eigvec.r = eigvec.r,
+                ca.eigvec.c = eigvec.c,
+                ca.eigval.r = eigval.r,
+                ca.eigval.c = eigval.c,
+                bon.eigval.r = bon.eigval.r,
+                bon.eigval.r = bon.eigval.c,
+                bon.eigvec.r = bon.eigvec.r,
+                bon.eigvec.c = bon.eigvec.c,
                 eigval.plot.r = eigval.plot.r,
                 eigval.plot.c = eigval.plot.c,
+                ca.A = A.plot1,
+                bon.A = A.plot2,
                 eigvec.plot.r = eigvec.plot.r,
                 eigvec.plot.c = eigvec.plot.c,
-                corr.plot.r = corr.plot.r,
-                corr.plot.c = corr.plot.c,
-                corr.plot = corr.plot,
-                bon.corr.plot = bon.corr.plot,
-                sim.plot.r = sim.plot.r,
-                sim.plot.c = sim.plot.c,
+                ca.sim.plot.r = sim.plot.r,
+                ca.sim.plot.c = sim.plot.c,
                 bon.sim.plot.r = bon.sim.plot.r,
-                bon.sim.plot.c = bon.sim.plot.c,
-                km.r = km.r,
-                km.c = km.c,
-                eigvec.r = eigvec.r,
-                eigvec.c = eigvec.c,
-                eigval.r = CA.r$d,
-                eigval.c = CA.c$d,
-                CA.res = CA.res)
-        )
+                bon.sim.plot.c = bon.sim.plot.c,                
+                ca.corr.plot = corr.plot,
+                bon.corr.plot  = bon.corr.plot))
         }

@@ -56,6 +56,14 @@ date: "`r Sys.Date()`"
 ```
 
 # Analysis
+
+
+```{r CA versus Bonacich Re-ordered Affiliation Matrices}
+   source(here("Functions", "TwoModeCA.R"))
+   a <- TwoModeCA(A, k.r = 5)
+   
+```
+
 ```{r Reflections Bump Charts}
    evens <- function(x) subset(x, x %% 2 == 0)
    odds <- function(x) subset(x, x %% 2 != 0)
@@ -124,11 +132,12 @@ date: "`r Sys.Date()`"
    b <- a$A.plot.ca
    c <- a$A.plot.bon
    png(file = here("Plots", "ca-v-bon-reord.png"), width=1000, height=700)
-      (b | c) + plot_annotation(tag_levels = "a")
+      (b | c) + plot_annotation(tag_levels = "a") &
+      theme(plot.tag = element_text(size = 20))
    dev.off() 
 ```
 
-```{r}
+```{r Similarity and Correspondence Plot (Bonacich)}
    source(here("Functions", "TwoModeCA.R"))
     tmCA.res <- TwoModeCA(A, k.r = 6, k.c = 6, d.r = 6, d.c = 6, b.r = 4, b.c = 4)
     a <- tmCA.res$bon.sim.plot.r + theme(axis.text.x = element_blank())
@@ -136,7 +145,8 @@ date: "`r Sys.Date()`"
     c <- tmCA.res$bon.corr.plot
     
     png(file = here("Plots", "bon-sim.png"), width=950, height=700)
-        (a | b) / c + plot_annotation(tag_levels = "a")
+      (a | b) / c + plot_annotation(tag_levels = "a") &
+      theme(plot.tag = element_text(size = 20)) 
     dev.off() 
 ```
 
@@ -154,11 +164,13 @@ date: "`r Sys.Date()`"
     g <- tmCA.res$corr.plot
     
     png(file = here("Plots", "eigvec.png"), width=1000, height=600)
-        (a | b) + plot_annotation(tag_levels = "a")
+        (a | b) + plot_annotation(tag_levels = "a") &
+      theme(plot.tag = element_text(size = 20))
     dev.off() 
     
     png(file = here("Plots", "sim.png"), width=950, height=700)
-        (e | f) / g + plot_annotation(tag_levels = "a")
+        (e | f) / g + plot_annotation(tag_levels = "a") &
+      theme(plot.tag = element_text(size = 20))
     dev.off() 
 ```
 
