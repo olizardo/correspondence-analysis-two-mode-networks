@@ -5,11 +5,6 @@ TwoModeCA <- function(x,
                       b.c = 2,
                       d.r = 2, 
                       d.c = 2) {
-        library(factoextra)
-        library(ggcorrplot)
-        library(ggpubr)
-        library(Matrix)
-
         # Plot Functions
         eigval.scatter <- function(x) {
                 p <- ggscatter(x, 
@@ -86,7 +81,6 @@ TwoModeCA <- function(x,
                 p <- p + labs(x = "First Eigenvector", y = "Second Eigenvector")
                 return(p)
         }
-        
         sim.plot <- function(x) {
                 p <- ggcorrplot(x)
                 p <- p + scale_x_discrete(position = "top")
@@ -96,25 +90,23 @@ TwoModeCA <- function(x,
         }
         
         # Initial matrices and vectors
-        A <- x[ , colSums(x) != 0, drop = FALSE]
-        A <- Matrix(A, sparse = TRUE)
-        At <- t(A)
+        A <- x[ , colSums(x) != 0, drop = FALSE] #dropping isolates
+        At <- t(A) #affiliation matrix transpose
         r <- nrow(A) # number of rows
         c <- ncol(A) # number of columns
         rn <- rownames(A)
         cn <- colnames(A)
-        u.r <- matrix(1, nrow = r, ncol = 1)
-        u.c <- matrix(1, nrow = c, ncol = 1)
+        u.r <- matrix(1, nrow = r, ncol = 1) #unit row vector
+        u.c <- matrix(1, nrow = c, ncol = 1) #unit column vector
 
-        
         # Derived matrices and vectors
         AAt <- A %*% At #row projection
         AtA <- At %*% A #column projection
-        N <- as.numeric(t(u.r) %*% A %*% u.c)
-        D.r <- diag(as.vector(A %*% u.c), r, r)
-        D.c <- diag(as.vector(At %*% u.r), c, c)
-        iDr <- solve(D.r)
-        iDc <- solve(D.c)
+        N <- as.numeric(t(u.r) %*% A %*% u.c) #affiliation matrix size
+        D.r <- diag(as.vector(A %*% u.c), r, r) #row diagonal degree matrix
+        D.c <- diag(as.vector(At %*% u.r), c, c) #column diagonal degree matrix
+        iDr <- solve(D.r) #inverse of row diagonal degree matrix
+        iDc <- solve(D.c)  #inverse of column diagonal degree matrix
         S.r <- A %*% iDc %*% At #degree-normalized similarity matrix for rows
         S.c <- At %*% iDr %*% A #degree-normalized similarity matrix for columns
         

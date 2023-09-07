@@ -14,12 +14,17 @@ date: "`r Sys.Date()`"
    library(here)
    library(patchwork)
    library(dplyr)
+   library(factoextra)
    library(ggbump)
+   library(ggcorrplot)
    library(ggplot2)
+   library(ggpubr)
    library(ggrepel)
    library(igraph)
    library(pals)
+   library(patchwork)
    source(here("Functions", "TwoModeCA.R"))
+   source(here("Functions", "TwoModeSR.R"))
    source(here("Functions", "reflections.R"))
    source(here("Functions", "ref.long.dat.R"))
 ```
@@ -56,13 +61,6 @@ date: "`r Sys.Date()`"
 ```
 
 # Analysis
-
-
-```{r CA versus Bonacich Re-ordered Affiliation Matrices}
-   source(here("Functions", "TwoModeCA.R"))
-   a <- TwoModeCA(A, k.r = 5)
-   
-```
 
 ```{r Reflections Bump Charts}
    evens <- function(x) subset(x, x %% 2 == 0)
@@ -129,50 +127,103 @@ date: "`r Sys.Date()`"
 ```{r CA versus Bonacich Re-ordered Affiliation Matrices}
    source(here("Functions", "TwoModeCA.R"))
    a <- TwoModeCA(A)
-   b <- a$A.plot.ca
-   c <- a$A.plot.bon
+   b <- a$ca.A
+   c <- a$bon.A
    png(file = here("Plots", "ca-v-bon-reord.png"), width=1000, height=700)
       (b | c) + plot_annotation(tag_levels = "a") &
       theme(plot.tag = element_text(size = 20))
    dev.off() 
 ```
 
-```{r Similarity and Correspondence Plot (Bonacich)}
+```{r Eigenvector Plot}
    source(here("Functions", "TwoModeCA.R"))
-    tmCA.res <- TwoModeCA(A, k.r = 6, k.c = 6, d.r = 6, d.c = 6, b.r = 4, b.c = 4)
-    a <- tmCA.res$bon.sim.plot.r + theme(axis.text.x = element_blank())
-    b <- tmCA.res$bon.sim.plot.c + theme(axis.text.x = element_blank())
-    c <- tmCA.res$bon.corr.plot
-    
-    png(file = here("Plots", "bon-sim.png"), width=950, height=700)
-      (a | b) / c + plot_annotation(tag_levels = "a") &
-      theme(plot.tag = element_text(size = 20)) 
-    dev.off() 
-```
-
-```{r Main Plot}
-   source(here("Functions", "TwoModeCA.R"))
-    tmCA.res <- TwoModeCA(A, k.r = 6, k.c = 6, d.r = 9, d.c = 9)
+    tmCA.res <- TwoModeCA(A, k.r = 2, k.c = 2)
     a <- tmCA.res$eigvec.plot.r + theme(axis.text = element_blank())
     b <- tmCA.res$eigvec.plot.c 
     c <- tmCA.res$eigval.plot.r
     d <- tmCA.res$eigval.plot.c
     a <- a + inset_element(c, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
     b <- b + inset_element(d, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
-    e <- tmCA.res$sim.plot.r + theme(axis.text.x = element_blank())
-    f <- tmCA.res$sim.plot.c + theme(axis.text.x = element_blank())
-    g <- tmCA.res$corr.plot
     
     png(file = here("Plots", "eigvec.png"), width=1000, height=600)
         (a | b) + plot_annotation(tag_levels = "a") &
       theme(plot.tag = element_text(size = 20))
     dev.off() 
+```
+
+```{r Similarity and Correspondence Plot (CA)}
+   source(here("Functions", "TwoModeCA.R"))
+    tmCA.res <- TwoModeCA(A, d.r = 4, d.c = 4, k.r = 3, k.c = 3)
+    a <- tmCA.res$ca.sim.plot.r + theme(axis.text.x = element_blank())
+    b <- tmCA.res$ca.sim.plot.c + theme(axis.text.x = element_blank())
+    c <- tmCA.res$ca.corr.plot
     
-    png(file = here("Plots", "sim.png"), width=950, height=700)
-        (e | f) / g + plot_annotation(tag_levels = "a") &
-      theme(plot.tag = element_text(size = 20))
+    png(file = here("Plots", "ca-sim.png"), width=950, height=700)
+      (a | b) / c + plot_annotation(tag_levels = "a") &
+      theme(plot.tag = element_text(size = 20)) 
     dev.off() 
 ```
 
+```{r Similarity and Correspondence Plot (Bonacich)}
+   source(here("Functions", "TwoModeCA.R"))
+    tmCA.res <- TwoModeCA(A, d.r = 4, d.c = 4, b.r = 4, b.c = 4)
+    a <- tmCA.res$bon.sim.plot.r + theme(axis.text.x = element_blank())
+    b <- tmCA.res$bon.sim.plot.c + theme(axis.text.x = element_blank())
+    c <- tmCA.res$bon.corr.plot
+    
+    png(file = here("Plots", "bon-sim.png"), width=950, height=700)
+      (a | b) / c + 
+       plot_annotation(tag_levels = "a") &
+      theme(plot.tag = element_text(size = 20)) 
+    dev.off() 
+```
 
+```{r SimRank Plot}
+   source(here("Functions", "TwoModeSR.R"))
+   tmSR.res <- TwoModeSR(A, C = 0.8, iter = 10)
+    a <- tmSR.res$eigvec.plot.r + theme(axis.text = element_blank())
+    b <- tmSR.res$eigvec.plot.c 
+    c <- tmSR.res$eigval.plot.r
+    d <- tmSR.res$eigval.plot.c
+    #a <- a + inset_element(c, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
+    #b <- b + inset_element(d, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
+    e <- tmSR.res$A.plot
+    f <- tmSR.res$corr.plot
+   dat.r <- data.frame(ca = as.numeric(tmCA.res$ca.eigvec.r[,1]),
+                       sr = tmSR.res$ov.r,
+                       lab = rownames(A))
+   dat.c <- data.frame(ca = as.numeric(tmCA.res$ca.eigvec.c[,1]),
+                       sr = tmSR.res$ov.c,
+                       lab = colnames(A))
+   g <- ggscatter(dat.r, x = "ca", y = "sr", 
+                  label = "lab", repel = TRUE, 
+                  add = "reg.line", 
+                  add.params = list(color = "gray80", linewidth = 0.25))
+   h <- ggscatter(dat.c, x = "ca", y = "sr", 
+                  label = "lab", repel = TRUE, 
+                  add = "reg.line",
+                  add.params = list(color = "gray80", linewidth = 0.25))
+   i <- (a | b | (g / h)) + plot_layout(widths = c(2, 2, 1))
+   j <- (e | f) + plot_layout(widths = c(1, 3))
+
+   
+   png(file = here("Plots", "sr-plot.png"), width=1000, height=1200)
+       (i / j ) +
+       plot_annotation(tag_levels = "a") &
+       theme(plot.tag = element_text(size = 20))
+    dev.off()
+
+```
+
+```{r}
+```
+
+ 
+```
+
+```{r}
+
+```
+
+ 
 
