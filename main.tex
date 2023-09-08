@@ -456,15 +456,14 @@ Where $p(i)_{i \in N(g)}$ is the $i^{th}$ person in the set of members of group 
 
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\textwidth]{Plots/sr-plot.png}
+    \includegraphics[width=0.8\textwidth]{Plots/sr-plot.png}
     \caption{Caption}
     \label{fig:simrank}
 \end{figure}
 
 In two-mode networks, SimRank scores can be estimated via a simple algorithm, in which we first estimate $S(p, p')$ in equation \ref{eq:simrank1} using baseline values. Hence, only groups that two people share contribute to the initial values of $S(p, p')$ since only $S(g, g)>0$ at the outset. We then plug those values into equation \ref{eq:simrank2}, then loop back to equation \ref{eq:simrank1} with the resulting $S(g, g')$ values, and continue iterating until convergence---generally achieved after five iterations \citep{jeh2002simrank}. Further Note that equations~\ref{eq:simrank1} and~\ref{eq:simrank2} share a formal similarity with the HH's ``method of reflections'' discussed earlier, in particular, the fact that both compute quantities based on nodes in the other mode averaged by the degree of nodes in the focal mode. The key difference is that SimRank works directly with pairwise comparisons between node dyads \citep{jeh2002simrank}. Nevertheless, this double weighting by degree should make us suspect that the results of the SimRank similarity analysis would not be too far from those obtained via CA.
 
-And indeed, they are not. Figure~\ref{fig:simrank}(a) and Figure~\ref{fig:simrank}(b) show a plot similar to that shown in Figures~\ref{fig:ca-eigvec}(a) and Figure~\ref{fig:ca-eigvec}(b) but this time with the first non-trivial eigenvector (corresponding to the second-largest eigenvalue) of the SimRank similarity matrices of both persons and groups. 
-
+And indeed, they are not. Figure~\ref{fig:simrank}(a) and Figure~\ref{fig:simrank}(b) show a plot similar to that shown in Figures~\ref{fig:ca-eigvec}(a) and Figure~\ref{fig:ca-eigvec}(b) but this time with the first non-trivial eigenvector (corresponding to the second-largest eigenvalue) of the SimRank similarity matrices of both persons and groups. As we can see, the partitioning of the node sets on the first informative eigenvector is substantively the same, separating the same two blocks of people and events. Figure~\ref{fig:simrank}(c) shows the original affiliation matrix, this time with rows and columns re-arranged according to the main eigenvector of the SimRank similarity matrix. Like in Figure~\ref{fig:ca-v-bon}(a), this reshuffling reveals the block-diagonal structure separating the two blocks of persons and groups. Figure~\ref{fig:simrank}(d) shows the correspondence plot of the first and second informative eigenvector of the SimRank similarity matrices for persons and groups. Once again, this plot is substantively equivalent (in terms of the internode groupings and distances) to that shown in Figure~\ref{fig:ca-sim}(c). 
 
 \section{Discussion}
 %% Loading bibliography style file
