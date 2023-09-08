@@ -180,31 +180,39 @@ date: "`r Sys.Date()`"
 
 ```{r SimRank Plot}
    source(here("Functions", "TwoModeSR.R"))
-   tmSR.res <- TwoModeSR(A, C = 0.8, iter = 10)
+   tmSR.res <- TwoModeSR(A)
     a <- tmSR.res$eigvec.plot.r + theme(axis.text = element_blank())
     b <- tmSR.res$eigvec.plot.c 
     c <- tmSR.res$eigval.plot.r
     d <- tmSR.res$eigval.plot.c
-    #a <- a + inset_element(c, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
-    #b <- b + inset_element(d, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
+    a <- a + inset_element(c, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
+    b <- b + inset_element(d, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
     e <- tmSR.res$A.plot
     f <- tmSR.res$corr.plot
    dat.r <- data.frame(ca = as.numeric(tmCA.res$ca.eigvec.r[,1]),
-                       sr = tmSR.res$ov.r,
+                       sr = tmSR.res$ov.r1,
                        lab = rownames(A))
    dat.c <- data.frame(ca = as.numeric(tmCA.res$ca.eigvec.c[,1]),
-                       sr = tmSR.res$ov.c,
+                       sr = tmSR.res$ov.c1,
                        lab = colnames(A))
-   g <- ggscatter(dat.r, x = "ca", y = "sr", 
+   cor <- round(cor(dat.r[,c("ca", "sr")])[1, 2], 2)
+   g <- ggscatter(dat.r, x = "ca", y = "sr", font.label= 8, 
                   label = "lab", repel = TRUE, 
                   add = "reg.line", 
-                  add.params = list(color = "gray80", linewidth = 0.5, linetype = 2))
-   h <- ggscatter(dat.c, x = "ca", y = "sr", 
+                  add.params = list(color = "gray80", 
+                                    linewidth = 0.5, linetype = 2)) +
+                  annotate("text", x = -.2, y = .3, 
+                           label = paste("r = ", cor), size = 6) 
+   cor <- round(cor(dat.c[,c("ca", "sr")])[1, 2], 2)
+   h <- ggscatter(dat.c, x = "ca", y = "sr", font.label= 8, 
                   label = "lab", repel = TRUE, 
                   add = "reg.line",
-                  add.params = list(color = "gray80", linewidth = 0.5, linetype = 2))
+                  add.params = list(color = "gray80", 
+                                    linewidth = 0.5, linetype = 2)) +
+                  annotate("text", x = -.2, y = .3, 
+                           label = paste("r = ", cor), size = 6) 
    i <- (a | b | e) 
-   j <- (f | (g / h)) + plot_layout(widths = c(2.5, 1))
+   j <- (f | (g / h)) + plot_layout(widths = c(3, 1))
    png(file = here("Plots", "sr-plot.png"), width=1200, height=1200)
        (i / j) +
        plot_annotation(tag_levels = "a") &
