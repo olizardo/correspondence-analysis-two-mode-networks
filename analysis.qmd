@@ -21,7 +21,6 @@ date: "`r Sys.Date()`"
    library(ggpubr)
    library(ggrepel)
    library(igraph)
-   library(pals)
    library(patchwork)
    source(here("Functions", "TwoModeCA.R"))
    source(here("Functions", "TwoModeSR.R"))
@@ -125,7 +124,6 @@ date: "`r Sys.Date()`"
 ```
 
 ```{r CA versus Bonacich Re-ordered Affiliation Matrices}
-   source(here("Functions", "TwoModeCA.R"))
    a <- TwoModeCA(A)
    b <- a$ca.A
    c <- a$bon.A
@@ -135,8 +133,7 @@ date: "`r Sys.Date()`"
    dev.off() 
 ```
 
-```{r Eigenvector Plot}
-   source(here("Functions", "TwoModeCA.R"))
+```{r CA Eigenvector Plot}
     tmCA.res <- TwoModeCA(A, k.r = 2, k.c = 2)
     a <- tmCA.res$eigvec.plot.r + theme(axis.text = element_blank())
     b <- tmCA.res$eigvec.plot.c 
@@ -144,7 +141,6 @@ date: "`r Sys.Date()`"
     d <- tmCA.res$eigval.plot.c
     a <- a + inset_element(c, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
     b <- b + inset_element(d, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
-    
     png(file = here("Plots", "ca-eigvec.png"), width=1000, height=600)
         (a | b) + plot_annotation(tag_levels = "a") &
       theme(plot.tag = element_text(size = 20))
@@ -152,8 +148,7 @@ date: "`r Sys.Date()`"
 ```
 
 ```{r Similarity and Correspondence Plot (CA)}
-   source(here("Functions", "TwoModeCA.R"))
-    tmCA.res <- TwoModeCA(A, d.r = 4, d.c = 4, k.r = 3, k.c = 3)
+    tmCA.res <- TwoModeCA(A, d.r = 2, d.c = 2, k.r = 5, k.c = 5)
     a <- tmCA.res$ca.sim.plot.r + theme(axis.text.x = element_blank())
     b <- tmCA.res$ca.sim.plot.c + theme(axis.text.x = element_blank())
     c <- tmCA.res$ca.corr.plot
@@ -165,12 +160,10 @@ date: "`r Sys.Date()`"
 ```
 
 ```{r Similarity and Correspondence Plot (Bonacich)}
-   source(here("Functions", "TwoModeCA.R"))
-    tmCA.res <- TwoModeCA(A, d.r = 4, d.c = 4, b.r = 4, b.c = 4)
+    tmCA.res <- TwoModeCA(A, d.r = 2, d.c = 2, b.r = 4, b.c = 4)
     a <- tmCA.res$bon.sim.plot.r + theme(axis.text.x = element_blank())
     b <- tmCA.res$bon.sim.plot.c + theme(axis.text.x = element_blank())
     c <- tmCA.res$bon.corr.plot
-    
     png(file = here("Plots", "bon-sim.png"), width=950, height=700)
       (a | b) / c + 
        plot_annotation(tag_levels = "a") &
@@ -179,7 +172,6 @@ date: "`r Sys.Date()`"
 ```
 
 ```{r SimRank Plot}
-   source(here("Functions", "TwoModeSR.R"))
    tmSR.res <- TwoModeSR(A)
     a <- tmSR.res$eigvec.plot.r + theme(axis.text = element_blank())
     b <- tmSR.res$eigvec.plot.c 
@@ -211,7 +203,7 @@ date: "`r Sys.Date()`"
                                     linewidth = 0.5, linetype = 2)) +
                   annotate("text", x = -.2, y = .3, 
                            label = paste("r = ", cor), size = 6) 
-   i <- (a | b | e) 
+   i <- (e | a | b) 
    j <- (f | (g / h)) + plot_layout(widths = c(3, 1))
    png(file = here("Plots", "sr-plot.png"), width=1200, height=1200)
        (i / j) +
