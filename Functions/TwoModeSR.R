@@ -144,12 +144,12 @@ TwoModeSR <- function(A, C = 0.8, iter = 10, k = 4) {
    k.r <- hkmeans(data.frame(e.r$vectors[, 2:2]), k = 2)
    k.c <- hkmeans(data.frame(e.c$vectors[, 2:2]), k = 2)
    
-   eigvec.dat.r <- data.frame(rank = rank(ov.r), 
-                              value = ov.r,
+   eigvec.dat.r <- data.frame(rank = rank(ov.r*-1), 
+                              value = ov.r*-1,
                               lab = rn,
                               cluster = as.factor(k.r$cluster))
-   eigvec.dat.c <- data.frame(rank = rank(ov.c), 
-                              value = ov.c,
+   eigvec.dat.c <- data.frame(rank = rank(ov.c*-1), 
+                              value = ov.c*-1,
                               lab = cn,
                               cluster = as.factor(k.c$cluster))
    eigvec.plot.r <- eigvec.scatter(eigvec.dat.r)
