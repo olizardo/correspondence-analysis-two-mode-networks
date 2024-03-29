@@ -21,6 +21,7 @@ date: "`r Sys.Date()`"
    library(ggpubr)
    library(ggrepel)
    library(igraph)
+   library(pals)
    library(patchwork)
    source(here("Functions", "TwoModeCA.R"))
    source(here("Functions", "TwoModeSR.R"))
@@ -53,7 +54,7 @@ date: "`r Sys.Date()`"
           0, 0, 0, 0, 0,  1, 0, 1, 1,  0, 0, 0, 0, 0,
           0, 0, 0, 0, 0,  0, 0, 1, 1,  0, 0, 0, 0, 0),
           ncol = 14, byrow = TRUE)
-     w <- c("EVELYN", "LAURA", "THERESA", "BRENDA", "CHARLOTTE", "FRANCES", "ELEANOR", "RUTH", "VERNE", "MYRA", "KATHERINE", "SYLVIA", "NORA", "HELEN", "OLIVIA", "FLORA", "PEARL", "DOROTHY")
+     w <- c("EVELYN", "LAURA", "THERESA", "BRENDA", "CHARLOTTE", "FRANCES", "ELEANOR", "RUTH", "VERNE", "MYRNA", "KATHERINE", "SYLVIA", "NORA", "HELEN", "OLIVIA", "FLORA", "PEARL", "DOROTHY")
      e <- paste("E", c(1:14), sep = "")
      rownames(A) <- w
      colnames(A) <- e
@@ -93,6 +94,11 @@ date: "`r Sys.Date()`"
         axis.title.y = element_blank()
         )
    p1 <- p + scale_color_manual(values=as.vector(cols25(18)))
+   png(file = here("Plots", "p-reflections.png"), width=750, height=500)
+   p1
+   dev.off()
+
+
 
    
    plot.dat <- b$group$even
@@ -118,7 +124,10 @@ date: "`r Sys.Date()`"
         axis.title.y = element_blank()
         )
    p2 <- p + scale_color_manual(values=as.vector(cols25(15)))
-   png(file = here("Plots", "pg-reflections.jpg"), width=750, height=950)
+   png(file = here("Plots", "g-reflections.png"), width=750, height=500)
+   p2
+   dev.off()
+   png(file = here("Plots", "pg-reflections.png"), width=750, height=950)
    p1 / p2
    dev.off()
 ```
@@ -127,6 +136,12 @@ date: "`r Sys.Date()`"
    a <- TwoModeCA(A)
    b <- a$ca.A
    c <- a$bon.A
+   png(file = here("Plots", "ca-reord.png"), width=500, height=500)
+   b
+   dev.off() 
+   png(file = here("Plots", "bon-reord.png"), width=500, height=500)
+   c
+   dev.off() 
    png(file = here("Plots", "ca-v-bon-reord.png"), width=1000, height=700)
       (b | c) + plot_annotation(tag_levels = "a") &
       theme(plot.tag = element_text(size = 20))
@@ -141,6 +156,13 @@ date: "`r Sys.Date()`"
     d <- tmCA.res$eigval.plot.c
     a <- a + inset_element(c, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
     b <- b + inset_element(d, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
+    
+   png(file = here("Plots", "ca-eigvec-p.png"), width=500, height=500)
+   a
+   dev.off() 
+   png(file = here("Plots", "ca-eigvec-g.png"), width=500, height=500)
+   b
+   dev.off() 
     png(file = here("Plots", "ca-eigvec.png"), width=1000, height=600)
         (a | b) + plot_annotation(tag_levels = "a") &
       theme(plot.tag = element_text(size = 20))
@@ -154,6 +176,10 @@ date: "`r Sys.Date()`"
     c <- tmCA.res$ca.corr.plot
     
     png(file = here("Plots", "ca-sim.png"), width=950, height=700)
+      (a | b) / c + plot_annotation(tag_levels = "a") &
+      theme(plot.tag = element_text(size = 20)) 
+    dev.off() 
+    png(file = here("Plots", "ca-sim-slide.png"), width=1050, height=700)
       (a | b) / c + plot_annotation(tag_levels = "a") &
       theme(plot.tag = element_text(size = 20)) 
     dev.off() 
