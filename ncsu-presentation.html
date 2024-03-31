@@ -1324,13 +1324,24 @@ S_g = A^TA
 </section>
 <section id="ca-reveals-dual-communities-5" class="slide level2">
 <h2>CA Reveals Dual Communities</h2>
-<p><img data-src="Plots/ca-sim-slide.png"> ::: {.notes}</p>
+
+<img data-src="Plots/ca-sim-slide.png" class="r-stretch"><aside class="notes">
 <p>To fix the intuition, the top-left panel (a) of the figure shows a heatmap representation of the group-size weighted similarity matrix <span class="math inline">\(S_p\)</span> (for people); the top-right panel (b) shows the same plot for the activity-weighted similarity matrix <span class="math inline">\(S_g\)</span> (for groups). In both figures, darker squares indicate more similar node pairs, and closer to white indicate less similarity. Moreover, the rows of each matrix are sorted according to <span class="math inline">\(C^R\)</span> for both people and groups. As we can see, for both people and groups, the re-ordered matrix recovers maximally similar communities of nodes, where the similarity is based on their shared (degree-weighted) connections to entities in the other mode.</p>
 <p>The bottom panel of the figure shows the usual correspondence plot of the first two CA dimensions. People and groups are colored according to a six-cluster k-means solution based on the first nine eigenvectors of their respective similarity matrices. The plot reveals that the distances between nodes in the standard correspondence plot—usually taken to be a low-dimensional representation of the original affiliation matrix—are best thought of as low-dimensional representations of the (other mode’s) degree-normalized similarity network across people and groups.</p>
 <p>People with similar values in <span class="math inline">\(S_p\)</span>—such as <span class="math inline">\(\left[Olivia, Flora\right]\)</span>, <span class="math inline">\(\left[Katherine, Sylvia, Nora\right]\)</span>, <span class="math inline">\(\left[Dorothy, Verne\right]\)</span>, and <span class="math inline">\(\left[Brenda, Laura, Evelyn\right]\)</span>— appear closer in the correspondence plot (and are assigned to the same cluster by the k-means algorithm). The same goes for events, those with similar values in <span class="math inline">\(S_g\)</span>—such as <span class="math inline">\(\left[E13, E14\right]\)</span> and <span class="math inline">\(\left[E1, E2, E3\right]\)</span>—appear closer in the correspondence plot, while those with dissimilar values are placed far apart. The distances between same-mode entities in the correspondence plot will thus be a function of their (inverse) degree-normalized similarity.</p>
 <p>Note that this differs from the usual interpretation of the CA correspondence plot, which is usually taken to bring together nodes with “similar” connectivity patterns, where similarity is presumed to be a function of their raw row profiles (for people) or column profiles (for groups). This interpretation implies (for instance) that two people who attend many of the same events or two groups with many members will appear close in the plot. But this (still common) interpretation is off the mark.</p>
 <p>What the CA correspondence plot distance captures is, instead, people and groups that are surprisingly similar (e.g., from the point of view of a suitable null model, like independence) after taking people’s activity levels and the sizes of the groups they belong to into account. As we have seen, this is precisely the key contrast between the Bonacich and the CA dual centrality measures for two-mode networks.} Thus, people who share memberships in small groups will be closer in the diagram than people who share memberships in big groups. In the same way, groups that share people with few memberships will be closer in the diagram than those sharing people with many other memberships.</p>
-<p>:::</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="bonacich-reveals-coreperiphery" class="slide level2">
 <h2>Bonacich Reveals Core/Periphery</h2>
@@ -1473,6 +1484,11 @@ S(g, g') = \frac{\alpha}{C_g^R(1)C_{g'}^R(1)}
 </ul></li>
 </ul></li>
 </ul>
+</section>
+<section id="thanks" class="slide level2">
+<h2>Thanks!</h2>
+<p><a href="https://github.com/olizardo/correspondence-analysis-two-mode-networks">https://github.com/olizardo/correspondence-analysis-two-mode-networks</a></p>
+<p>olizardo@soc.ucla.edu</p>
 <div class="footer footer-default">
 
 </div>

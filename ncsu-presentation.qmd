@@ -590,8 +590,8 @@ Note that this is roughly the same partitioning obtained by Doreian (1979) using
 
 ## CA Reveals Dual Communities
 ![](Plots/ca-sim-slide.png)
-::: {.notes}
 
+::: {.notes}
 To fix the intuition, the top-left panel (a) of the figure shows a heatmap representation of the group-size weighted similarity matrix $S_p$ (for people); the top-right panel (b) shows the same plot for the activity-weighted similarity matrix $S_g$ (for groups). In both figures, darker squares indicate more similar node pairs, and closer to white indicate less similarity. Moreover, the rows of each matrix are sorted according to $C^R$ for both people and groups. As we can see, for both people and groups, the re-ordered matrix recovers maximally similar communities of nodes, where the similarity is based on their shared (degree-weighted) connections to entities in the other mode. 
 
 The bottom panel of the figure shows the usual correspondence plot of the first two CA dimensions. People and groups are colored according to a six-cluster k-means solution based on the first nine eigenvectors of their respective similarity matrices. The plot reveals that the distances between nodes in the standard correspondence plot---usually taken to be a low-dimensional representation of the original affiliation matrix---are best thought of as low-dimensional representations of the (other mode's) degree-normalized similarity network across people and groups. 
@@ -703,4 +703,10 @@ In two-mode networks, SimRank scores can be estimated via a simple algorithm, in
   - Another approach (similar to blockmodeling):
     - Use CA for spectral clustering
     - Then use **specific CA** (on a sub-table) to split clusters into further clusters
+    
+## Thanks!
+
+[https://github.com/olizardo/correspondence-analysis-two-mode-networks](https://github.com/olizardo/correspondence-analysis-two-mode-networks)
+
+olizardo@soc.ucla.edu
 
