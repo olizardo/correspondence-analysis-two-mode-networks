@@ -99,7 +99,7 @@ format:
 :::
 
 ::: {.column width="50%"}
-![Correspondence Plot of Southern Women Data Obtained from Simple CA of the Affiliation Matrix](Plots/ca-southern-women.png)
+![Correspondence Plot of Southern Women Data Obtained from Simple CA of the Affiliation Matrix](Plots/ca-sw.png)
 :::
 ::::
 
@@ -277,55 +277,55 @@ $$ {#eq-rig}
 ## Reflection Trajectories for SWD
 :::: {.columns}
 ::: {.column width="50%"}
-![Person Reflection Trajectories](Plots/p-reflections.png)
+![Person Reflection Trajectories](Plots/p-reflections-sw.png)
 :::
 
 ::: {.column width="50%"}
-![Group Reflection Trajectories](Plots/g-reflections.png)
-:::
-::::
-
-## Final Reflection Ordering versus CA
-:::: {.columns}
-::: {.column width="50%"}
-![Person Reflection Trajectories](Plots/p-reflections.png)
-:::
-
-::: {.column width="50%"}
-![Correspondence Plot of Southern Women Data](Plots/ca-southern-women.png)
+![Group Reflection Trajectories](Plots/g-reflections-sw.png)
 :::
 ::::
 
 ## Final Reflection Ordering versus CA
 :::: {.columns}
 ::: {.column width="50%"}
-![Person Reflection Trajectories](Plots/g-reflections.png)
+![Person Reflection Trajectories](Plots/p-reflections-sw.png)
 :::
 
 ::: {.column width="50%"}
-![Correspondence Plot of Southern Women Data](Plots/ca-southern-women.png)
-:::
-::::
-
-## Final Reflection Ordering versus CA
-:::: {.columns}
-::: {.column width="50%"}
-![Scatter of standardized person reflection centralities and person scores on first CA dimension (r = 1.0)](Plots/p-ca-ref-corr.png)
-:::
-
-::: {.column width="50%"}
-![Correspondence Plot of Southern Women Data](Plots/ca-southern-women.png)
+![Correspondence Plot of Southern Women Data](Plots/ca-sw.png)
 :::
 ::::
 
 ## Final Reflection Ordering versus CA
 :::: {.columns}
 ::: {.column width="50%"}
-![Scatter of standardized group reflection centralities and group scores on first CA dimension (r = 1.0)](Plots/g-ca-ref-corr.png)
+![Person Reflection Trajectories](Plots/g-reflections-sw.png)
 :::
 
 ::: {.column width="50%"}
-![Correspondence Plot of Southern Women Data](Plots/ca-southern-women.png)
+![Correspondence Plot of Southern Women Data](Plots/ca-sw.png)
+:::
+::::
+
+## Final Reflection Ordering versus CA
+:::: {.columns}
+::: {.column width="50%"}
+![Scatter of standardized person reflection centralities and person scores on first CA dimension (r = 1.0)](Plots/p-ca-ref-corr-sw.png)
+:::
+
+::: {.column width="50%"}
+![Correspondence Plot of Southern Women Data](Plots/ca-sw.png)
+:::
+::::
+
+## Final Reflection Ordering versus CA
+:::: {.columns}
+::: {.column width="50%"}
+![Scatter of standardized group reflection centralities and group scores on first CA dimension (r = 1.0)](Plots/g-ca-ref-corr-sw.png)
+:::
+
+::: {.column width="50%"}
+![Correspondence Plot of Southern Women Data](Plots/ca-sw.png)
 :::
 ::::
 
