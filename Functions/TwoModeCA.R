@@ -36,16 +36,22 @@ TwoModeCA <- function(x,
         # Spectral matrices
         CA.r <- eigen(iDr %*% A %*% iDc %*% At) #row CA
         CA.c <- eigen(iDc %*% At %*% iDr %*% A) #column CA
-        S.r.eig <- eigen(S.r) #eigendecomposition of row similarity matrix
-        S.c.eig <- eigen(S.c) #eigendecomposition of column similarity matrix
-        eigvec.r <- CA.r$vectors[, 2:r] #row coordinates
-        eigvec.c <- CA.c$vectors[, 2:c] #column coordinates
+        S.r.eig <- eigen(S.r) #eigendecomposition of row similarity matrix 
+        S.c.eig <- eigen(S.c) #eigendecomposition of column similarity matrix 
+        L.r.eig <- eigen(D.r - S.r) #eigendecomposition of row similarity matrix Laplacian
+        L.c.eig <- eigen(D.c - S.c) #eigendecomposition of column similarity matrix Laplacian
+        eigvec.r <- Re(CA.r$vectors[, 2:r]) #row coordinates
+        eigvec.c <- Re(CA.c$vectors[, 2:c]) #column coordinates
         eigval.r <- CA.r$values[2:r] #row eigenvalues
         eigval.c <- CA.c$values[2:c] #column eigenvalues
-        eigvec.S.r <- S.r.eig$vectors #row similarity eigenvectors
-        eigvec.S.c <- S.c.eig$vectors #column similarity eigenvectors
+        eigvec.S.r <- Re(S.r.eig$vectors) #row similarity eigenvectors
+        eigvec.S.c <- Re(S.c.eig$vectors) #column similarity eigenvectors
         eigval.S.r <- S.r.eig$values #row similarity eigenvalues 
         eigval.S.c <- S.c.eig$values #column similarity eigenvalues
+        eigvec.L.r <- Re(L.r.eig$vectors) #row Laplacian eigenvectors
+        eigvec.L.c <- Re(L.c.eig$vectors) #column Laplacian eigenvectors
+        eigval.L.r <- Re(L.r.eig$values) #row Laplacian eigenvectors
+        eigval.L.c <- Re(L.c.eig$values) #column Laplacian eigenvectors
         bon.eigvec.r <- as.matrix(eigen(AAt)$vectors) #row eigenvectors
         bon.eigvec.c <- as.matrix(eigen(AtA)$vectors) #column eigenvectors
         bon.eigval.r <- as.matrix(eigen(AAt)$values)  #row eigenvalues
@@ -101,7 +107,7 @@ TwoModeCA <- function(x,
         corr.plot <- corr.scatter(c)
         
         # Correspondence Plot (Bonacich)
-        a <- rbind(bon.eigvec.r[, 1:2], bon.eigvec.c[, 1:2])
+        a <- rbind(bon.eigvec.r[, 1:2]*-1, bon.eigvec.c[, 1:2]*-1)
         b <- rownames(a)
         a <- apply(a, 2, as.numeric)
         colnames(a) <- c("d1", "d2")
@@ -125,7 +131,7 @@ TwoModeCA <- function(x,
         A.plot2 <- A.plot + theme(legend.position = "none",
                                   axis.text.x = element_text(hjust = -0.2)) 
         
-        # Similarity matrix plot (weighted by degree)
+        # CA Similarity matrix plot (normalized by matrix maximum value)
         norm.sim.r <- as.matrix(S.r/max(S.r))
         norm.sim.c <- as.matrix(S.c/max(S.c))
         norm.sim.r <- norm.sim.r[order(eigvec.r[, 1]), order(eigvec.r[, 1])]
@@ -133,7 +139,7 @@ TwoModeCA <- function(x,
         sim.plot.r <- sim.plot(norm.sim.r) #row similarity plot
         sim.plot.c <- sim.plot(norm.sim.c) #column similarity plot
         
-        # Similarity matrix plot (unweighted)
+        # Bonacich Similarity matrix plot (normalized by matrix maximum value)
         norm.sim.r <- as.matrix(AAt/max(AAt))
         norm.sim.c <- as.matrix(AtA/max(AtA))
         norm.sim.r <- norm.sim.r[order(bon.eigvec.r[, 1]), order(bon.eigvec.r[, 1])]
@@ -154,6 +160,14 @@ TwoModeCA <- function(x,
                 ca.eigvec.c = eigvec.c,
                 ca.eigval.r = eigval.r,
                 ca.eigval.c = eigval.c,
+                sim.eigvec.r = eigvec.S.r,
+                sim.eigvec.c = eigvec.S.c,
+                eigvec.L.r = eigvec.L.r,
+                eigvec.L.c = eigvec.L.c,
+                eigval.L.r = eigval.L.r,
+                eigval.L.c = eigval.L.c,
+                D.r = D.r,
+                D.c = D.c,
                 bon.eigval.r = bon.eigval.r,
                 bon.eigval.r = bon.eigval.c,
                 bon.eigvec.r = bon.eigvec.r,

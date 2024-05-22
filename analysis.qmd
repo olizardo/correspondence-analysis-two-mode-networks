@@ -15,16 +15,19 @@ date: "`r Sys.Date()`"
    library(patchwork)
    library(dplyr)
    library(factoextra)
+   library(FactoMineR)
    library(ggbump)
    library(ggcorrplot)
    library(ggplot2)
    library(ggpubr)
    library(ggrepel)
    library(igraph)
+   library(kableExtra)
    library(pals)
    library(patchwork)
    source(here("Functions", "TwoModeCA.R"))
    source(here("Functions", "TwoModeSR.R"))
+   source(here("Functions", "TwoModeGSR.R"))
    source(here("Functions", "reflections.R"))
    source(here("Functions", "ref.long.dat.R"))
 ```
@@ -60,9 +63,37 @@ date: "`r Sys.Date()`"
      colnames(A) <- e
 ```
 
-# Analysis
+```{r HTML data table}
+   A <- A[sort(rownames(A)), ]
+   kbl(A, align = "c", format = "html") %>% 
+      kable_minimal(full_width = F, font_size = 26) %>% 
+      row_spec(1:18, extra_css = "border-bottom: 0px;line-height: 20px;") %>% 
+      save_kable(here("southern-women.html"))
+```
 
-```{r Reflections Bump Charts}
+# Analysis
+```{r CA of affiliation matrix}
+   ca.res <- CA(A, graph = FALSE)
+   plot.dat <- data.frame(rbind(ca.res$row$coord, ca.res$col$coord)[, 1:2])
+   plot.dat <- cbind(plot.dat, mode = c(rep(1, 18), rep(2, 14)), names = rownames(plot.dat))
+   p <- ggplot(plot.dat, aes(x = Dim.2, y = Dim.1*-1, 
+                             color = factor(mode), label = names))
+   p <- p + geom_vline(xintercept = 0, color = "gray")
+   p <- p + geom_hline(yintercept = 0, color = "gray")
+   p <- p + geom_text_repel(size = 5, max.overlaps = 50)
+   p <- p + theme_minimal() 
+   p <- p + theme(legend.position = "none",
+                  axis.text = element_text(size = 20),
+                  axis.title = element_text(size = 24)
+                  )
+   p <- p + labs(x = "Second Dimension", y = "First Dimension")
+   p <- p + scale_color_manual(values = c('red', 'blue'))
+   png(file = here("Plots", "ca-southern-women.png"), width=600, height=625)
+   p
+   dev.off()
+```
+
+```{r Reflections Bump Chart (Persons)}
    evens <- function(x) subset(x, x %% 2 == 0)
    odds <- function(x) subset(x, x %% 2 != 0)
    a <- reflections(A, iter = 26)
@@ -71,66 +102,119 @@ date: "`r Sys.Date()`"
    p.o.r <- p.o.r[, -1]
    b <- ref.long.dat(a = a$p.r, b = a$g.r, max.iter = 26)
    plot.dat <- b$person$even
-   p <- ggplot(data = filter(plot.dat, n.iter < 22),
+   p <- ggplot(data = filter(plot.dat, n.iter < 18),
                mapping = aes(x = n.iter, y = ref, color = person))
    # geoms
-   p <- p + geom_bump(linewidth = 1, smooth = 8, alpha = 0.4)
-   p <- p + geom_point(size = 4, alpha = 0.8)
+   p <- p + geom_bump(linewidth = 1.1, smooth = 8)
+   p <- p + geom_point(size = 5)
    p <- p + geom_text_repel(data = filter(plot.dat, n.iter == 2), 
                                     aes(x = n.iter, label = person), 
-                                    size = 4, nudge_x = -3)
-   p <-    p <- p + geom_text(data = filter(plot.dat, n.iter == 22), 
+                                    size = 5, nudge_x = -3)
+   p <-    p <- p + geom_text_repel(data = filter(plot.dat, n.iter == 18), 
                               aes(x = n.iter, label = person), 
-                              size = 4, nudge_x = 0.5)
+                              size = 5, nudge_x = 0.01)
 
    # fixings
    p <- p + theme_minimal_grid(font_size = 14, line_size = 0)
-   p <- p + scale_x_continuous(limits = c(-4, 30), breaks = evens(2:20))
+   p <- p + scale_x_continuous(limits = c(-2, 20), breaks = evens(2:16))
    p <- p + labs(x = "Reflection")
    p <- p + scale_y_reverse()
    p <- p + theme(legend.position = "none",
         panel.grid.major = element_blank(),
         axis.text.y = element_blank(),
-        axis.title.y = element_blank()
+        axis.title.y = element_blank(),
+        axis.text.x = element_text(size = 16)
         )
-   p1 <- p + scale_color_manual(values=as.vector(cols25(18)))
-   png(file = here("Plots", "p-reflections.png"), width=750, height=500)
+   set.seed(145)
+   c <- sample(cols25(25), 18, replace = FALSE)
+   p1 <- p + scale_color_manual(values=as.vector(c))
+   png(file = here("Plots", "p-reflections.png"), width=600, height=625)
    p1
    dev.off()
+```
 
-
-
-   
-   plot.dat <- b$group$even
-   p <- ggplot(data = filter(plot.dat, n.iter < 22),
+```{r Reflections Bump Chart (Groups)}
+   plot.dat <- b$group$even %>% 
+      mutate(ref = 15 - ref)
+   p <- ggplot(data = filter(plot.dat, n.iter < 14),
                mapping = aes(x = n.iter, y = ref, color = group))
    #geoms
-   p <- p + geom_bump(linewidth = 1, smooth = 8, alpha = 0.4)
-   p <- p + geom_point(size = 4, alpha = 1)
-   p <-    p <- p + geom_text(data = filter(plot.dat, n.iter == 24), 
-                              aes(x = n.iter, label = group), 
-                              size = 4, nudge_x = -2)
-   p <-    p <- p + geom_text_repel(data = filter(plot.dat, n.iter == 2), 
+   p <- p + geom_bump(linewidth = 1.1, smooth = 8)
+   p <- p + geom_point(size = 5)
+   p <- p + geom_text_repel(data = filter(plot.dat, n.iter == 2), 
                                     aes(x = n.iter, label = group), 
-                                    size = 4, nudge_x = -1)
+                                    size = 6, nudge_x = -1)
+   p <- p + geom_text_repel(data = filter(plot.dat, n.iter == 14), 
+                              aes(x = n.iter, label = group), 
+                              size = 6, nudge_x = -0.01)
    #fixings
    p <- p + theme_minimal_grid(font_size = 14, line_size = 0)
-   p <- p + scale_x_continuous(limits = c(-4, 30), breaks = evens(2:20))
+   p <- p + scale_x_continuous(limits = c(1, 14), breaks = evens(2:12))
    p <- p + labs(x = "Reflection")
    p <- p + scale_y_reverse()
    p <- p + theme(legend.position = "none",
         panel.grid.major = element_blank(),
         axis.text.y = element_blank(),
-        axis.title.y = element_blank()
+        axis.title.y = element_blank(),
+        axis.text.x = element_text(size = 16)
         )
-   p2 <- p + scale_color_manual(values=as.vector(cols25(15)))
-   png(file = here("Plots", "g-reflections.png"), width=750, height=500)
+   set.seed(145)
+   c <- sample(cols25(25), 18, replace = FALSE)
+   p2 <- p + scale_color_manual(values=as.vector(c))
+   png(file = here("Plots", "g-reflections.png"), width=600, height=625)
    p2
    dev.off()
-   png(file = here("Plots", "pg-reflections.png"), width=750, height=950)
-   p1 / p2
+```
+
+```{r CA versus Reflections Scatter}
+   tm <- TwoModeCA(A)
+   mr <- reflections(A, iter = 26)
+   p.plot.dat <- data.frame(cbind(c = tm$ca.eigvec.r[, 1], 
+                                  r = mr$p.s[, 22]))
+   p <- ggplot(data = p.plot.dat, aes(x = c, y = r))
+   p <- p + geom_point(size = 3, color = "blue") 
+   p <- p + geom_smooth(method = "lm", se=FALSE, formula = y ~ x, color = "gray")
+   p <- p + geom_text_repel(aes(label = rownames(p.plot.dat)), color = "red")
+   p <- p + theme_minimal() + labs(x = "First CA Dimension", y = "18th Reflection (Standardized)")
+   p <- p + theme(axis.text = element_text(size = 16),
+                  axis.title = element_text(size = 16))
+   png(file = here("Plots", "p-ca-ref-corr.png"), width=600, height=625)
+   p
+   dev.off()
+
+   p.plot.dat <- data.frame(cbind(c = tm$ca.eigvec.c[, 1], 
+                                  r = mr$g.s[, 16]))
+   p <- ggplot(data = p.plot.dat, aes(x = c, y = r))
+   p <- p + geom_point(size = 3, color = "red") 
+   p <- p + geom_smooth(method = "lm", se=FALSE, formula = y ~ x, color = "gray")
+   p <- p + geom_text_repel(aes(label = rownames(p.plot.dat)), 
+                            color = "blue", size = 6)
+   p <- p + theme_minimal() + labs(x = "First CA Dimension", y = "14th Reflection (Standardized)")
+   p <- p + theme(axis.text = element_text(size = 16),
+                  axis.title = element_text(size = 16))
+   png(file = here("Plots", "g-ca-ref-corr.png"), width=600, height=625)
+   p
    dev.off()
 ```
+
+```{r CA via SVD of two mode network}
+   Rp <- diag(sqrt(rowSums(A)))
+   Rc <- diag(sqrt(colSums(A)))
+
+   svd.res <- svd(Rp%*%A%*%Rc)
+   
+   t <- sum(rowSums(A))
+   r.rp <- t/rowSums(A)
+   r.cp <- t/colSums(A)
+   s.rp.cp <- sqrt(c(r.rp, r.cp))
+   tv <- t(svd.res$v)
+   x <- c(svd.res$u[, 3]*r.rp, tv[3, ]*r.cp) 
+   y <- c(svd.res$u[, 2]*r.rp, tv[2, ]*r.cp) 
+
+   d <- data.frame(x = x, y = y, l = c(rownames(A), colnames(A)))
+   ggscatter(d, x = "x", y = "y", label = "l", repel = TRUE)
+```
+
 
 ```{r CA versus Bonacich Re-ordered Affiliation Matrices}
    a <- TwoModeCA(A)
@@ -175,14 +259,17 @@ date: "`r Sys.Date()`"
     b <- tmCA.res$ca.sim.plot.c + theme(axis.text.x = element_blank())
     c <- tmCA.res$ca.corr.plot
     
-    png(file = here("Plots", "ca-sim.png"), width=950, height=700)
-      (a | b) / c + plot_annotation(tag_levels = "a") &
-      theme(plot.tag = element_text(size = 20)) 
-    dev.off() 
-    png(file = here("Plots", "ca-sim-slide.png"), width=1050, height=700)
-      (a | b) / c + plot_annotation(tag_levels = "a") &
-      theme(plot.tag = element_text(size = 20)) 
-    dev.off() 
+    png(file = here("Plots", "ca-sim-p.png"), width=600, height=625)
+    a + theme(axis.text.y = element_text(size = 18))
+    dev.off()
+    
+    png(file = here("Plots", "ca-sim-g.png"), width=600, height=625)
+    b + theme(axis.text.y = element_text(size = 22))
+    dev.off()
+    
+    png(file = here("Plots", "ca-corr-plot.png"), width=600, height=625)
+    c
+    dev.off()
 ```
 
 ```{r Similarity and Correspondence Plot (Bonacich)}
@@ -190,28 +277,35 @@ date: "`r Sys.Date()`"
     a <- tmCA.res$bon.sim.plot.r + theme(axis.text.x = element_blank())
     b <- tmCA.res$bon.sim.plot.c + theme(axis.text.x = element_blank())
     c <- tmCA.res$bon.corr.plot
-    png(file = here("Plots", "bon-sim.png"), width=950, height=700)
-      (a | b) / c + 
-       plot_annotation(tag_levels = "a") &
-      theme(plot.tag = element_text(size = 20)) 
+    png(file = here("Plots", "bon-sim-p.png"), width=600, height=625)
+      a + theme(axis.text.y = element_text(size = 16))
+    dev.off() 
+    
+    png(file = here("Plots", "bon-sim-g.png"), width=600, height=625)
+      b + theme(axis.text.y = element_text(size = 16))
+    dev.off() 
+    
+    png(file = here("Plots", "bon-corr-plot.png"), width=600, height=625)
+      c
     dev.off() 
 ```
 
 ```{r SimRank Plot}
+   source(here("Functions", "TwoModeSR.R"))
    tmSR.res <- TwoModeSR(A)
-    a <- tmSR.res$eigvec.plot.r + theme(axis.text = element_blank())
+    a <- tmSR.res$eigvec.plot.r 
     b <- tmSR.res$eigvec.plot.c 
     c <- tmSR.res$eigval.plot.r
     d <- tmSR.res$eigval.plot.c
     a <- a + inset_element(c, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
     b <- b + inset_element(d, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
     e <- tmSR.res$A.plot
-    f <- tmSR.res$corr.plot
-   dat.r <- data.frame(ca = as.numeric(tmCA.res$ca.eigvec.r[,1]),
-                       sr = tmSR.res$ov.r1,
+
+   dat.r <- data.frame(ca = as.numeric(tm$ca.eigvec.r[,1]),
+                       sr = tmSR.res$ev.r1,
                        lab = rownames(A))
-   dat.c <- data.frame(ca = as.numeric(tmCA.res$ca.eigvec.c[,1]),
-                       sr = tmSR.res$ov.c1,
+   dat.c <- data.frame(ca = as.numeric(tm$ca.eigvec.c[,1])*-1,
+                       sr = tmSR.res$ev.c1,
                        lab = colnames(A))
    cor <- round(cor(dat.r[,c("ca", "sr")])[1, 2], 2)
    g <- ggscatter(dat.r, x = "ca", y = "sr", font.label= 8, 
@@ -229,15 +323,66 @@ date: "`r Sys.Date()`"
                                     linewidth = 0.5, linetype = 2)) +
                   annotate("text", x = -.2, y = .3, 
                            label = paste("r = ", cor), size = 6) 
-   i <- (e | a | b) 
-   j <- (f | (g / h)) + plot_layout(widths = c(3, 1))
-   png(file = here("Plots", "sr-plot.png"), width=1200, height=1200)
-       (i / j) +
-       plot_annotation(tag_levels = "a") &
-       theme(plot.tag = element_text(size = 20))
-    dev.off()
 
+   png(file = here("Plots", "sr-plot-eigen-p.png"), width=600, height=625)
+   a
+   dev.off()
+   png(file = here("Plots", "sr-plot-eigen-g.png"), width=600, height=625)
+   b
+   dev.off()
+   png(file = here("Plots", "sr-plot-reord.png"), width=600, height=625)
+   e
+   dev.off()
+   png(file = here("Plots", "sr-corr-scatter.png"), width=350, height=625)
+   g / h
+   dev.off()
 ```
 
+```{r GRS Plot}
+   source(here("Functions", "TwoModeGRS.R"))
+   tmSR.res <- TwoModeGRS(A)
+    a <- tmSR.res$eigvec.plot.r 
+    b <- tmSR.res$eigvec.plot.c 
+    c <- tmSR.res$eigval.plot.r
+    d <- tmSR.res$eigval.plot.c
+    a <- a + inset_element(c, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
+    b <- b + inset_element(d, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
+    e <- tmSR.res$A.plot
 
+   dat.r <- data.frame(ca = as.numeric(tm$ca.eigvec.r[,1])*-1,
+                       sr = tmSR.res$ev.r1,
+                       lab = rownames(A))
+   dat.c <- data.frame(ca = as.numeric(tm$ca.eigvec.c[,1])*-1,
+                       sr = tmSR.res$ev.c1,
+                       lab = colnames(A))
+   cor <- round(cor(dat.r[,c("ca", "sr")])[1, 2], 2)
+   g <- ggscatter(dat.r, x = "ca", y = "sr", font.label= 8, 
+                  label = "lab", repel = TRUE, 
+                  add = "reg.line", 
+                  add.params = list(color = "gray80", 
+                                    linewidth = 0.5, linetype = 2)) +
+                  annotate("text", x = -.2, y = .3, 
+                           label = paste("r = ", cor), size = 6) 
+   cor <- round(cor(dat.c[,c("ca", "sr")])[1, 2], 2)
+   h <- ggscatter(dat.c, x = "ca", y = "sr", font.label= 8, 
+                  label = "lab", repel = TRUE, 
+                  add = "reg.line",
+                  add.params = list(color = "gray80", 
+                                    linewidth = 0.5, linetype = 2)) +
+                  annotate("text", x = -.2, y = .3, 
+                           label = paste("r = ", cor), size = 6) 
+
+   png(file = here("Plots", "grs-plot-eigen-p.png"), width=600, height=625)
+   a
+   dev.off()
+   png(file = here("Plots", "grs-plot-eigen-g.png"), width=600, height=625)
+   b
+   dev.off()
+   png(file = here("Plots", "grs-plot-reord.png"), width=600, height=625)
+   e
+   dev.off()
+   png(file = here("Plots", "grs-corr-scatter.png"), width=350, height=625)
+   g / h
+   dev.off()
+```
 

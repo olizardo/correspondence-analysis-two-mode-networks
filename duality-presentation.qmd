@@ -1,0 +1,1038 @@
+---
+title: "Coasting on Duality"
+subtitle: "What We Get When We Do Two-Mode Network CA"
+author: "Omar Lizardo"
+institute: "*University of California, Los Angeles*"
+date: "`r Sys.Date()`"
+slide-number: true
+slide-level: 2
+progress: true
+format:
+  revealjs:
+    incremental: false 
+    theme: simple 
+    smaller: true
+    footer: "https://github.com/olizardo/correspondence-analysis-two-mode-networks"
+---
+
+## CA and Two Mode Networks
+
+- While still not very common, Correspondence Analysis (CA) has been sporadically used in *analyzing* two-mode network data*
+- But criticized for being limited and inapplicable for most "SNA" tasks**
+  - Computing (Centrality-Like) Measures of Node Position
+  - Computing Measures of Group Membership
+
+::: aside
+*Breiger 2000; Roberts 2000; Faust 2005; D’Esposito et al. 2014
+
+**Bonacich 1991; Borgatti & Everett 1997
+:::
+
+
+## CA and Two Mode Networks
+
+- While still not very common, Correspondence Analysis (CA) has been sporadically used in *analyzing* two-mode network data*
+- But criticized for being limited and inapplicable for most "SNA" tasks**
+  - Computing (Centrality-Like) Measures of Node Position
+  - Computing Measures of Group Membership
+- CA Proponents point to some important advantages of CA for the analysis of two-mode networks:
+  - CA can provide a "joint display" of the structural connectivity patterns in two-mode data
+  - (M)CA can be used to "visually explore" two-mode networks
+  
+::: aside
+*Breiger 2000; Roberts 2000; Faust 2005; D’Esposito et al. 2014
+
+**Bonacich 1991; Borgatti & Everett 1997
+:::
+
+## CA and Two Mode Networks
+
+- While still not very common, Correspondence Analysis (CA) has been sporadically used in *analyzing* two-mode network data*
+- But criticized for being limited and inapplicable for most "SNA" tasks**
+  - Computing (Centrality-Like) Measures of Node Position
+  - Computing Measures of Group Membership
+- This presentation builds on and expands on previous  research on using CA for two-mode data analysis but discusses aspects of CA that have not been emphasized in previous research:
+  - CA as computing a type of "(Reflective) Dual Centrality" on the entities in the two-modes*
+
+:::aside
+*Rediscovered recently under the heading of the Economic Complexity Index (ECI; Hidalgo and Hausman 2009)
+:::
+
+## CA and Two Mode Networks
+
+- While still not very common, Correspondence Analysis (CA) has been sporadically used in *analyzing* two-mode network data*
+- But criticized for being limited and inapplicable for most "SNA" tasks**
+  - Computing (Centrality-Like) Measures of Node Position
+  - Computing Measures of Group Membership
+- This presentation builds on and expands on previous  research on using CA for two-mode data analysis but discusses aspects of CA that have not been emphasized in previous research:
+  - CA as extracting "positional" information the entities in the two modes
+    - With positions defined by "Generalized Relational Similarity"
+    - Similarly central entities have similar patterns of connectivity with entities that are themselves similar**
+  
+:::aside
+**Jeh & Widom 2002; Kovacs 2010; Lizardo 2024
+:::
+
+
+## Southern Women Data
+{{< include southern-women.html >}}
+
+
+
+## What do we get when we do CA?
+:::: {.columns}
+::: {.column width="50%"}
+- Taken singly, the first dimension of CA suggests an **ordering**
+  - Is this connected to centrality?
+  - If so, what is the relation (if any) to existing two-mode centralities?*
+- Take jointly, the first two dimensions of CA suggest a **grouping**
+  - Connected to group cohesion?**
+  - Affinity of actors for particular events?***
+:::
+
+::: aside
+ *Bonacich 1991 
+ 
+ **Doreian 1979 
+ 
+ ***Faust 2005
+:::
+
+::: {.column width="50%"}
+![Correspondence Plot of Southern Women Data Obtained from Simple CA of the Affiliation Matrix](Plots/ca-southern-women.png)
+:::
+::::
+
+## What do we get when we do CA?
+
+- To (try to) shed light on these questions I examine the cases of three relatively recent "accidental reinventions" of CA in the "network science" and "data science" (computer and information science) literatures:
+  - The "Economic Complexity Index" (ECI)*
+    - Relevant to the question of centrality
+  - *SimRank* and Generalized Relational Similarity**
+    - Relevant to the question of grouping
+- The ECI case has been examined in detail in recent work***
+- The second and third are new to this presentation
+  - All shed light on what exactly we get when we use CA to analyze two mode data
+
+::: aside
+*Hidalgo & Hausmann 2009 
+ 
+**Jeh & Widom 2002; Kovacs (2010)
+
+***van Dam et al. 2021; Mealy 2019
+:::
+
+
+## CA and Reflective Centrality
+
+- Hidalgo & Hausmann (2009) introduced a "novel" way to rank nodes in two-mode networks
+  - Their approach, called "reflective," was originally applied to country-by-product networks*
+  
+. . . 
+  
+  - The method has since been shown to be applicable to other two-mode networks (like cultural networks)**
+  - I introduce here using the more familiar sociological example of the **duality of persons and groups***** 
+
+::: aside
+*Referred to as the Economic Complexity Index (ECI)
+
+**Lizardo 2018
+
+***Breiger 1974
+:::
+
+## CA and Reflective Centrality
+
+- Notation:
+  - A two-mode network composed of a set of persons $P$
+  - Their affiliation relations to a set of groups $G$
+  - Represented by an affiliation matrix $\mathbf{A}$ 
+  
+. . .
+
+  - $\mathbf{A}$ is of dimensions $|P| \times |G|$ with people along the rows and groups across the columns
+    - $|P|$ is the cardinality of the persons set  
+    - $|G|$ is the cardinality of the group set
+ 
+. . .
+
+  - $\mathbf{A}$ has cell entries $a_{pg}= 1$ if person \textit{p} is affiliated with group \textit{g} and $a_{pg}= 0$ otherwise.
+
+
+## CA and Reflective Centrality
+- If we are going to compute the centrality of nodes in a two-mode network, the most natural place to start is with the good old **degree centrality***
+
+- Given this, the degree-centrality of people is given by:
+
+$$
+C^R_p(1) = \sum_g a_{pg}
+$$ {#eq-dp}
+
+- And for groups:
+
+$$
+   C^R_g(1) = \sum_p a_{pg}
+$$ {#eq-dg}
+
+:::aside
+*Faust 1997, eqs. 4 and 5
+:::
+    
+    
+## CA and Reflective Centrality
+
+- Once we have the first-order quantities $C^R_p(1)$ and $C^R_g(1)$, we can compute "second-order centralities" $C^R(2)$ for both people and groups
+ 
+- For people, these are given by:*
+
+$$
+C^R_p(2) = \frac{1}{C^R_p(1)}\sum_g a_{pg}C^R_g(1)
+$$ {#eq-r2p}
+
+
+- And for groups:**
+
+$$   
+C^R_g(2) = \frac{1}{C^R_g(1)}\sum_p a_{pg}C^R_p(1)
+$$ {#eq-r2g}
+
+:::aside
+*People are central when the average sum of the size of the groups they belong to is large
+
+**Groups are central when the average activity of the people who belong to them is large
+:::
+
+::: {.notes}
+Equation @eq-r2p says "people are more central when the average sum of the size of the groups they belong to is large'' (e.g., whenever $a_{pg} = 1$ and $C^R_g(1)$ is a big number). Equation @eq-r2g says "groups are more central when the average activity of their members is large" (e.g., whenever $a_{pg} = 1$ and $C^R_p(1)$ is a big number).
+:::
+
+
+## CA and Reflective Centrality
+
+- Of course, once we have the second-order quantities $C^R_p(2)$ and $C^R_g(2)$, we can compute "third-order centralities" $C^R(3)$ for both people and groups
+
+  
+- For people, these are given by:
+
+$$
+   C^R_p(3) = \frac{1}{C^R_p(1)}\sum_g a_{pg}C^R_g(2)
+$$ {#eq-r3p}
+
+
+- And for groups:
+
+$$   
+   C^R_g(3) = \frac{1}{C^R_g(1)}\sum_p a_{pg}C^R_p(2)
+$$ {#eq-r3g}
+
+:::aside
+*People are central when the average sum of the average activity of the members of the groups they belong to is large
+
+**Groups are central when the average sum of the average size of the groups their members belong to is large
+:::
+
+::: {.notes}
+Equation @eq-r3p says something like "people are more central when the average sum of the average activity of the members of the groups they belong to is large" (e.g., $a_{pg} = 1$ and $C^R_g(2)$ is a big number). Equation @eq-r3g says, "groups are more central when the average sum of the average size of the groups their members belong to is large." (e.g., $a_{pg} = 1$ and $C^R_p(2)$ is a big number).
+:::
+
+## CA and Reflective Centrality
+- More generally, Hidalgo & Hausmann show that we can define a **series** of reflective quantities* $C^R_p(4), C^R_p(5)...C^R_p(q)$ and $C^R_g(4), C^R_g(5)...C^R_g(q)$
+  
+
+- For people, these are given by:
+
+$$   
+C^R_p(q) = \frac{1}{C^R_p(1)}\sum_g a_{pg}C^R_g(q-1) 
+$$ {#eq-rip}
+
+
+- And for groups:
+
+$$   
+C^R_g(q) = \frac{1}{C^R_g(1)}\sum_p a_{pg}C^R_p(q-1)
+$$ {#eq-rig}
+
+
+::: aside
+*Whose verbal and substantive interpretation becomes more elusive as the number of iterations increases
+:::
+
+
+## CA and Reflective Centrality
+
+- For people:
+  - Even-numbered reflections measure centrality based on the **average size** of the groups a person belongs to* 
+  - Odd-numbered reflections measure centrality based the **average number of memberships** of each member of the groups they belong to* 
+  
+. . .
+
+- For groups:
+  - Even-numbered reflections measure centrality based on the **average number of memberships** of the members of the group*
+  - Odd-numbered reflections measure centrality based on the **average size** of the group memberships of each member* 
+
+::: aside
+*and the average of the average of the average of the average...
+:::
+
+## Reflection Trajectories for SWD
+:::: {.columns}
+::: {.column width="50%"}
+![Person Reflection Trajectories](Plots/p-reflections.png)
+:::
+
+::: {.column width="50%"}
+![Group Reflection Trajectories](Plots/g-reflections.png)
+:::
+::::
+
+## Final Reflection Ordering versus CA
+:::: {.columns}
+::: {.column width="50%"}
+![Person Reflection Trajectories](Plots/p-reflections.png)
+:::
+
+::: {.column width="50%"}
+![Correspondence Plot of Southern Women Data](Plots/ca-southern-women.png)
+:::
+::::
+
+## Final Reflection Ordering versus CA
+:::: {.columns}
+::: {.column width="50%"}
+![Person Reflection Trajectories](Plots/g-reflections.png)
+:::
+
+::: {.column width="50%"}
+![Correspondence Plot of Southern Women Data](Plots/ca-southern-women.png)
+:::
+::::
+
+## Final Reflection Ordering versus CA
+:::: {.columns}
+::: {.column width="50%"}
+![Scatter of standardized person reflection centralities and person scores on first CA dimension (r = 1.0)](Plots/p-ca-ref-corr.png)
+:::
+
+::: {.column width="50%"}
+![Correspondence Plot of Southern Women Data](Plots/ca-southern-women.png)
+:::
+::::
+
+## Final Reflection Ordering versus CA
+:::: {.columns}
+::: {.column width="50%"}
+![Scatter of standardized group reflection centralities and group scores on first CA dimension (r = 1.0)](Plots/g-ca-ref-corr.png)
+:::
+
+::: {.column width="50%"}
+![Correspondence Plot of Southern Women Data](Plots/ca-southern-women.png)
+:::
+::::
+
+
+## Method of Reflections versus CA
+
+- So the method of reflections is an accidental re-invention of CA!* 
+
+- But *why* is it a reinvention of CA?
+  - Short answer: 
+    - The final reflection scores are the (second largest) eigenvalues of a matrix, just like CA!
+ 
+- What's the (slightly) longer answer? 
+  - A couple of things first:
+    - $Dp$ is a $|P| \times |P|$ square degree matrix containing each person's $C_p^R(1)$ (activity) along the diagonals and zeroes in every other cell
+    - $Dg$ is a $|G| \times |G|$ square degree matrix containing each group's $C_g^R(1)$ (size) along the diagonals and zeroes in every other cell
+    
+:::aside
+*On the first dimension: Mealy 2019; van Dam et al. 2021
+:::
+  
+## Method of Reflections versus CA
+- So the method of reflections is an accidental re-invention of CA!* 
+
+- But *why* is it a reinvention of CA?  
+
+  - Short answer: 
+    - The final reflection scores are the (second largest) eigenvalues of a matrix, just like CA!
+    
+- What's the (slightly) longer answer? 
+  
+  - In the limit ($q \rightarrow \infty$), the iterative Hidalgo-Hausmann reflective centralities are the solution of the eigensystem:*
+
+$$
+\left(Dp^{-1}ADg^{-1}A^T\right)C^R_p = \lambda C^R_p
+$$ {#eq-dam1}
+
+$$
+\left(Dg^{-1}A^TDp^{-1}A\right)C^R_g = \lambda C^R_g
+$$ {#eq-dam2}
+
+::: aside
+*van Dam et al. 2021
+:::
+
+## CA versus Bonacich
+- Do the matrices whose eigenvalues yield the equilibrium reflective centralities look familiar to you?
+
+$$
+\left(Dp^{-1}ADg^{-1}A^T\right)C^R_p = \lambda C^R_p
+$$ 
+
+$$
+\left(Dg^{-1}A^TDp^{-1}A\right)C^R_g = \lambda C^R_g
+$$ 
+
+- They should, because the solutions to the following eigensystem give the Bonacich $(C^B)$ dual centralities for two-mode networks:*
+
+$$
+\left(AA^T\right)C^B_p = \lambda C^B_p
+$$ {#eq-bon1}
+
+
+$$
+\left(A^TA\right)C^B_g = \lambda C^B_g
+$$ {#eq-bon2}
+
+:::aside
+*Bonacich 1991
+:::
+
+
+
+## CA versus Bonacich
+- So both Reflective and Bonacich centralities are eigenvectors of the person and group **projections** of the two-mode network
+
+$$
+\left(Dp^{-1}ADg^{-1}A^T\right)C^R_p = \lambda C^R_p
+\\
+\left(Dg^{-1}A^TDp^{-1}A\right)C^R_g = \lambda C^R_g
+\\
+\left(AA^T\right)C^B_p = \lambda C^B_p
+\\
+\left(A^TA\right)C^B_g = \lambda C^B_g
+$$
+
+- But for reflective centralities the affiliation matrix and its transpose are pre-multiplied by the **inverse of the degree matrix of each mode***
+
+:::aside
+* van Dam et al. 2021
+:::
+
+## CA versus Bonacich
+- So both Reflective and Bonacich centralities are eigenvectors of the person and group **projections** of the two-mode network
+
+$$
+\left(Dp^{-1}ADg^{-1}A^T\right)C^R_p = \lambda C^R_p
+\\
+\left(Dg^{-1}A^TDp^{-1}A\right)C^R_g = \lambda C^R_g
+\\
+\left(AA^T\right)C^B_p = \lambda C^B_p
+\\
+\left(A^TA\right)C^B_g = \lambda C^B_g
+$$
+
+- Similar to how each entry in the original affiliation matrix is weighted in CA performing the SVD!*
+
+$$
+Dp^{-1/2}ADg^{-1/2} = X_p \lambda X_g^T
+$$ 
+
+
+::: aside
+**Faust 2005, eq. 7.8 
+:::
+
+
+## CA versus Bonacich
+- We can gain some insight into the equivalence between CA and Reflections by expressing the degree-weighted projections in terms of each cell entry:*
+
+$$
+a_{pp'} = \sum_g\frac{a_{pg}a_{p'g}}{C^R_p(1)C^R_g(1)} = 
+    \frac{1}{C^R_p}\sum_g\frac{a_{pg}a_{p'g}}{C^R_g(1)}
+$$ {#eq-mealy1}
+
+  - In @eq-mealy1, the fraction's numerator is equal to one only when person $p$ and $p'$ are both members of $g$.
+
+    - Summed across groups, this is the number of **shared groups** between $p$ and $p'$: 
+      - The cell entries in the Bonacich matrix (raw projections)
+
+    - But in @eq-mealy1 the numerator is *weighted* by the product of group size and each person's number of memberships (in contrast to Bonacich)
+  
+::: aside
+*Mealy 2019, eq. 4
+:::
+
+## CA versus Bonacich
+- We can gain some insight into the equivalence between CA and Reflections by expressing the degree-weighted projections in terms of each cell entry:*
+
+$$
+    a_{gg'} = \sum_p\frac{a_{pg}a_{pg'}}{C^R_p(1)C^R_g(1)} = 
+    \frac{1}{C^R_g}\sum_p\frac{a_{pg}a_{pg'}}{C^R_p(1)}
+$$ {#eq-mealy2}
+
+  - In @eq-mealy2, the fraction's numerator is equal to one only when group $g$ and $g'$ both have $p$ as a member
+
+    - Summed across persons, the number of **shared members** between $g$ and $g'$:
+      - The cell entries in the Bonacich matrix (raw projections)
+
+    - But in @eq-mealy2 the numerator is *weighted* by the product of group size and each person's number of memberships (in contrast to Bonacich)
+  
+::: aside
+*Mealy 2019, eq. 4
+:::
+
+
+## CA versus Bonacich
+:::: {.columns}
+::: {.column width="50%"}
+![CA Re-ordered Affiliation Matrix](Plots/ca-reord.png)
+:::
+
+::: {.column width="50%"}
+![Bonacich Re-ordered Affiliation Matrix](Plots/bon-reord.png)
+:::
+::::
+
+## CA versus Bonacich
+:::: {.columns}
+::: {.column width="50%"}
+![CA Re-ordered Affiliation Matrix](Plots/ca-reord.png)
+:::
+
+::: {.column width="50%"}
+- The CA re-ordered affiliation matrix is **block-diagonal** 
+- Reveals (a well-known and storied*) grouping of persons and groups into two clusters 
+![](Plots/doreian-sw.png)
+:::
+::::
+
+## CA versus Bonacich
+:::: {.columns}
+::: {.column width="50%"}
+![CA Re-ordered Affiliation Matrix](Plots/ca-reord.png)
+:::
+
+::: {.column width="50%"}
+- First CA dimension is also an **ordering** so it counts as a centrality (a rank over the nodes)
+- It is an ordering that uses a logic of grouping in order to rank
+  - Tasks usually segregated in sna
+- Central events contain the most central people and central people attend the most central events:
+  - $E1 = \{Laura, Brenda, Evelyn\}$
+- In CA ordering central events are *not* the ones with most members! 
+  - $\{E7, E8, E9\}$
+:::
+::::
+
+## CA versus Bonacich
+:::: {.columns}
+::: {.column width="50%"}
+![CA Re-ordered Affiliation Matrix](Plots/bon-reord.png)
+:::
+
+::: {.column width="50%"}
+- First CA dimension is also an **ordering** so it counts as a centrality (a rank over the nodes)
+- It is an ordering that uses a logic of grouping in order to rank
+  - Tasks usually segregated in sna
+- Central events contain the most central people and central people attend the most central events:
+  - $E1 = \{Laura, Brenda, Evelyn\}$
+- But they are the most central in the Bonacich ordering!
+  - $\{E7, E8, E9\}$
+:::
+::::
+
+
+## CA versus Bonacich
+:::: {.columns}
+::: {.column width="50%"}
+![CA Re-ordered Affiliation Matrix](Plots/ca-reord.png)
+:::
+
+::: {.column width="50%"}
+- First CA dimension is also an **ordering** so it counts as a centrality (a rank over the nodes)
+- It is an ordering that uses a logic of grouping in order to rank
+  - Tasks usually segregated in sna
+- Least central events contain many of the least central people:
+  - $E11 = \{Helen, Flora, Olivia, \\ Nora\}$
+- In CA ordering less central events are *not* the ones with the least members! 
+  - $\{E1, E13, E14\}$
+  - $E1$ is the most central!
+:::
+::::
+
+## CA versus Bonacich
+:::: {.columns}
+::: {.column width="50%"}
+![CA Re-ordered Affiliation Matrix](Plots/ca-reord.png)
+:::
+
+::: {.column width="50%"}
+- First CA dimension is also an **ordering** so it counts as a centrality (a rank over the nodes)
+- It is an ordering that uses a logic of grouping in order to rank
+  - Tasks usually segregated in sna
+- Central people attend the most central events and central events are attended by central people:
+  - $Frances = \{E3, E5, E4, E6, E8\}$
+- Not necessarily those with the most memberships
+  - $\{Theresa, Evelyn, Brenda\}$
+  
+:::
+::::
+
+## CA versus Bonacich
+:::: {.columns}
+::: {.column width="50%"}
+![CA Re-ordered Affiliation Matrix](Plots/ca-reord.png)
+:::
+
+::: {.column width="50%"}
+- First CA dimension is also an **ordering** so it counts as a centrality (a rank over the nodes)
+- It is an ordering that uses a logic of grouping in order to rank
+  - Tasks usually segregated in sna
+- The least central person $\{Nora\}$ is not the one with the least memberships
+  - Instead $\{Nora\}$ shares many memberships with less central people (those who attend the less central events)
+  - $\{Flora,  Olivia, Sylvia, Kat.\}$
+:::
+::::
+
+## CA versus Bonacich
+:::: {.columns}
+::: {.column width="50%"}
+![CA Re-ordered Affiliation Matrix](Plots/ca-reord.png)
+:::
+
+::: {.column width="50%"}
+- First CA dimension is also an **ordering** so it counts as a centrality (a rank over the nodes)
+- It is an ordering that uses a logic of grouping in order to rank
+  - Tasks usually segregated in sna
+- Central people attend the most central events and central events are attended by central people:
+  - $E1 = \{Laura, Brenda, Evelyn\}$
+- In CA ordering central events are *not* the ones with the most members! 
+  - e.g., $\{E7, E8, E9\}$
+:::
+::::
+
+
+## CA versus Bonacich
+:::: {.columns}
+::: {.column width="50%"}
+![Bonacich Re-ordered Affiliation Matrix](Plots/bon-reord.png)
+:::
+::: {.column width="50%"}
+- The Bonacich re-ordered affiliation matrix is **upper triangular**
+- Arranges persons and groups from top to bottom and left to right by activity and size respectively
+  - More central people and groups at the upper right
+  - Less central people and groups at the lower left
+:::
+::::
+
+## CA versus Bonacich
+:::: {.columns}
+::: {.column width="50%"}
+![Bonacich Re-ordered Affiliation Matrix](Plots/bon-reord.png)
+:::
+::: {.column width="50%"}
+- Bonacich centrality is dual but it is "simple" dual
+  - Central people attend well-attended events
+  - Central events are attended by people who attend many events
+- Centrality in one mode is a weighted *sum* of the other mode's centrality*
+
+$$
+    C^B_p = \frac{1}{\lambda}\sum_{g}a_{pg}C^B_g
+$$ {#eq-fau1}
+
+
+$$
+    C^B_g = \frac{1}{\lambda}\sum_{p}a_{pg}C^B_p
+$$ {#eq-fau2}
+:::
+::::
+
+:::aside
+*Faust 1997, p. 170
+:::
+
+
+## CA versus Bonacich
+:::: {.columns}
+::: {.column width="50%"}
+![CA Re-ordered Affiliation Matrix](Plots/ca-reord.png)
+:::
+::: {.column width="50%"}
+- CA centrality is dual but it is "generalized similarity" dual*
+  - Central people attend central (not necessarily the most well-attended) events
+  - Central events are attended by central (not necessarily the most active) people
+- Some people calculate Bonacich centralities when they have this more "generalized similarity" idea of centrality in mind!
+  - They should use CA instead
+:::
+::::
+:::aside
+*Kovacs 2010; Lizardo 2024
+:::
+
+## CA and Similarity
+- Another way to gain insight into what CA is doing is by looking at the similarity of people and groups in the data
+
+- As we all know,* the usual one mode projections are obtained via:
+
+$$
+S_p = AA^T
+$$ {#eq-brei1}
+
+$$
+S_g = A^TA
+$$ {#eq-brei1}
+
+- Which can be thought of as **similarity matrices** based on the shared neighbors in the two mode network
+
+::: aside
+Breiger 1974
+:::
+
+
+## CA and Similarity
+- Another way to gain insight into what CA is doing is by looking at the similarity of people and groups in the data
+
+- But we can also obtain *other-mode degree weighted* versions of these similarity matrices*
+
+
+$$
+S^*_p = ADg^{-1}A^T
+$$ {#eq-dam5}
+
+$$
+S^*_g = A^TDp^{-1}A
+$$ {#eq-dam6}
+
+::: aside
+van Dam et al. 2021
+:::
+
+## CA and Similarity
+:::: {.columns}
+::: {.column width="50%"}
+![Degree-weighted similarity matrix (persons)](Plots/ca-sim-p.png)
+:::
+::: {.column width="50%"}
+![First eigenvalue of person similarity matrix against rank](Plots/ca-eigvec-p.png)
+:::
+::::
+
+## CA and Similarity
+:::: {.columns}
+::: {.column width="50%"}
+![Degree-weighted similarity matrix (groups)](Plots/ca-sim-g.png)
+:::
+::: {.column width="50%"}
+![First eigenvalue of group similarity matrix against rank](Plots/ca-eigvec-g.png)
+:::
+::::
+
+## CA and Similarity
+:::: {.columns}
+::: {.column width="30%"}
+![](Plots/ca-sim-p.png)
+![](Plots/ca-sim-g.png)
+
+:::
+::: {.column width="55%"}
+![CA Correspondence Plot](Plots/ca-corr-plot.png)
+:::
+::::
+
+## Bonacich and Similarity
+:::: {.columns}
+::: {.column width="30%"}
+![](Plots/bon-sim-p.png)
+![](Plots/bon-sim-g.png)
+
+:::
+::: {.column width="55%"}
+![Bonacich Correspondence Plot](Plots/bon-corr-plot.png)
+:::
+::::
+
+
+## CA and Generalized Relational Similarity
+- Bonacich orders people according to attendance at central (most-well attended) events and events according to attendance by central (most active) people
+- CA orders people according to attendance at **similarly central events** and events according to attendance by **similarly central people** 
+  - This is precisely the definition of **generalized relational similarity** (GSR)*
+
+. . .
+
+- In that case proximity of nodes in the first CA dimension may reveal a type of GSR in two-mode networks
+  - Let us see how that works in the case of two candidate two-mode GSRs
+    - *SimRank* *
+    - Similarity Weighted Correlation Distance**
+  
+:::aside
+*Jeh & Widom 2002
+
+**Kovacs 2010; Lizardo 2024
+:::
+
+## CA and SimRank
+
+- To explore the link between CA and GSR we can compare CA with one independently developed approach for obtaining GSRs in two-mode networks:* 
+  - *SimRank* 
+
+- According to *SimRank*:
+  - People are *similar* if they belong to *similar* groups
+  - Groups are *similar* if they share *similar* members
+  
+- In *SimRank* the similarity between two people is given by:
+
+$$
+S(p, p') = \frac{\alpha}{C_p^R(1)C_{p'}^R(1)}
+    \sum_{i = 1}^{C_p^R(1)} \sum_{j = 1}^{C_{p'}^R(1)} 
+    S\left(g(i)_{i \in N(p)}, g(j)_{j \in N(p')}\right)
+$$ {#eq-simrank1}
+  
+:::aside
+*Jeh & Widom 2002
+:::
+
+
+## CA and SimRank
+
+- To explore the link between CA and GSR we can compare CA with one independently developed approach for obtaining GSRs in two-mode networks:* 
+  - *SimRank* 
+
+- According to *SimRank*:
+  - People are *similar* if they belong to *similar* groups
+  - Groups are *similar* if they share *similar* members
+  
+- In *SimRank* the similarity between two groups is given by:
+
+$$
+S(g, g') = \frac{\alpha}{C_g^R(1)C_{g'}^R(1)}
+    \sum_{i = 1}^{C_g^R(1)} \sum_{j = 1}^{C_{g'}^R(1)} 
+    S\left(p(i)_{i \in N(g)}, p(j)_{j \in N(g')}\right)
+$$ {#eq-simrank2}
+  
+:::aside
+*Jeh & Widom 2002
+:::
+
+## CA and SimRank
+
+- *SimRank*  for people:
+
+$$
+\small
+S(p, p') = \frac{\alpha}{C_p^R(1)C_{p'}^R(1)}
+    \sum_{i = 1}^{C_p^R(1)} \sum_{j = 1}^{C_{p'}^R(1)} 
+    S\left(g(i)_{i \in N(p)}, g(j)_{j \in N(p')}\right)
+$$ 
+
+- *SimRank*  for groups:
+
+$$
+\small
+S(g, g') = \frac{\alpha}{C_g^R(1)C_{g'}^R(1)}
+    \sum_{i = 1}^{C_g^R(1)} \sum_{j = 1}^{C_{g'}^R(1)} 
+    S\left(p(i)_{i \in N(g)}, p(j)_{j \in N(g')}\right)
+$$
+
+With:*
+  
+- $S(p, p) = 1$ and $S(g, g) = 1$ and $0 > \alpha < 1$
+
+  
+:::aside
+*Jeh & Widom 2002
+:::
+
+::: {.notes}
+In two-mode networks, SimRank scores can be estimated via a simple algorithm, in which we first estimate $S(p, p')$ in equation @eq-simrank1 using baseline values. Hence, only groups that two people share contribute to the initial values of $S(p, p')$ since only $S(g, g)>0$ at the outset. We then plug those values into equation @eq-simrank2, then loop back to equation @eq-simrank1 with the resulting $S(g, g')$ values, and continue iterating until convergence---generally achieved after five iterations
+:::
+
+## CA and SimRank
+:::: {.columns}
+::: {.column width="50%"}
+![SimRank Re-ordered Affiliation Matrix](Plots/sr-plot-reord.png)
+:::
+
+::: {.column width="50%"}
+![Simrank Similarity Matrix Eigenvalue Plot (Persons)](Plots/sr-plot-eigen-p.png)
+:::
+::::
+
+## CA and SimRank
+:::: {.columns}
+::: {.column width="50%"}
+![SimRank Re-ordered Affiliation Matrix](Plots/sr-plot-reord.png)
+:::
+
+::: {.column width="50%"}
+![Simrank Similarity Matrix Eigenvalue Plot (Groups)](Plots/sr-plot-eigen-g.png)
+:::
+::::
+
+
+## CA and SimRank
+:::: {.columns}
+::: {.column width="50%"}
+![SimRank Re-ordered Affiliation Matrix](Plots/sr-plot-reord.png)
+:::
+
+::: {.column width="30%"}
+![Correlation between CA and SimRank Similarity Matrix Eigenvectors](Plots/sr-corr-scatter.png)
+:::
+::::
+
+## CA and Generalized Relational Similarity
+
+- I recently proposed a measure of generalized relational similarity (GSR) metric for nodes in two-mode networks by "tweaking" a previous approach based on the modified correlation distance*
+
+- For pairs of people the GSR is given by:
+
+$$
+\begin{equation}
+\scriptsize
+    S(p, p') = 
+    \frac{
+    (A_{p\bullet} - \bar{A}_{p\bullet})
+    \mathbf{S(G)}
+    (A_{p'\bullet} - \bar{A}_{p'\bullet})^T
+    }
+    {
+    \sqrt{
+    (A_{p\bullet} - \bar{A}_{p\bullet})
+    \mathbf{S(G)}
+    (A_{p\bullet} - \bar{A}_{p\bullet})^T
+    }
+    \sqrt{
+    (A_{p'\bullet} - \bar{A}_{p'\bullet})
+    \mathbf{S(G)}
+    (A_{p'\bullet} - \bar{A}_{p'\bullet})^T
+        }
+    }
+\end{equation}
+$${#eq-kovacs1}
+
+- And for groups:
+
+$$
+\begin{equation}
+\scriptsize 
+    S(g, g') = 
+    \frac{
+    (A_{g\bullet} - \bar{A}_{g\bullet})
+    \mathbf{S(P)}
+    (A_{g'\bullet} - \bar{A}_{g'\bullet})^T
+    }
+    {
+    \sqrt{
+    (A_{g\bullet} - \bar{A}_{g\bullet})
+    \mathbf{S(P)}
+    (A_{g\bullet} - \bar{A}_{g\bullet})^T
+    }
+    \sqrt{
+    (A_{g'\bullet} - \bar{A}_{g'\bullet})
+    \mathbf{S(P)}
+    (A_{g'\bullet} - \bar{A}_{g'\bullet})^T
+        }
+    }
+\end{equation}
+$${#eq-kovacs2}
+
+:::aside
+*Lizardo 2024; Kovacs 2010
+:::
+
+## CA and Generalized Relational Similarity
+
+
+- With the base similarities between people given by:
+
+$$
+\mathbf{S(P)}_{pp'} = \frac{AA_{pp'}}{\sqrt{AA_{pp}AA_{p'p'}}}
+$${#eq-lizardo1}
+
+- And the base similarities for groups:
+
+$$
+\mathbf{S(G)}_{gg'} = \frac{AA_{gg'}}{\sqrt{AA_{gg}AA_{g'g'}}}
+$${#eq-lizardo2}
+
+- Namely, the cosine distances between people and groups based on the corresponding cell entries of the one-mode projections*
+
+:::aside
+*Lizardo 2024
+:::
+
+
+## CA and Generalized Relational Similarity
+:::: {.columns}
+::: {.column width="50%"}
+![GRS Re-ordered Affiliation Matrix](Plots/grs-plot-reord.png)
+:::
+
+::: {.column width="50%"}
+![GRS Similarity Matrix Eigenvalue Plot (Persons)](Plots/grs-plot-eigen-p.png)
+:::
+::::
+
+## CA and Generalized Relational Similarity
+:::: {.columns}
+::: {.column width="50%"}
+![GRS Re-ordered Affiliation Matrix](Plots/grs-plot-reord.png)
+:::
+
+::: {.column width="50%"}
+![GRS Similarity Matrix Eigenvalue Plot (Groups)](Plots/grs-plot-eigen-g.png)
+:::
+::::
+
+
+## CA and Generalized Relational Similarity
+:::: {.columns}
+::: {.column width="50%"}
+![GRS Re-ordered Affiliation Matrix](Plots/grs-plot-reord.png)
+:::
+
+::: {.column width="30%"}
+![Correlation between CA and GRS Matrix Eigenvectors](Plots/grs-corr-scatter.png)
+:::
+::::
+
+## Conclusions
+- To paraphrase John Martin paraphrasing Levi-Strauss:
+  - There is only *one analysis* in two-mode network analysis and it is CA
+  - Rediscovered many times by researchers pursuing seemingly incompatible taks
+  
+. . .
+
+- Contra skeptics we can do two-mode "sna" when we do CA
+  - Rank nodes against a meaningful centrality metric
+  - Detect equivalences (generalized similarities) between node clusters
+- These are some of the standard "positional" tasks that take up much sna
+
+## Conclusions
+- To paraphrase John Martin paraphrasing Levi-Strauss:
+  - There is only *one analysis* in two-mode network analysis and it is CA
+  - Rediscovered many times by researchers pursuing seemingly incompatible taks
+  
+. . .
+
+- We can also go do more than visualization and joint display
+- The first CA dimension particularly represents a seldom noted **duality of ranking and equivalence**
+  - Ranking via similarity within clusters
+  - Bonacich by contrast is a "pure" centrality ranking
+  
+## Conclusions
+- To paraphrase John Martin paraphrasing Levi-Strauss:
+  - There is only *one analysis* in two-mode network analysis and it is CA
+  - Rediscovered many times by researchers pursuing seemingly incompatible taks
+  
+. . .
+
+- Using CA for this kind of "spectral clustering" and "spectral ranking" is not common but feasible
+  - Another approach (similar to blockmodeling):
+    - Use CA for spectral clustering
+    - Then use **specific CA** (on sub-tables defined by the eigengap heuristic) to split clusters into further clusters
+    
+## Thanks!
+
+[https://github.com/olizardo/correspondence-analysis-two-mode-networks](https://github.com/olizardo/correspondence-analysis-two-mode-networks)
+
+olizardo@soc.ucla.edu

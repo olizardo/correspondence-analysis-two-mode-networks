@@ -4,40 +4,16 @@ author: "Omar Lizardo (UCLA)"
 format:
   revealjs:
     incremental: false 
-    theme: sky 
+    theme: simple 
     smaller: true
 ---
 
-## CA and Two Mode Networks
 
-- While not common, Correspondence Analysis (CA) has been sporadically used in *analyzing* two-mode network data.
 
-  - But criticized for being limited and inapplicable for most "sna" tasks*
 
-- CA Proponents point to some important advantages of CA for the analysis of two-mode networks:
-  - CA can provide synoptic graphical representations of structural connectivity patterns in two-mode data**
-  - (M)CA can be used to "visually explore" two-mode networks***
+
   
-::: aside
-*Borgatti & Everett 1997
 
-**Breiger 2000; Roberts 2000; Faust 2005
-
-***D’Esposito et al. 2014
-:::
-
-## CA and Two Mode Networks
-
-- While not common, Correspondence Analysis (CA) has been sporadically used in *analyzing* two-mode network data.
-
-  - But criticized for being limited and inapplicable for most "sna" tasks*
-
-- This presentation builds on and expands on previous  research on using CA for two-mode data analysis
-
-  - But discusses aspects of CA that have not been emphasized in previous research:
-  
-1. CA as computing a type of "(Reflective) Dual Centrality" on the entities in the two-modes**
-    - Rediscovered recently under the heading of the Economic Complexity Index (ECI; Hidalgo and Hausman 2009)
     
 ::: aside
 *Borgatti & Everett 1997
@@ -62,14 +38,10 @@ I argue that this is a rather restricted interpretation of a more general ``dual
 
   - But discusses aspects of CA that have not been emphasized in previous research:
 
-2. CA as extracting "positional" information the entities in the two modes
-    - With positions defined by "Generalized Relational Similarity"**
-    - Similar entities have similar patterns of connectivity with entities that are themselves similar
-  
+
 ::: aside
 *Borgatti & Everett 1997
 
-*Kovacs 2010; Lizardo 2024
 :::
 
 ::: {.notes}
@@ -90,46 +62,14 @@ Second, I show that the first two CA dimensions provide information on the degre
   - I introduce here using the more familiar sociological example of the **duality of persons and groups***** 
 
 ::: aside
-*Later referred to as the Economic Complexity Index (ECI)
+*Referred to as the Economic Complexity Index (ECI)
 
 **Lizardo 2018
 
 ***Breiger 1974
 :::
 
-## Southern Women Data {.scrollable}
-```{r Southern women data}
-    A <- matrix(
-         c(
-          1, 1, 1, 1, 1,  1, 0, 1, 1,  0, 0, 0, 0, 0, 
-          1, 1, 1, 0, 1,  1, 1, 1, 0,  0, 0, 0, 0, 0, 
-          0, 1, 1, 1, 1,  1, 1, 1, 1,  0, 0, 0, 0, 0, 
-          1, 0, 1, 1, 1,  1, 1, 1, 0,  0, 0, 0, 0, 0, 
-          0, 0, 1, 1, 1,  0, 1, 0, 0,  0, 0, 0, 0, 0, 
-          0, 0, 1, 1, 1,  1, 0, 1, 0,  0, 0, 0, 0, 0, 
-          0, 0, 0, 1, 1,  1, 1, 1, 0,  0, 0, 0, 0, 0, 
-          0, 0, 0, 1, 1,  0, 1, 1, 1,  0, 0, 0, 0, 0, 
-          
-          0, 0, 0, 0, 0,  0, 1, 1, 1,  0, 0, 1, 0, 0, 
-          0, 0, 0, 0, 0,  0, 0, 1, 1,  1, 0, 1, 0, 0, 
-          0, 0, 0, 0, 0,  0, 0, 1, 1,  1, 0, 1, 1, 1,
-          0, 0, 0, 0, 0,  0, 1, 1, 1,  1, 0, 1, 1, 1,
-          0, 0, 0, 0, 0,  0, 1, 0, 1,  1, 1, 1, 1, 1,
-          0, 0, 0, 0, 0,  0, 1, 1, 0,  1, 1, 1, 0, 0,
-          0, 0, 0, 0, 0,  0, 0, 0, 1,  0, 1, 0, 0, 0,
-          0, 0, 0, 0, 0,  0, 0, 0, 1,  0, 1, 0, 0, 0, 
-          
-          0, 0, 0, 0, 0,  1, 0, 1, 1,  0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0,  0, 0, 1, 1,  0, 0, 0, 0, 0),
-          ncol = 14, byrow = TRUE)
-     w <- c("EVELYN", "LAURA", "THERESA", "BRENDA", "CHARLOTTE", "FRANCES", "ELEANOR", "RUTH", "VERNE", "MYRA", "KATHERINE", "SYLVIA", "NORA", "HELEN", "OLIVIA", "FLORA", "PEARL", "DOROTHY")
-     e <- paste("E", c(1:14), sep = "")
-     rownames(A) <- w
-     colnames(A) <- e
-     require(kableExtra)
-     A <- A[sort(rownames(A)), ]
-     kbl(A)
-```
+
 
 
 ## CA and Reflective Centrality
@@ -164,7 +104,7 @@ $$ {#eq-dp}
 
 . . . 
 
-  - And for groups:
+- And for groups:
 
 $$
    C^R_g(1) = \sum_p a_{pg}
@@ -362,28 +302,7 @@ $$ {#eq-bon4}
 
 
 ## CA and Bonacich Centrality
-- But what's the connection to reflections and CA after all of this?
 
-- A couple of things first:
-
-  - $Dp$ is a $|P| \times |P|$ matrix containing each person's $C_p^R(1)$ (activity) along the diagonals and zeroes in every other cell
-  - $Dg$ is a $|G| \times |G|$ matrix $Dg$ containing each group's $C_g^R(1)$ (size) along the diagonals and zeroes in every other cell
-  
-. . .
-  
-- In the limit ($q \rightarrow \infty$), the iterative HH reflective centralities are the solution of the eigensystem:*
-
-$$
-    \left(Dp^{-1}ADg^{-1}A^T\right)C^R_p = \lambda C^R_p
-$$ {#eq-dam1}
-
-$$
-    \left(Dg^{-1}A^TDp^{-1}A\right)C^R_g = \lambda C^R_g
-$$ {#eq-dam2}
-
-::: aside
-*van Dam et al. 2021
-:::
 
 ::: {.notes}
 Note the formal similarity and differences between these and @eq-bon3 and @eq-bon4
@@ -410,7 +329,7 @@ $$ {#eq-mealy1}
 - But in @eq-mealy1 $\sum_g a_{pg}a_{p'g}$ is *weighted* by group size and each person's number of memberships 
   
 ::: aside
-Mealy 2019, eq. 4
+*Mealy 2019, eq. 4
 :::
 
 ::: {.notes}
@@ -487,7 +406,7 @@ Bonacich Re-ordered Affiliation Matrix
 ::: {.notes}
 As we can see, the two row-column-reshuffled matrices have appreciably distinct structures, with the $C^R$ re-ordered affiliation matrix having a block-diagonal structure and the $C^B$ re-ordered affiliation matrix having a triangular structure. Accordingly, the $C^R$ centrality rankings reveal a dual community partition between groups of women who selectively attend two groups of events (on the top-right and bottom-left of the plot). The traditional eigenvector centrality re-ordering, on the other hand, reveals a classic core-periphery partitioning, with a group of highly active women (on the bottom-right) who selectively co-participate in highly attended events (on the lower right-hand side of the plot) and less active women (in the upper half) who go to less well-attended events (on the right side). The two centralities extract qualitatively different information from the two-mode network, with $C^R$ geared toward community partitioning and $C^B$ more focused on finding a core of well-connected people and groups. 
 :::
-
+ be thought of as **similarity matrices** based on the shared neighbors in the two mode network
 ## CA Reveals Dual Communities
 - As we know from Breiger (1974) the usual one mode projections are obtained via:
 
@@ -499,7 +418,7 @@ $$
 S_g = A^TA
 $$
 
-- Which can be thought of as **similarity matrices** based on the shared neighbors in the two mode network
+- Which can
 
 - But we can also obtain *degree weighted* versions of these similarity matrices
 
@@ -627,8 +546,6 @@ This ``preferential attachment'' of core people to core events and peripheral pe
 
 - It would be useful to compare CA with one such method for obtaining GSRs in two-mode networks: *SimRank* (Jeh & Widom 2002)
 
-. . .
-
 - According to Jeh & Widom:
   - People are *similar* if they belong to *similar* groups*
   - Groups are *similar* if they share *similar* members*
@@ -639,13 +556,7 @@ Kovacs (2010); Lizardo (2024)
 
 ## CA and Generalized Similarity
 
-- In *SimRank* the similarity between two people is given by:
 
-$$
-S(p, p') = \frac{\alpha}{C_p^R(1)C_{p'}^R(1)}
-    \sum_{i = 1}^{C_p^R(1)} \sum_{j = 1}^{C_{p'}^R(1)} 
-    S\left(g(i)_{i \in N(p)}, g(j)_{j \in N(p')}\right)
-$$ {#eq-simrank1}
 
 . . .
 

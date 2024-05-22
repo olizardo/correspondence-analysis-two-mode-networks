@@ -38,7 +38,7 @@ reflections <- function(x, iter = 20) { #x is a matrix with people as rows and g
          p.c[i, m] <- sum(x[i, ] * g.c[, k]) * (1/p.c[i, 1]) #assign person avg. centrality groups they belong to
       } #end person loop
       for(j in 1:g) {
-         g.c[j, m] <- sum(x[, j] * p.c[, k]) * (1/g.c[j, 1]) #assign genre avg. person centrality of people in group
+         g.c[j, m] <- sum(x[, j] * p.c[, k]) * (1/g.c[j, 1]) #assign group avg. person centrality of people in group
       } #end group loop
       k <- k + 1 #increase counter
    } #end while loop
