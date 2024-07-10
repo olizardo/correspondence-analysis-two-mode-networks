@@ -4,14 +4,14 @@ subtitle: "What We Get When We Do Two-Mode Network CA"
 author: "Omar Lizardo"
 institute: "*University of California, Los Angeles*"
 date: "`r Sys.Date()`"
-slide-number: true
-slide-level: 2
-progress: true
 format:
-  revealjs:
+  beamer:
     incremental: false 
     theme: simple 
     smaller: true
+    slide-number: true
+    slide-level: 2
+    progress: true
     footer: "https://github.com/olizardo/correspondence-analysis-two-mode-networks"
 ---
 
