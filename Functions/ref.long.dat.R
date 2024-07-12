@@ -2,7 +2,7 @@ ref.long.dat <- function(a, b, max.iter) {
      library(tidyverse)
      pr.long <- data.frame(a)
      pr.long <- pr.long %>% 
-          mutate(mode = rownames(pr.long)) %>% 
+          mutate(person = rownames(pr.long)) %>% 
           pivot_longer(
                cols = 1:ncol(a),
                names_to = "iter",
@@ -12,7 +12,7 @@ ref.long.dat <- function(a, b, max.iter) {
        mutate(n.iter = as.integer(iter)*2)
      gr.long <- data.frame(b)
      gr.long <- gr.long %>% 
-          mutate(mode = rownames(gr.long)) %>% 
+          mutate(group = rownames(gr.long)) %>% 
           pivot_longer(
                cols = 1:ncol(b),
                names_to = "iter",

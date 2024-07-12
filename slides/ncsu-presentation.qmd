@@ -1,0 +1,623 @@
+---
+title: "Coasting on Duality: What We Get When We Do Two-Mode CA"
+author: "Omar Lizardo (UCLA)"
+format:
+  revealjs:
+    incremental: false 
+    theme: simple 
+    smaller: true
+---
+
+
+
+
+
+  
+
+    
+::: aside
+*Borgatti & Everett 1997
+
+**Distinct from the traditional Bonacich dual centrality
+:::
+
+::: {.notes}
+I show that CA can be thought of as computing a kind of dual centrality score on both modes---one related to but not mathematically equivalent to the Bonacich two-mode centrality----an approach that has been recently re-invented in some corners of network science under the guise of the "economic complexity index'' 
+
+I argue that this is a rather restricted interpretation of a more general ``dual centrality'' score that connects to the use of CA in some disciplines (e.g., ecology) as a method of ordination---e.g., the discovery of latent one-dimensional orderings among a set of entities.
+:::
+
+
+## CA and Two Mode Networks
+
+- While not common, Correspondence Analysis (CA) has been sporadically used in *analyzing* two-mode network data.
+
+  - But criticized for being limited and inapplicable for most "sna" tasks*
+
+- This presentation builds on and expands on previous  research on using CA for two-mode data analysis.
+
+  - But discusses aspects of CA that have not been emphasized in previous research:
+
+
+::: aside
+*Borgatti & Everett 1997
+
+:::
+
+::: {.notes}
+There is a suggestive similarity between the scores obtained from the first dimension of the CA of the two-mode affiliation matrix (the aforementioned dual centrality score) and recent work on "generalized relational similarity'' in two-mode networks. CA recovers clusters of entities (e.g., people) linked by their similar connectivity patterns to similar entities in the other mode (e.g., groups). 
+
+Second, I show that the first two CA dimensions provide information on the degree-weighted similarity of nodes in the same mode concerning their connections to nodes in the other mode. Thus, CA can be used as an approach to indirect "community" identification in two-mode networks that connects to the use of CA in some disciplines (e.g., computer and information science) as a clustering method or the discovery of sociometrically similar subsets of entities in affiliation networks. 
+:::
+
+
+## CA and Reflective Centrality
+
+- Hidalgo and Hausmann (2009) introduced a novel way to rank nodes in a two-mode network.
+  - Their approach, called "reflective," was originally applied to country-by-product networks*
+  
+. . . 
+  
+  - The method has since been shown to be applicable to other two-mode networks (like cultural networks)**
+  - I introduce here using the more familiar sociological example of the **duality of persons and groups***** 
+
+::: aside
+*Referred to as the Economic Complexity Index (ECI)
+
+**Lizardo 2018
+
+***Breiger 1974
+:::
+
+
+
+
+## CA and Reflective Centrality
+- If we are going to compute the centrality of nodes in a two-mode network, the most natural place to start is with the good old **degree centrality** (Faust 1997)
+
+. . . 
+
+- Notation:
+  - A two-mode network composed of a set of persons $P$
+  - Their affiliation relations to a set of groups $G$
+  - Represented by an affiliation matrix $\mathbf{A}$ 
+  
+. . .
+
+  - $\mathbf{A}$ is of dimensions $|P| \times |G|$ with people along the rows and groups across the columns
+    - $|P|$ is the cardinality of the persons set  
+    - $|G|$ is the cardinality of the group set
+ 
+. . .
+
+  - $\mathbf{A}$ has cell entries $a_{pg}= 1$ if person \textit{p} is affiliated with group \textit{g} and $a_{pg}= 0$ otherwise.
+
+
+## CA and Reflective Centrality
+- If we are going to compute the centrality of nodes in a two-mode network, the most natural place to start is with the good old **degree centrality** (Faust 1997)
+
+- Given this, the degree-centrality of people is given by:
+
+$$
+C^R_p(1) = \sum_g a_{pg}
+$$ {#eq-dp}
+
+. . . 
+
+- And for groups:
+
+$$
+   C^R_g(1) = \sum_p a_{pg}
+$$ {#eq-dg}
+    
+    
+## CA and Reflective Centrality
+
+- The key Hidalgo and Hausman's "reflective" approach is as follows:
+
+   - Once we have the first-order quantities $C^R_p(1)$ and $C^R_g(1)$, we can compute "second-order centralities" $C^R(2)$ for both people and groups:
+  
+   - To do that we use the (averaged) first-order centralities of the entities in the other mode they are connected to
+   
+. . . 
+
+For people, these are given by:
+
+$$
+C^R_p(2) = \frac{1}{C^R_p(1)}\sum_g a_{pg}C^R_g(1)
+$$ {#eq-r2p}
+
+And for groups:
+
+$$   
+C^R_g(2) = \frac{1}{C^R_g(1)}\sum_p a_{pg}C^R_p(1)
+$$ {#eq-r2g}
+
+::: {.notes}
+Equation @eq-r2p says "people are more central when the average sum of the size of the groups they belong to is large'' (e.g., whenever $a_{pg} = 1$ and $C^R_g(1)$ is a big number). Equation @eq-r2g says "groups are more central when the average activity of their members is large" (e.g., whenever $a_{pg} = 1$ and $C^R_p(1)$ is a big number).
+:::
+
+
+## CA and Reflective Centrality
+
+- The key Hidalgo and Hausman's "reflective" approach is as follows:
+
+   - Once we have the first-order quantities $C^R_p(1)$ and $C^R_g(1)$, we can compute "second-order centralities" $C^R(2)$ for both people and groups:
+  
+  - Of course, we can keep on going and define third-order $C^R(3)$ reflections!   
+  
+. . . 
+
+
+For people, these are given by:
+
+$$
+   C^R_p(3) = \frac{1}{C^R_p(1)}\sum_g a_{pg}C^R_g(2)
+$$ {#eq-r3p}
+
+And for groups:
+
+$$   
+   C^R_g(3) = \frac{1}{C^R_g(1)}\sum_p a_{pg}C^R_p(2)
+$$ {#eq-r3g}
+
+::: {.notes}
+Equation @eq-r3p says something like "people are more central when the average sum of the average activity of the members of the groups they belong to is large" (e.g., $a_{pg} = 1$ and $C^R_g(2)$ is a big number). Equation @eq-r3g says, "groups are more central when the average sum of the average size of the groups their members belong to is large." (e.g., $a_{pg} = 1$ and $C^R_p(2)$ is a big number).
+:::
+
+## CA and Reflective Centrality
+- More generally, HS show that we can define a series of reflective quantities for people and groups* 
+
+- For people, these are given by:
+
+$$   
+C^R_p(q) = \frac{1}{C^R_p(1)}\sum_g a_{pg}C^R_g(q-1) 
+$$ {#eq-rip}
+
+- And for groups:
+
+$$   
+C^R_g(q) = \frac{1}{C^R_g(1)}\sum_p a_{pg}C^R_p(q-1)
+$$ {#eq-rig}
+
+
+::: aside
+*Whose verbal and substantive interpretation seems to become more elusive as the number of iterations increases
+:::
+
+
+## CA and Reflective Centrality
+
+- For people:
+  - Even-numbered reflections measure centrality based on group size 
+  - Odd-numbered reflections measure centrality based on the average size of the groups a person belongs to*
+  
+. . .
+
+- For groups:
+  - Even-numbered reflections measure centrality based on member activity 
+  - Odd-numbered reflections measure centrality based on the average group size of a group's members
+
+::: aside
+*Although these are nominally distinct metrics, in practice, the rank order of the nodes in each mode for even and odd reflections ends up being identical after a small number of iterations
+:::
+
+::: {.notes}
+Note that for the people, the even-numbered reflection $C^R_p(2)$ assigns centrality based on a formal feature of the groups they belong to (in this case, the group sizes). On the other hand, the odd-numbered reflection $C^R_p(3)$ assigns centrality based on a formal feature of the members of the groups they belong to (in this case, the average size of the groups they belong to). In the same way, for the groups, the even-numbered reflection $C^R_g(2)$ assigns centrality based on a formal feature of the people who belong to them (in this case, their activity). On the other hand, the odd-numbered reflection $C^R_g(3)$ assigns centrality based on a formal feature of the other groups their members belong to (in this case, their average group size). While these are distinct metrics, in practice, the ordering of the nodes in each mode ends up being identical across even and odd centralities after the ranks ``freeze'' past a given number of iterations (proportional to the network size). 
+:::
+
+## CA and Reflective Centrality
+![Person Reflection Trajectories](Plots/p-reflections.png)
+
+## CA and Reflective Centrality
+![Group Reflection Trajectories](Plots/g-reflections.png)
+
+## CA and Reflective Centrality
+
+- What's the point of going through all these reflective centralities?
+
+- Particularly, since Bonacich already defined dual centralities for two-mode networks based on a similar idea!*
+
+- In that paper, Bonacich also considered CA in passing 
+  - However, He dismissed CA as a method to derive centrality rankings:
+    - "[r]ather than centrality, what they [CA scores] seem to capture is membership in the two cliques that attended two different sets of events"** 
+
+
+::: aside
+*Define the centralities of entities in one mode based on the centralities of entities in the other mode to which they are connected; Bonacich 1991
+
+** p. 164
+:::
+
+## CA and Reflective Centrality
+
+- What's the point of going through all these reflective centralities?
+
+- Particularly, since Bonacich (1991) already defined dual centralities for two-mode networks based on a similar idea!*
+
+- Bonacich was only half right!
+  - CA scores do capture "positional" information but not one based purely on cohesion (cliques)
+  - But they (particularly the first dimension) also capture a version of centrality** 
+  - In fact, they capture the limit $(q \rightarrow \infty)$ of HH's reflective centralities!
+  
+::: aside
+*Define the centralities of entities in one mode based on the centralities of entities in the other mode to which they are connected; Bonacich 1991
+:::
+
+::: aside
+**In the most general sense of ranking nodes based on a meaningful criterion; Borgatti 2005
+:::
+
+## CA and Bonacich Centrality
+- Let's look at the connection between Bonacich, HH Reflections, and CA
+
+- The solutions to the following eigensystem give the Bonacich $(C^B)$ two-mode centralities:
+
+$$
+AC^B_p = \lambda C^B_g 
+$$ {#eq-bon1}
+
+$$
+A^TC^B_g = \lambda C^B_p 
+$$ {#eq-bon2}
+
+## CA and Bonacich Centrality
+
+- It is possible to express @eq-bon1 and @eq-bon2 in terms of person and group-specific centralities:*
+
+$$
+    C^B_p = \frac{1}{\lambda}\sum_{g}a_{pg}C^B_g
+$$ {#eq-fau1}
+
+
+$$
+    C^B_g = \frac{1}{\lambda}\sum_{p}a_{pg}C^B_p
+$$ {#eq-fau2}
+
+. . . 
+
+- The Bonacich Centralities look a lot like the "reflective" ones, minus the averaging by same-mode degree!
+
+::: aside
+Faust 1997, p. 170
+:::
+
+## CA and Bonacich Centrality
+
+We can solve for $C^B_g$ in @eq-bon2 and $C^B_p$ in @eq-bon1 and substitute the respective solutions into @eq-bon1 and @eq-bon2
+
+- After some algebraic manipulation we get:
+
+$$
+\left(AA^T\right)C^B_p = \lambda^2 C^B_p
+$$ {#eq-bon3}
+
+
+$$
+\left(A^TA\right)C^B_g = \lambda^2 C^B_g
+$$ {#eq-bon4}
+
+- The first eigenvector of the respective one-mode projections also gives us the Bonacich dual centralities!
+
+
+
+## CA and Bonacich Centrality
+
+
+::: {.notes}
+Note the formal similarity and differences between these and @eq-bon3 and @eq-bon4
+
+Both extract individual and group centralities as eigenvectors of the one-mode projection of the original affiliation matrix
+
+But @eq-dam1 and @eq-dam2 *pre-multiply the affiliation matrix and its transpose by the inverse of the first-order centralities of the nodes in each mode before factorizing*!
+:::
+
+## CA and Bonacich Centrality
+- The difference between @eq-dam1 and @eq-bon3 can be more clearly seen if we express it in terms of each cell entry* 
+
+- For people:
+
+$$
+a_{pp'} = \sum_g\frac{a_{pg}a_{p'g}}{C^R_p(1)C^R_g(1)} = 
+    \frac{1}{C^R_p}\sum_g\frac{a_{pg}a_{p'g}}{C^R_g(1)}
+$$ {#eq-mealy1}
+
+- In equation @eq-mealy1, the fraction's numerator is equal to one only when person $p$ and $p'$ are both members of $g$.
+
+- Summed across groups, the number of shared groups between $p$ and $p'$
+
+- But in @eq-mealy1 $\sum_g a_{pg}a_{p'g}$ is *weighted* by group size and each person's number of memberships 
+  
+::: aside
+*Mealy 2019, eq. 4
+:::
+
+::: {.notes}
+In equation @eq-mealy1, the numerator is equal to one when person $p$ and person $p'$ share membership in a group $g$. Summed across groups, this gives the number of memberships that $p$ and $p'$ have in common. 
+
+As noted, the Bonacich dual centralities are obtained from the eigenvector corresponding to the first eigenvalue of this matrix of shared memberships (for people) and shared people (for groups). 
+
+The reflective centralities, on the other hand, are given by the eigenvectors of a weighted version of the same matrix, where the weights are the sizes of each of the groups $p$ shares with each other person summed across groups and divided by the total number of $p$'s memberships. 
+:::
+
+## CA and Bonacich Centrality
+- The difference between @eq-dam1 and @eq-bon3 can be more clearly seen if we express it in terms of each cell entry* 
+
+- For groups:
+
+$$
+    a_{gg'} = \sum_p\frac{a_{pg}a_{pg'}}{C^R_p(1)C^R_g(1)} = 
+    \frac{1}{C^R_g}\sum_p\frac{a_{pg}a_{pg'}}{C^R_p(1)}
+$$ {#eq-mealy2}
+
+- In equation @eq-mealy2, the fraction's numerator is equal to one only when group $g$ and $g'$ both have $p$ as a member
+
+- Summed across persons, the number of shared members between $g$ and $g'$
+
+- But in @eq-mealy2 $\sum_p a_{pg}a_{pg'}$ is *weighted* by group size and each person's number of memberships 
+
+::: aside
+Mealy 2019, eq. 4
+:::
+
+## CA and Bonacich Centrality
+
+- And here comes out first result/conclusion:
+
+  - Turns out that the $C^R_p$ and $C^R_p$ centralities are the same (to a scaling factor) as the row and column scores obtained from the first dimension of a **simple CA*** of the two-mode affiliation matrix!
+     - It is well known among CA users that CA works with the row and *column sum degree weighted* (for each cell) version of the original data matrix
+    - Which in the two-mode network case equals degree-weighting!
+  - This means that if the reflective centralities are "centralities" then CA produces dual centrality scores on the first dimension
+  - These are *different* from the traditional Bonacich centrality scores**
+
+:::aside
+*No an MCA as in D'Esposito et al. (2014)
+:::
+
+:::aside
+**Because of the double-degree pre-weighting
+:::
+
+::: {.notes}
+Degree-pre-weighting does not radically alter the nature of the data. Indeed, it corresponds to moving from sums to averages, thus "adjusting" for the influence of person-activity and group size---a seemingly perennial issue in two-mode data analysis. This can be seen by the fact that Equations @eq-mealy1 and @eq-mealy2 show that, substantively, what the degree pre-weighting does is that, for people, co-memberships count for more in determining interpersonal similarity when the group in question is small than when it is large. On the group side, shared members who do not have many affiliations count more in determining intergroup similarity than those with many affiliations. 
+
+Accordingly, it would make no sense to call the Bonacich scores $C^B_p$ and $C^B_g$ from equations 
+@eq-bon3 and @eq-bon4 "centrality scores" but fail to hold that designation from $C^R_p$ and $C^R_g$, given that the mathematics are not only ``similar'' but formally identical. In the Bonacich case, a factorization of the one-mode projection of the two-mode network; in the reflective case, factorization of the degree-weighted one-mode projection of the same network. 
+
+Accordingly, the CA of a two-mode network will return---along the first dimension---a rank-ordered score for nodes in each mode that meets all the conditions for qualifying as a centrality measure for two-mode networks. Particularly, the CA centrality retains the duality property, as the (average) centrality of people is a function of the (average) centrality of the groups they belong to. 
+
+The (average) centrality of groups, in turn, is a function of their members' (average) centrality. The person and group score ranks given by the first CA dimension are thus better thought of as \textit{activity and group-size normalized} versions of the familiar Bonacich dual centralities for two-mode networks.
+
+:::
+
+## CA and Bonacich Centrality
+:::: {.columns}
+::: {.column width="50%"}
+CA Re-ordered Affiliation Matrix
+![](Plots/ca-reord.png)
+:::
+
+::: {.column width="50%"}
+Bonacich Re-ordered Affiliation Matrix
+![](Plots/bon-reord.png)
+:::
+::::
+
+::: {.notes}
+As we can see, the two row-column-reshuffled matrices have appreciably distinct structures, with the $C^R$ re-ordered affiliation matrix having a block-diagonal structure and the $C^B$ re-ordered affiliation matrix having a triangular structure. Accordingly, the $C^R$ centrality rankings reveal a dual community partition between groups of women who selectively attend two groups of events (on the top-right and bottom-left of the plot). The traditional eigenvector centrality re-ordering, on the other hand, reveals a classic core-periphery partitioning, with a group of highly active women (on the bottom-right) who selectively co-participate in highly attended events (on the lower right-hand side of the plot) and less active women (in the upper half) who go to less well-attended events (on the right side). The two centralities extract qualitatively different information from the two-mode network, with $C^R$ geared toward community partitioning and $C^B$ more focused on finding a core of well-connected people and groups. 
+:::
+ be thought of as **similarity matrices** based on the shared neighbors in the two mode network
+## CA Reveals Dual Communities
+- As we know from Breiger (1974) the usual one mode projections are obtained via:
+
+$$
+S_p = AA^T
+$$
+
+$$
+S_g = A^TA
+$$
+
+- Which can
+
+- But we can also obtain *degree weighted* versions of these similarity matrices
+
+
+$$
+S^*_p = ADg^{-1}A^T
+$$
+
+$$
+S^*_g = A^TDp^{-1}A
+$$
+
+## CA Reveals Dual Communities
+- As we know from Breiger (1974) the usual one mode projections are obtained via:
+
+$$
+S_p = AA^T
+$$
+
+$$
+S_g = A^TA
+$$
+
+- Which can be thought of as **similarity matrices** based on the shared neighbors in the two mode network
+
+- The eigenvalues/first eigenvectors of $S^*_p$ and $S^*_g$ reveal dual communities
+
+
+$$
+S^*_p = ADg^{-1}A^T
+$$
+
+$$
+S^*_g = A^TDp^{-1}A
+$$
+
+
+
+## CA Reveals Dual Communities
+- As we know from Breiger (1974) the usual one mode projections are obtained via:
+
+$$
+S_p = AA^T
+$$
+
+$$
+S_g = A^TA
+$$
+
+- Which can be thought of as **similarity matrices** based on the shared neighbors in the two mode network
+
+- The eigenvalues/first eigenvectors of $S^*_p$ and $S^*_g$ reveal dual communities
+
+- The eigenvectors of $S^*_p$ and $S^*_g$ are equivalent (to a scaling factor) to those obtained from the simple CA of the affiliation matrix!
+
+## CA Reveals Dual Communities
+:::: {.columns}
+::: {.column width="50%"}
+![Second Eigenvector of Degree-Weighted Similarity Matrix Against Rank (Persons)](Plots/ca-eigvec-p.png)
+:::
+
+
+::: {.column width="50%"}
+![Second Eigenvector of Degree-Weighted Similarity Matrix Against Rank (Groups)](Plots/ca-eigvec-g.png)
+:::
+::::
+
+::: {.notes}
+We can confirm that the first CA axis points toward the underlying community partitioning of the two-mode network by looking at the Figures which show the $C^R$ score of persons and groups on the x-axis against the score's rank order on the y-axis. 
+
+If a two-mode network has no discernible community structure, the first dimension CA scores would be distributed as a continuous logistic curve; when community structure is present, we should observe discernible breaks in this distribution. The Southern Women data clearly belong to the second category. In the people mode, we have $\left[Frances, Laura, Brenda, Charlotte, Evenly, Theresa, Elanor, Ruth, Pearl\right]$ on one side, $\left[Dorothy, Nora, Katherine, Sylvia, Flora, Olivia, Myra, Helen, Verne\right]$ on the other. Among events, we have $\left[E1, E2, E3, E4, E5, E6\right]$ on side $\left[E9, E10, E11, E12, E13, E14\right]$ on the other and $\left[E7, E8\right]$ in an ambiguous middle position. 
+
+Note that this is roughly the same partitioning obtained by Doreian (1979) using a different method (Q analysis) and reproduced by Kovacs and Lizardo (using a generalized relational similarity approach). This indicates that persons and groups receive similar scores in the first dimension of CA only when they have similar connectivity similar to similar groups, where group similarity is defined dually as having members in common who are themselves similar. 
+
+
+:::
+
+## CA Reveals Dual Communities
+:::: {.columns}
+::: {.column width="43%"}
+![Second Eigenvector of Degree-Weighted Similarity Matrix Against Rank (Persons)](Plots/ca-eigvec-p.png)
+:::
+
+::: {.column width="57%"}
+![From Doreian (1979, p. 237)](Plots/doreian-sw.png)
+:::
+::::
+
+## CA Reveals Dual Communities
+![](Plots/ca-sim-slide.png)
+
+::: {.notes}
+To fix the intuition, the top-left panel (a) of the figure shows a heatmap representation of the group-size weighted similarity matrix $S_p$ (for people); the top-right panel (b) shows the same plot for the activity-weighted similarity matrix $S_g$ (for groups). In both figures, darker squares indicate more similar node pairs, and closer to white indicate less similarity. Moreover, the rows of each matrix are sorted according to $C^R$ for both people and groups. As we can see, for both people and groups, the re-ordered matrix recovers maximally similar communities of nodes, where the similarity is based on their shared (degree-weighted) connections to entities in the other mode. 
+
+The bottom panel of the figure shows the usual correspondence plot of the first two CA dimensions. People and groups are colored according to a six-cluster k-means solution based on the first nine eigenvectors of their respective similarity matrices. The plot reveals that the distances between nodes in the standard correspondence plot---usually taken to be a low-dimensional representation of the original affiliation matrix---are best thought of as low-dimensional representations of the (other mode's) degree-normalized similarity network across people and groups. 
+
+People with similar values in $S_p$---such as $\left[Olivia, Flora\right]$,  $\left[Katherine, Sylvia, Nora\right]$, $\left[Dorothy, Verne\right]$, and $\left[Brenda, Laura, Evelyn\right]$--- appear closer in the correspondence plot (and are assigned to the same cluster by the k-means algorithm). The same goes for events, those with similar values in $S_g$---such as $\left[E13, E14\right]$ and $\left[E1, E2, E3\right]$---appear closer in the correspondence plot, while those with dissimilar values are placed far apart. The distances between same-mode entities in the correspondence plot will thus be a function of their (inverse) degree-normalized similarity.
+
+Note that this differs from the usual interpretation of the CA correspondence plot, which is usually taken to bring together nodes with "similar" connectivity patterns, where similarity is presumed to be a function of their raw row profiles (for people) or column profiles (for groups). This interpretation implies (for instance) that two people who attend many of the same events or two groups with many members will appear close in the plot. But this (still common) interpretation is off the mark. 
+
+What the CA correspondence plot distance captures is, instead, people and groups that are surprisingly similar (e.g., from the point of view of a suitable null model, like independence) after taking people's activity levels and the sizes of the groups they belong to into account. As we have seen, this is precisely the key contrast between the Bonacich and the CA dual centrality measures for two-mode networks.} Thus, people who share memberships in small groups will be closer in the diagram than people who share memberships in big groups. In the same way, groups that share people with few memberships will be closer in the diagram than those sharing people with many other memberships. 
+
+:::
+
+
+## Bonacich Reveals Core/Periphery
+![](Plots/bon-sim-slide.png)
+
+::: {.notes}
+To illustrate, The Figure shows the ``raw'' (unweighted by other-mode degree) similarity scores for persons ($a_{pp'} = \sum_g a_{pg}a_{p'g}$) and groups ($a_{gg'} = \sum_p a_{pg}a_{pg'}$), with the rows and columns sorted by the first eigenvector of the matrix, which is the usual Bonacich centrality score. Both similarity matrices reproduce the triangular, core-periphery structure we observed in the re-ordered affiliation matrix. The Figure plots $C^B$ on the x-axis against the second eigenvector of the unweighted similarity matrix---a relatively unusual but not substantively unmotivated practice.
+
+Nodes are colored to a four-cluster k-means solution using the first six eigenvectors of the respective similarity matrices.
+
+We can see that the plot of the first two eigenvectors does a good job of recovering the raw connectivity structure of the Southern Women affiliation network, partitioning the core persons and groups (on the upper-right) from the more peripheral ones (on the lower-left). 
+
+Moreover, if all we are interested in is capturing a low-dimensional representation of which people have particular affinities for which events (regardless of people's activity levels or group sizes), then the Bonacich plot does a better job of that than the usual CA correspondence plot. For instance, $\left[Flora, Olivia\right]$ do have a special affinity for $\left[E11\right]$ and $\left[Nora, Katherine, Sylvia\right]$ for $\left[E10, E12\right]$. In the same way, core events like $\left[E8, E9, E10\right]$---shown on the lower half of the plot---are different from core events $\left[E3, E4, E5, E6\right]$---shown in the upper half. The former are more inclusive of peripheral members while the latter are more ``cliquish,'' including only core members. 
+
+This ``preferential attachment'' of core people to core events and peripheral people to peripheral events seems to be captured by the second dimension, left over after considering each node's eigenvector centrality. For instance, $\left[E1, E2\right]$, although as poorly attended as other peripheral events, tends to include core members and thus appear closer to other core actors in the upper half of the plot. Similarly, the main difference between $\left[Ruth\right]$ and $\left[Sylvia\right]$, despite their comparable $C^B$ scores, is that the former's (closer to the upper half of the plot) event profile is composed mainly of core events. In contrast, peripheral events dominate the latter's attendance profile (shown in the bottom half of the plot), accordingly, $\left[Ruth\right]$ and $\left[Sylvia\right]$ are assigned to distinct clusters by the k-means algorithm. 
+:::
+
+## CA and Generalized Similarity
+- The contrast between CA scores and Bonacich Dual Centralities is that CA picks up patterns of attendance between similar people at similar events  
+
+- This is precisely the definition of **generalized relational similarity** (GSR) 
+
+- It would be useful to compare CA with one such method for obtaining GSRs in two-mode networks: *SimRank* (Jeh & Widom 2002)
+
+- According to Jeh & Widom:
+  - People are *similar* if they belong to *similar* groups*
+  - Groups are *similar* if they share *similar* members*
+  
+:::aside
+Kovacs (2010); Lizardo (2024)
+:::
+
+## CA and Generalized Similarity
+
+
+
+. . .
+
+
+- And for groups:
+
+$$
+S(g, g') = \frac{\alpha}{C_g^R(1)C_{g'}^R(1)}
+    \sum_{i = 1}^{C_g^R(1)} \sum_{j = 1}^{C_{g'}^R(1)} 
+    S\left(p(i)_{i \in N(g)}, p(j)_{j \in N(g')}\right)
+$$ {#eq-simrank2}
+
+. . .
+
+- $S(p, p) = 1$ and $S(g, g) = 1$ 
+- $\alpha$ is a free parameter, with the restriction: $0 > \alpha < 1$
+
+
+::: {.notes}
+In two-mode networks, SimRank scores can be estimated via a simple algorithm, in which we first estimate $S(p, p')$ in equation @eq-simrank1 using baseline values. Hence, only groups that two people share contribute to the initial values of $S(p, p')$ since only $S(g, g)>0$ at the outset. We then plug those values into equation @eq-simrank2, then loop back to equation @eq-simrank1 with the resulting $S(g, g')$ values, and continue iterating until convergence---generally achieved after five iterations
+:::
+
+## CA and Generalized Similarity
+:::: {.columns}
+::: {.column width="30%"}
+![SimRank Re-ordered Affiliation Matrix](Plots/simrank-plot-reord.png)
+:::
+
+::: {.column width="65%"}
+![Simrank Similarity Matrix Eigenvalue Plot](Plots/simrank-plot-eigen.png)
+:::
+::::
+
+
+## CA and Generalized Similarity
+:::: {.columns}
+::: {.column width="65%"}
+![Simrank Correspondence Plot](Plots/simrank-plot-corr.png)
+:::
+
+::: {.column width="24%"}
+![Correlation between CA and SimRank Eigenvectors](Plots/simrank-plot-scatter.png)
+:::
+::::
+
+## Conclusions
+
+- What have we learned after all of this? A few lessons:
+  - You can use CA so do more than "visually explore" two-mode network data!
+  - Instead, you an use CA to do "real" sna
+    - Compute (a version of) centrality on each node
+    - Discover Dual Community Partitions
+    - Assign nodes to (generalized) similarity classes
+  - Using CA for this kind of "spectral clustering" and "spectral ranking" is not common but feasible
+  - Another approach (similar to blockmodeling):
+    - Use CA for spectral clustering
+    - Then use **specific CA** (on a sub-table) to split clusters into further clusters
+    
+## Thanks!
+
+[https://github.com/olizardo/correspondence-analysis-two-mode-networks](https://github.com/olizardo/correspondence-analysis-two-mode-networks)
+
+olizardo@soc.ucla.edu
+
