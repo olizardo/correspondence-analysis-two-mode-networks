@@ -25,46 +25,12 @@ date: "`r Sys.Date()`"
    library(kableExtra)
    library(pals)
    library(patchwork)
-   source(here("Functions", "TwoModeCA.R"))
-   source(here("Functions", "TwoModeSR.R"))
-   source(here("Functions", "TwoModeGSR.R"))
-   source(here("Functions", "reflections.R"))
-   source(here("Functions", "ref.long.dat.R"))
 ```
 
-# Data
-```{r Southern women data}
-    A <- matrix(
-         c(
-          1, 1, 1, 1, 1,  1, 0, 1, 1,  0, 0, 0, 0, 0, 
-          1, 1, 1, 0, 1,  1, 1, 1, 0,  0, 0, 0, 0, 0, 
-          0, 1, 1, 1, 1,  1, 1, 1, 1,  0, 0, 0, 0, 0, 
-          1, 0, 1, 1, 1,  1, 1, 1, 0,  0, 0, 0, 0, 0, 
-          0, 0, 1, 1, 1,  0, 1, 0, 0,  0, 0, 0, 0, 0, 
-          0, 0, 1, 1, 1,  1, 0, 1, 0,  0, 0, 0, 0, 0, 
-          0, 0, 0, 1, 1,  1, 1, 1, 0,  0, 0, 0, 0, 0, 
-          0, 0, 0, 1, 1,  0, 1, 1, 1,  0, 0, 0, 0, 0, 
-          
-          0, 0, 0, 0, 0,  0, 1, 1, 1,  0, 0, 1, 0, 0, 
-          0, 0, 0, 0, 0,  0, 0, 1, 1,  1, 0, 1, 0, 0, 
-          0, 0, 0, 0, 0,  0, 0, 1, 1,  1, 0, 1, 1, 1,
-          0, 0, 0, 0, 0,  0, 1, 1, 1,  1, 0, 1, 1, 1,
-          0, 0, 0, 0, 0,  0, 1, 0, 1,  1, 1, 1, 1, 1,
-          0, 0, 0, 0, 0,  0, 1, 1, 0,  1, 1, 1, 0, 0,
-          0, 0, 0, 0, 0,  0, 0, 0, 1,  0, 1, 0, 0, 0,
-          0, 0, 0, 0, 0,  0, 0, 0, 1,  0, 1, 0, 0, 0, 
-          
-          0, 0, 0, 0, 0,  1, 0, 1, 1,  0, 0, 0, 0, 0,
-          0, 0, 0, 0, 0,  0, 0, 1, 1,  0, 0, 0, 0, 0),
-          ncol = 14, byrow = TRUE)
-     w <- c("EVELYN", "LAURA", "THERESA", "BRENDA", "CHARLOTTE", "FRANCES", "ELEANOR", "RUTH", "VERNE", "MYRNA", "KATHERINE", "SYLVIA", "NORA", "HELEN", "OLIVIA", "FLORA", "PEARL", "DOROTHY")
-     e <- paste("E", c(1:14), sep = "")
-     rownames(A) <- w
-     colnames(A) <- e
-```
-
+# Southern Women Data Table
 ```{r HTML data table}
-   A <- A[sort(rownames(A)), ]
+   source(here("Functions", "sw.dat.R"))
+   A <- A[sort(rownames(sw.dat())), ]
    kbl(A, align = "c", format = "html") %>% 
       kable_minimal(full_width = F, font_size = 26) %>% 
       row_spec(1:18, extra_css = "border-bottom: 0px;line-height: 20px;") %>% 
@@ -94,14 +60,15 @@ date: "`r Sys.Date()`"
 ```
 
 ```{r Reflections Bump Chart (Persons)}
+   source(here("Functions", "reflections.R"))
+   source(here("Functions", "ref.long.dat.R"))
    evens <- function(x) subset(x, x %% 2 == 0)
    odds <- function(x) subset(x, x %% 2 != 0)
    a <- reflections(A, iter = 26)
    p.e.r <- a$p.r[, evens(1:20)]
-   p.o.r <- a$p.r[, odds(1:20)]
-   p.o.r <- p.o.r[, -1]
-   b <- ref.long.dat(a = a$p.r, b = a$g.r, max.iter = 26)
-   plot.dat <- b$person$even
+   g.e.r <- a$g.r[, evens(1:20)]
+   b <- ref.long.dat(a = p.e.r, b = g.e.r, max.iter = 26)
+   plot.dat <- b$person
    p <- ggplot(data = filter(plot.dat, n.iter < 18),
                mapping = aes(x = n.iter, y = ref, color = person))
    # geoms
@@ -134,8 +101,7 @@ date: "`r Sys.Date()`"
 ```
 
 ```{r Reflections Bump Chart (Groups)}
-   plot.dat <- b$group$even %>% 
-      mutate(ref = 15 - ref)
+   plot.dat <- b$group
    p <- ggplot(data = filter(plot.dat, n.iter < 14),
                mapping = aes(x = n.iter, y = ref, color = group))
    #geoms
