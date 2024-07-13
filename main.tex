@@ -467,16 +467,16 @@ We can confirm that the first CA axis points toward the underlying community par
     \captionsetup[subfigure]{font=footnotesize,labelfont=footnotesize}
     \centering
      \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=1.0\textwidth]{Plots/p-e}
-            \caption{Re-ordered Affiliation matrix (CA).}
+        \includegraphics[width=1.0\textwidth]{Plots/p-ca-eigvec.png}
+            \caption{Eigenvector plot (Persons).}
             \label{fig:ca-reord}
     \end{subfigure}
      \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=1.0\textwidth]{Plots/bon-reord.png}
-            \caption{Re-ordered Affiliation matrix (Bonacich).}
+        \includegraphics[width=1.0\textwidth]{Plots/g-ca-eigvec.png}
+            \caption{Eigenvector plot (Groups).}
             \label{fig:bon-reord}
     \end{subfigure}
-    \caption{CA Eigenvector plot for persons (a) and groups (c). The first CA score is on the x-axis, and the rank order of persons and groups is on the y-axis. Insets show the eigenvalue orderings on the x-axis ($k$) for persons (b) and groups (d).}
+    \caption{CA Eigenvector plot for persons (a) and groups (b). The first CA score is on the x-axis, and the rank order of persons and groups is on the y-axis. Insets show the eigenvalue orderings on the x-axis ($k$) for persons and groups.}
     \label{fig:ca-eigvec}
 \end{figure}
 
@@ -484,8 +484,23 @@ We can confirm that the first CA axis points toward the underlying community par
 To further appreciate the links between CA, reflective centralities, and community partitioning in two-mode networks, note that $S_p = ADg^{-1}A^T$ in~\ref{eq:dam1} can be thought of as giving the similarity between pairs of people weighted by the size of the groups they belong to (so that people are more similar when they share smaller memberships).\footnote{Note that \citet[eq.2]{newman2001scientific} proposes a slightly modified version of this two-mode similarity score for people---in Newman's case, scientists---except that the one mode projection is normalized as $A(Dg - I)^{-1}A^T$; namely, the size of the ``group''---the number of co-authors on a scientific paper---minus one. Substantively, this is unlikely to make much difference as the rank order of dyads by similarity between the two scores will be identical.} The same interpretation can be given to $S_g = A^TDp^{-1}A$ in~\ref{eq:dam2}, which is the similarity of groups weighted by the activity of the people in them (so that groups are more similar when they share members who do not belong to many other groups). As \citet{van2021correspondence} show, the eigenvectors corresponding to (the Laplacian\footnote{For the similarity matrix $S$, the Laplacian is defined as $D-S$ where $D$ is the matrix containing the degrees of either people or groups in the diagonal and zeroes in every other cell.} of) these similarity matrices are equivalent to $C^R$. This means that the relative spread of the eigenvalues of the degree-weighted similarity matrix provides information concerning the quality of the resulting community partition. These are shown as inset plots in Figure~\ref{fig:ca-eigvec} for both people and groups. Note that in both cases, the first two eigenvalues separate from the rest, strongly indicating a dual-community structure in the Southern Women two-mode network. 
 
 \begin{figure}
+    \captionsetup[subfigure]{font=footnotesize,labelfont=footnotesize}
     \centering
-    \includegraphics[width=1.0\textwidth]{Plots/ca-sim.png}
+     \begin{subfigure}[b]{0.425\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/p-ca-sim.png}
+            \caption{CA Similarity plot (Persons).}
+            \label{fig:p-ca-sim}
+    \end{subfigure}
+     \begin{subfigure}[b]{0.4\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/g-ca-sim.png}
+            \caption{CA Similarity plot (Groups).}
+            \label{fig:g-ca-sim}
+    \end{subfigure} \\
+     \begin{subfigure}[b]{0.65\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/ca-corr-plot.png}
+            \caption{CA correspondence plot.}
+            \label{fig:ca-corr}
+    \end{subfigure}
     \caption{CA similarity plots for persons (a) and groups (b) on the left and right top panel. The bottom panel (c) shows the correspondence plot for persons and groups with scores corresponding to the first dimension on the horizontal axis and scores corresponding to the second dimension on the vertical axis.}
     \label{fig:ca-sim}
 \end{figure}
@@ -498,8 +513,23 @@ The bottom panel of Figure~\ref{fig:ca-sim} shows the usual correspondence plot 
 Note that this differs from the usual interpretation of the CA correspondence plot, which is usually taken to bring together nodes with ``similar'' connectivity patterns, where similarity is presumed to be a function of their raw row profiles (for people) or column profiles (for groups). This interpretation implies (for instance) that two people who attend many of the same events or two groups with many members will appear close in the plot. But this (still common) interpretation is off the mark. What the CA correspondence plot distance captures is, instead, people and groups that are \textit{surprisingly} similar (e.g., from the point of view of a suitable null model, like independence) after taking people's activity levels and the sizes of the groups they belong to into account.\footnote{Note that this, finding ``surprising'' similarities in terms of the indirect paths linking nodes in a network after the main effects of node-connectivity are considered, is the same rationale given by \cite{leicht2006vertex} for weighting the \citet{katz1953new} similarity matrix by the degrees of the corresponding nodes \citep[see][68, eqs. 2.13 and 2.14]{fouss2016algorithms}. As we have seen, this is precisely the key contrast between the Bonacich and the CA dual centrality measures for two-mode networks.} Thus, people who share memberships in small groups will be closer in the diagram than people who share memberships in big groups. In the same way, groups that share people with few memberships will be closer in the diagram than those sharing people with many other memberships. 
 
 \begin{figure}
+    \captionsetup[subfigure]{font=footnotesize,labelfont=footnotesize}
     \centering
-    \includegraphics[width=1.0\textwidth]{Plots/bon-sim.png}
+     \begin{subfigure}[b]{0.425\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/p-bon-sim.png}
+            \caption{Bonacich Similarity plot (Persons).}
+            \label{fig:p-bon-sim}
+    \end{subfigure}
+     \begin{subfigure}[b]{0.4\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/g-bon-sim.png}
+            \caption{Bonacich Similarity plot (Groups).}
+            \label{fig:g-bon-sim}
+    \end{subfigure} \\
+     \begin{subfigure}[b]{0.65\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/bon-corr-plot.png}
+            \caption{Bonacich correspondence plot.}
+            \label{fig:bon-corr}
+    \end{subfigure}
     \caption{Bonacich dual centrality similarity plots for persons (a) and groups (b) on the left and right top panel. The bottom panel (c) shows the Bonacich eigenvector centrality correspondence plot for persons and groups with scores corresponding to the standard Bonacich eigenvector centrality on the horizontal axis and scores corresponding to the second largest eigenvector of the affiliation matrix on the vertical axis.}
     \label{fig:bon-sim}
 \end{figure}
@@ -546,8 +576,33 @@ Likewise, for groups, the SimRank similarities are given by:
 Where $p(i)_{i \in N(g)}$ is the $i^{th}$ person in the set of members of group $g$, and $p(j)_{j \in N(g')}$ is the $j^{th}$ person in the set of members of group $g'$, and $S(g, g) = 1$. Thus, the SimRank similarity between two groups is a function of the sum of the similarities of each pair of people who belong to both groups, weighted by the reciprocal of the products of the number of members of each group multiplied by $\alpha$.
 
 \begin{figure}
+    \captionsetup[subfigure]{font=footnotesize,labelfont=footnotesize}
     \centering
-    \includegraphics[width=0.8\textwidth]{Plots/sr-plot.png}
+     \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/sr-plot-reord.png}
+            \caption{Bonacich Similarity plot (Persons).}
+            \label{fig:p-bon-sim}
+    \end{subfigure}
+     \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/p-sr-plot-eigen.png}
+            \caption{Bonacich Similarity plot (Groups).}
+            \label{fig:g-bon-sim}
+    \end{subfigure} 
+     \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/g-sr-plot-eigen.png}
+            \caption{Bonacich correspondence plot.}
+            \label{fig:bon-corr}
+    \end{subfigure} \\
+     \begin{subfigure}[b]{0.6\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/sr.png}
+            \caption{Bonacich Similarity plot (Groups).}
+            \label{fig:g-bon-sim}
+    \end{subfigure} 
+     \begin{subfigure}[b]{0.2\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/g-sr-plot-eigen.png}
+            \caption{SimRank correspondence plot.}
+            \label{fig:sr-corr}
+    \end{subfigure}
     \caption{Simrank versus CA comparison. Panel (a) shows the affiliation matrix re-ordered according to the first eigenvector of the SVD of the SimRank similarity matrix. Panels (b) and (d) show the corresponding eigenvector and eigenvalue---panels (c) and (e)---plots for persons and groups, respectively, of the SimRank similarity matrix. Panel (f) shows the correspondence plot based on the eigenvector decomposition of the SimRank similarity matrix. Panels (g) and (h) show the Pearson correlation between the scores corresponding to the first eigenvector of the SimRank similarity matrix (on the y-axis) and the scores corresponding to the first CA dimension (on the x-axis).}
     \label{fig:simrank}
 \end{figure}
