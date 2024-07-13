@@ -435,6 +435,24 @@ The same reasoning applies to groups in~\ref{eq:dam2}, whose entries are given b
 
 Now, as has been noted by two-mode data analysts in other contexts \citep[e.g.,][]{faust2005using} it turns out that this ``double-pre-weighting'' of each cell entry by the degrees of each mode (e.g., the row and column sums of the original affiliation matrix) is precisely that used for the CA of a two-mode matrix.\footnote{More accurately, cells are weighted by the inverse of the square root of the product of the row, and column sums \citep[e.g.,][124]{faust2005using}.} And indeed, the limit reflective centralities obtained from equations~\ref{eq:dam1} and~\ref{eq:dam2}---which will be given by the eigenvectors corresponding to the \textit{second} largest eigenvalue of the resulting solution---will be equivalent to the row and column scores corresponding to the first non-trivial dimension (for people and groups respectively) obtained from a simple CA of the original affiliation matrix \citep[398, eq. 9.17]{fouss2016algorithms}.\footnote{As \citet[126]{faust2005using} notes, the first non-trivial CA dimension is also given by the eigenvector corresponding to the second-largest eigenvalue of $D_p^{-1/2}AD_g^{-1/2}$.} In fact, the method of ``reflections'' is just a re-discovery of the older idea of reciprocal averaging \citep{hill1973reciprocal}, which is yet another way of computing row and column scores for elements in a two-mode matrix that are substantively equivalent to those obtained by (the first non-trivial dimension of) CA \citep{mealy2019interpreting}.
 
+\begin{figure}
+    \captionsetup[subfigure]{font=footnotesize,labelfont=footnotesize}
+    \centering
+     \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/p-ca-ref-corr.png}
+            \caption{CA/Reflection Correlation (Persons).}
+            \label{fig:p-ca-ref}
+    \end{subfigure}
+     \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/g-ca-ref-corr.png}
+            \caption{CA/Reflection Correlation (Groups)}
+            \label{fig:g-ca-ref}
+    \end{subfigure}
+    \caption{Scatter plot of the scores computed by the method of reflections ($q = 26$) on the y-axis and the first dimension of the Correspondence Analysis of the two-mode affiliation matrix on the x-axis, for both persons (a) and groups (b). }
+    \label{fig:ca-ref-corr}
+\end{figure}
+
+
 Degree-pre-weighting does not radically alter the nature of the data. Indeed, it corresponds to moving from sums to averages, thus ``adjusting'' for the influence of person-activity and group size---a seemingly perennial issue in two-mode data analysis \citep[159ff]{bonacich1991simultaneous}. This can be seen by the fact that Equations~\ref{eq:mealy1} and~\ref{eq:mealy2} show that, substantively, what the degree pre-weighting does is that, for people, co-memberships count for more in determining interpersonal similarity when the group in question is small than when it is large. On the group side, shared members who do not have many affiliations count more in determining intergroup similarity than those with many affiliations. 
 
 Accordingly, it would make no sense to call the Bonacich scores $C^B_p$ and $C^B_g$ from equations~\ref{eq:bon3} and~\ref{eq:bon4} ``centrality scores'' but fail to hold that designation from $C^R_p$ and $C^R_g$, given that the mathematics are not only ``similar'' \citep[162]{bonacich1991simultaneous} but formally identical. In the Bonacich case, an eigendecomposition of the one-mode projection of the two-mode network; in the reflective case, an eigendecomposition of the degree-weighted one-mode projection of the same network. Accordingly, the CA of a two-mode network will return---along the first dimension---a rank-ordered score for nodes in each mode that meets all the conditions for qualifying as a centrality measure for two-mode networks. Particularly, the CA centrality retains the duality property \citep[128]{faust2005using}, as the (average) centrality of people is a function of the (average) centrality of the groups they belong to. The (average) centrality of groups, in turn, is a function of their members' (average) centrality. The person and group score ranks given by the first CA dimension are thus better thought of as \textit{activity and group-size normalized} versions of the familiar Bonacich \citeyearpar{bonacich1991simultaneous} dual centralities for two-mode networks.
@@ -578,32 +596,32 @@ Where $p(i)_{i \in N(g)}$ is the $i^{th}$ person in the set of members of group 
 \begin{figure}
     \captionsetup[subfigure]{font=footnotesize,labelfont=footnotesize}
     \centering
-     \begin{subfigure}[b]{0.3\textwidth}
+     \begin{subfigure}[b]{0.35\textwidth}
         \includegraphics[width=1.0\textwidth]{Plots/sr-plot-reord.png}
-            \caption{Bonacich Similarity plot (Persons).}
+            \caption{Re-ordered Affiliation Matrix (SimRank).}
             \label{fig:p-bon-sim}
     \end{subfigure}
      \begin{subfigure}[b]{0.3\textwidth}
         \includegraphics[width=1.0\textwidth]{Plots/p-sr-plot-eigen.png}
-            \caption{Bonacich Similarity plot (Groups).}
+            \caption{SimRank Eigenvector Plot (Persons).}
             \label{fig:g-bon-sim}
     \end{subfigure} 
      \begin{subfigure}[b]{0.3\textwidth}
         \includegraphics[width=1.0\textwidth]{Plots/g-sr-plot-eigen.png}
-            \caption{Bonacich correspondence plot.}
+            \caption{SimRank Eigenvector Plot (Groups).}
             \label{fig:bon-corr}
     \end{subfigure} \\
-     \begin{subfigure}[b]{0.6\textwidth}
-        \includegraphics[width=1.0\textwidth]{Plots/sr.png}
-            \caption{Bonacich Similarity plot (Groups).}
+     \begin{subfigure}[b]{0.55\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/sr-corr-plot.png}
+            \caption{SimRank Correspondence Plot}
             \label{fig:g-bon-sim}
     \end{subfigure} 
-     \begin{subfigure}[b]{0.2\textwidth}
-        \includegraphics[width=1.0\textwidth]{Plots/g-sr-plot-eigen.png}
-            \caption{SimRank correspondence plot.}
+     \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/sr-corr-scatter.png}
+            \caption{SimRank/CA Correlation.}
             \label{fig:sr-corr}
     \end{subfigure}
-    \caption{Simrank versus CA comparison. Panel (a) shows the affiliation matrix re-ordered according to the first eigenvector of the SVD of the SimRank similarity matrix. Panels (b) and (d) show the corresponding eigenvector and eigenvalue---panels (c) and (e)---plots for persons and groups, respectively, of the SimRank similarity matrix. Panel (f) shows the correspondence plot based on the eigenvector decomposition of the SimRank similarity matrix. Panels (g) and (h) show the Pearson correlation between the scores corresponding to the first eigenvector of the SimRank similarity matrix (on the y-axis) and the scores corresponding to the first CA dimension (on the x-axis).}
+    \caption{Simrank versus CA comparison. Panel (a) shows the affiliation matrix re-ordered according to the first eigenvector of the SVD of the SimRank similarity matrix. Panels (b) and (c) show the corresponding eigenvector and eigenvalue plots for persons and groups, respectively, of the SimRank similarity matrix. Panel (d) shows the correspondence plot based on the eigenvector decomposition of the first two non-trivial eigenvectors of the SimRank similarity matrix. Panel (e) shows the Pearson correlation between the scores corresponding to the first eigenvector of the SimRank similarity matrix (on the y-axis) and the scores corresponding to the first CA dimension (on the x-axis) for persons (top) and groups (bottom).}
     \label{fig:simrank}
 \end{figure}
 
