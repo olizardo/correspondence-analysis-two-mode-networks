@@ -275,12 +275,12 @@ Figure~\ref{fig:g-refs} shows the corresponding bump chart for the events. Just 
     \captionsetup[subfigure]{font=footnotesize,labelfont=footnotesize}
     \centering
      \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=1.0\textwidth]{Plots/p-reflections-sw.png}
+        \includegraphics[width=1.0\textwidth]{Plots/p-reflections.png}
             \caption{Reflective centrality trajectories of persons.}
             \label{fig:p-refs}
     \end{subfigure}
      \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=1.0\textwidth]{Plots/g-reflections-sw.png}
+        \includegraphics[width=1.0\textwidth]{Plots/g-reflections.png}
             \caption{Reflective centrality trajectories of groups.}
             \label{fig:g-refs}
     \end{subfigure}
@@ -443,22 +443,15 @@ Accordingly, it would make no sense to call the Bonacich scores $C^B_p$ and $C^B
     \captionsetup[subfigure]{font=footnotesize,labelfont=footnotesize}
     \centering
      \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=1.0\textwidth]{Plots/p-reflections-sw.png}
-            \caption{Reflective centrality trajectories of persons.}
-            \label{fig:p-refs}
+        \includegraphics[width=1.0\textwidth]{Plots/ca-reord.png}
+            \caption{Re-ordered Affiliation matrix (CA).}
+            \label{fig:ca-reord}
     \end{subfigure}
      \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=1.0\textwidth]{Plots/g-reflections-sw.png}
-            \caption{Reflective centrality trajectories of groups.}
-            \label{fig:g-refs}
+        \includegraphics[width=1.0\textwidth]{Plots/bon-reord.png}
+            \caption{Re-ordered Affiliation matrix (Bonacich).}
+            \label{fig:bon-reord}
     \end{subfigure}
-    \caption{Reflective centralities for persons and groups (even reflections)}
-    \label{fig:refs}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.8\textwidth]{Plots/ca-v-bon-reord.png}
     \caption{Southern Women Affiliation matrix with re-ordered rows and columns: (a) row and columns re-ordered according to the person and group score on the first CA dimension, (b) row and columns re-ordered according to person and group Eigenvector centrality score.}
     \label{fig:ca-v-bon}
 \end{figure}
@@ -471,8 +464,18 @@ Figures~\ref{fig:ca-v-bon}(a) and~\ref{fig:ca-v-bon}(b) illustrate the key diffe
 We can confirm that the first CA axis points toward the underlying community partitioning of the two-mode network by looking at Figure~\ref{fig:ca-eigvec}(a) and~\ref{fig:ca-eigvec}(c), which shows the $C^R$ score of persons and groups on the x-axis against the score's rank order on the y-axis. If a two-mode network has no discernible community structure, the first dimension CA scores would be distributed as a continuous logistic curve; when community structure is present, we should observe discernible breaks in this distribution \citep{van2021correspondence}. The Southern Women data clearly belong to the second category. In the people mode, we have $\left[Frances, Laura, Brenda, Charlotte, Evenly, Theresa, Elanor, Ruth, Pearl\right]$ on one side, $\left[Dorothy, Nora, Katherine, Sylvia, Flora, Olivia, Myra, Helen, Verne\right]$ on the other. Among events, we have $\left[E1, E2, E3, E4, E5, E6\right]$ on side $\left[E9, E10, E11, E12, E13, E14\right]$ on the other and $\left[E7, E8\right]$ in an ambiguous middle position. Note that this is roughly the same partitioning obtained by \citep{doreian2004generalized} and reproduced by \citet{kovacs2010generalized} and \citet{lizardo2024two} using a generalized relational similarity approach. This indicates that persons and groups receive similar scores in the first dimension of CA only when they have similar connectivity similar to \textit{similar} groups, where group similarity is defined dually as having members in common who are themselves similar. 
 
 \begin{figure}
+    \captionsetup[subfigure]{font=footnotesize,labelfont=footnotesize}
     \centering
-    \includegraphics[width=0.8\textwidth]{Plots/ca-eigvec.png}
+     \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/p-e}
+            \caption{Re-ordered Affiliation matrix (CA).}
+            \label{fig:ca-reord}
+    \end{subfigure}
+     \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/bon-reord.png}
+            \caption{Re-ordered Affiliation matrix (Bonacich).}
+            \label{fig:bon-reord}
+    \end{subfigure}
     \caption{CA Eigenvector plot for persons (a) and groups (c). The first CA score is on the x-axis, and the rank order of persons and groups is on the y-axis. Insets show the eigenvalue orderings on the x-axis ($k$) for persons (b) and groups (d).}
     \label{fig:ca-eigvec}
 \end{figure}
