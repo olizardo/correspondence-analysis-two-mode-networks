@@ -142,7 +142,7 @@ date: "`r Sys.Date()`"
    p <- p + geom_point(size = 3, color = "blue") 
    p <- p + geom_smooth(method = "lm", se=FALSE, formula = y ~ x, color = "gray")
    p <- p + geom_text_repel(aes(label = rownames(p.plot.dat)), color = "red")
-   p <- p + theme_minimal() + labs(x = "First CA Dimension", y = "18th Reflection (Standardized)")
+   p <- p + theme_minimal() + labs(x = "First CA Dimension", y = "26th Reflection (Standardized)")
    p <- p + theme(axis.text = element_text(size = 16),
                   axis.title = element_text(size = 16))
    png(file = here("Plots", "p-ca-ref-corr.png"), width=600, height=625)
@@ -156,7 +156,7 @@ date: "`r Sys.Date()`"
    p <- p + geom_smooth(method = "lm", se=FALSE, formula = y ~ x, color = "gray")
    p <- p + geom_text_repel(aes(label = rownames(g.plot.dat)), 
                             color = "blue", size = 6)
-   p <- p + theme_minimal() + labs(x = "First CA Dimension", y = "14th Reflection (Standardized)")
+   p <- p + theme_minimal() + labs(x = "First CA Dimension", y = "26th Reflection (Standardized)")
    p <- p + theme(axis.text = element_text(size = 16),
                   axis.title = element_text(size = 16))
    png(file = here("Plots", "g-ca-ref-corr.png"), width=600, height=625)
@@ -232,7 +232,7 @@ date: "`r Sys.Date()`"
 
 ```{r SimRank Plot}
    source(here("Functions", "TwoModeSR.R"))
-   tmSR.res <- TwoModeSR(A)
+   tmSR.res <- TwoModeSR(A, n.eig = 5)
     a <- tmSR.res$eigvec.plot.r 
     b <- tmSR.res$eigvec.plot.c 
     c <- tmSR.res$eigval.plot.r
@@ -275,6 +275,10 @@ date: "`r Sys.Date()`"
    png(file = here("Plots", "sr-corr-scatter.png"), width=350, height=625)
    g / h
    dev.off()
+   png(file = here("Plots", "sr-corr-plot.png"), width=600, height=625)
+   tmSR.res$corr.plot
+   dev.off()
+   
 ```
 
 
