@@ -185,10 +185,10 @@ date: "`r Sys.Date()`"
     a <- a + inset_element(c, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
     b <- b + inset_element(d, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
     
-   png(file = here("Plots", "p-ca-eigvec-p.png"), width=500, height=500)
+   png(file = here("Plots", "p-ca-eigvec.png"), width=500, height=500)
    a
    dev.off() 
-   png(file = here("Plots", "g-ca-eigvec-g.png"), width=500, height=500)
+   png(file = here("Plots", "g-ca-eigvec.png"), width=500, height=500)
    b
    dev.off() 
 ```
@@ -240,7 +240,6 @@ date: "`r Sys.Date()`"
     a <- a + inset_element(c, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
     b <- b + inset_element(d, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
     e <- tmSR.res$A.plot
-
    dat.r <- data.frame(ca = as.numeric(tm$ca.eigvec.r[,1]),
                        sr = tmSR.res$ev.r1,
                        lab = rownames(A))

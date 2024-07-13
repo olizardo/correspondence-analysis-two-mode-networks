@@ -23,7 +23,7 @@ TwoModeSR <- function(A, k = 4, n.eig = 4) {
    ev.c2 <- e.c[, 2] #second main eigenvector of column similarity matrix
    
    # Affiliation matrix plot (SimRank ordering)
-   A.ord <- as.matrix(A[order(ev.r1), order(ev.c1)])
+   A.ord <- as.matrix(A[order(ev.r1), order(ev.c1*-1)])
    A.plot <- ggcorrplot(t(A.ord)) 
    A.plot <- A.plot + scale_x_discrete(position = "top")
    A.plot <- A.plot + theme(legend.position = "none",
@@ -50,15 +50,29 @@ TwoModeSR <- function(A, k = 4, n.eig = 4) {
                               cluster = as.factor(k.c$cluster))
    eigvec.plot.r <- eigvec.scatter(eigvec.dat.r, s = 14)
    eigvec.plot.c <- eigvec.scatter(eigvec.dat.c, s = 14)
+   
+   #k-means similarity-based clustering
+   km.r <- hkmeans(data.frame(e.r[, 1:n.eig]), n.eig)
+   km.c <- hkmeans(data.frame(e.c[, 1:n.eig]), n.eig)
+   
+   # Correspondence Plot (SimRank)
+   a <- rbind(e.r[, 1:2], e.c[, 1:2]*-1)
+   colnames(a) <- c("d1", "d2")
+   b <- c(rownames(A), colnames(A))
+   c <- factor(c(km.r$cluster, km.c$cluster))
+   d <- data.frame(a, cluster = c, lab = b)
+   corr.plot <- corr.scatter(d)
 
 return(list(
    ev.r1 = ev.r1,
-   ev.c1 = ev.c1,
+   ev.c1 = ev.c1, 
    A.plot = A.plot,
    eigval.plot.c = eigval.plot.c,
    eigval.plot.r = eigval.plot.r,
    eigvec.plot.c = eigvec.plot.c,
-   eigvec.plot.r = eigvec.plot.r))
+   eigvec.plot.r = eigvec.plot.r,
+   corr.plot = corr.plot)
+   )
    }
 
 
