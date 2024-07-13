@@ -267,17 +267,25 @@ blockmodeling solution of Doreian et al. (2004, Table 4).} \\
 \end{table}
 
 \subsection{Empirical Example} \label{subsec:ex}
-Figure~\ref{fig:pg-reflections} shows the trajectory of the HH reflective centralities for persons (top panel) and groups (bottom panel) in the Southern Women data \citep{davis1941}, shown in Table~\ref{tab:southern}. The rank order of people and groups in the $q^{th}$ centrality is plotted on the y-axis, and the centrality iteration $q$ is plotted on the x-axis.
+Figure~\ref{fig:p-refs} shows the trajectory of the HH reflective centralities for persons in the Southern Women data \citep{davis1941}, using a bump chart to plot the rank order trajectory of persons across reflections. The rank order of people and groups in the $q^{th}$ centrality is plotted on the y-axis, and the centrality iteration $q$ is plotted on the x-axis. As the figure shows, $NORA$, $FLORA$, $CHARLOTTE$, and $EVELYN$ are the top-ranked actors when it comes to $C^R_p(2)$:  The average number of members of the groups they belong to. However, their fates in this reflective metric diverge at higher reflections, with $NORA$ and $FLORA$ maintaining their top positions but $CHARLOTTE$ and $EVELYN$ tumbling down the ranks, suggesting that the members of the groups they belong to affiliate with smaller groups than the members of the groups $NORA$ and $FLORA$ belong to (and so on for higher reflections). Notably, the reflective centrality rankings after freezing ($q \geq 18$) recover the Doreian et al. (2004) block partition (see Table~\ref{tab:southern}), but this time with Dorothy and Pearl in the middle separating the two largest blocks of women. 
 
-As the bottom panel of the figure shows, $NORA$, $FLORA$, $CHARLOTTE$, and $EVELYN$ are the top-ranked actors when it comes to $C^R_p(2)$:  The average number of members of the groups they belong to. However, their fates in this reflective metric diverge at higher reflections, with $NORA$ and $FLORA$ maintaining their top positions but $CHARLOTTE$ and $EVELYN$ tumbling down the ranks, suggesting that the members of the groups they belong to affiliate with smaller groups than the members of the groups $NORA$ and $FLORA$ belong to (and so on for higher reflections). Notably, the reflective centrality rankings after freezing ($q \geq 18$) recover the Doreian et al. (2004) block partition (see Table~\ref{tab:southern}), but this time with Dorothy and Pearl in the middle separating the two largest blocks of women. 
+Figure~\ref{fig:g-refs} shows the corresponding bump chart for the events. Just like for these actors, the equilibrium reflective centralities recover the ordering of the columns according to Doreian et al. generalized blockmodel with events 1-6 separated from events 10-15 by events 7-9 (see also \citet{kovacs2010generalized}). Figure~\ref{fig:pg-reflections} shows that $E14$ experiences the most dramatic improvement in status as we move to higher reflections. Relatively low ranked when it comes to the average number of memberships of its members, it increases in standing when considering the average of the average number of memberships of its members (and so forth). 
 
-The bottom panel of Figure~\ref{fig:pg-reflections} shows the corresponding bump chart for the events. Just like for these actors, the equilibrium reflective centralities recover the ordering of the columns according to Doreian et al. generalized blockmodel with events 1-6 separated from events 10-15 by events 7-9 (see also \citet{kovacs2010generalized}). Figure~\ref{fig:pg-reflections} shows that $E14$ experiences the most dramatic improvement in status as we move to higher reflections. Relatively low ranked when it comes to the average number of memberships of its members, it increases in standing when considering the average of the average number of memberships of its members (and so forth). 
-
-\begin{figure}
+\begin{figure}[ht!]
+    \captionsetup[subfigure]{font=footnotesize,labelfont=footnotesize}
     \centering
-    \includegraphics[width=0.75\textwidth]{Plots/pg-reflections.jpg}
-    \caption{Reflective centrality trajectories of persons and groups (even reflections).}
-    \label{fig:pg-reflections}
+     \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/p-reflections-sw.png}
+            \caption{Reflective centrality trajectories of persons.}
+            \label{fig:p-refs}
+    \end{subfigure}
+     \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/g-reflections-sw.png}
+            \caption{Reflective centrality trajectories of groups.}
+            \label{fig:g-refs}
+    \end{subfigure}
+    \caption{Reflective centralities for persons and groups (even reflections)}
+    \label{fig:refs}
 \end{figure}
 
 \section{Correspondence Analysis, Dual Centrality, and Communities in Two-Mode Networks} \label{sec:ca}
@@ -370,7 +378,9 @@ Of course, it is evident that these sum of sums would diverge to a bigger and bi
    \label{eq:BRq_gn}
 \end{equation} 
 
-Where the denominator in~\ref{eq:BRq_pn} and~\ref{eq:BRq_gn} is the Euclidean vector norm.\footnote{For any vector $\mathbf{x}$ of length $n$, the $L_2$ norm is given by: $||\mathbf{x}||_2 = \sqrt{\sum_i^n x_i^2}$.} The normalization will prevent divergence of the sum of centralities for persons and groups, formalizing the weaker assumption of \textit{proportionality} between the centrality of each set of nodes and the sum of the centralities of the nodes in the other mode to which they are connected rather than the stronger assumption of strict equivalence \citep{bonacich_lloyd01}. Furthermore, the normalization guarantees convergence and the ``freezing'' of the sums around steady values after a few iterations. These values will be equivalent (up to rounding error) to the (absolute value) of the dominant row and column eigenvectors of $\mathbf{A}$ as given in~\ref{eq:bon1} and~\ref{eq:bon2}.\footnote{Note that dividing by any vector norm---e.g., the $L_1$ or max norm---will prevent divergence and return scores perfectly correlated to the Bonacich eigenvector approach. Dividing by the $L_2$ norm returns scores that are \textit{exactly} the same, save for rounding error, as the absolute value of the dominant left and right eigenvectors of the affiliation matrix.} In fact, the iterative (normalized sum of sums) approach is one way of computing the leading eigenvectors of a rectangular matrix (e.g., the ``power'' method of \citet{mises1929praktische}). 
+Where the denominator in~\ref{eq:BRq_pn} and~\ref{eq:BRq_gn} is the Euclidean vector norm.\footnote{For any vector $\mathbf{x}$ of length $n$, the $L_2$ norm is given by: $||\mathbf{x}||_2 = \sqrt{\sum_i^n x_i^2}$.} The normalization will prevent divergence of the sum of centralities for persons and groups, formalizing the weaker assumption of \textit{proportionality} between the centrality of each set of nodes and the sum of the centralities of the nodes in the other mode to which they are connected rather than the stronger assumption of strict equivalence \citep{bonacich_lloyd01}. 
+
+Furthermore, the normalization guarantees convergence and the ``freezing'' of the sums of sums around steady values after a few iterations. These values will be equivalent (up to rounding error) to the (absolute value) of the dominant row and column eigenvectors of $\mathbf{A}$ as given in~\ref{eq:bon1} and~\ref{eq:bon2}.\footnote{Note that dividing by any vector norm---e.g., the $L_1$ or max norm---will prevent divergence and return scores perfectly correlated to the Bonacich eigenvector approach. Dividing by the $L_2$ norm returns scores that are \textit{exactly} the same, save for rounding error, as the absolute value of the dominant left and right eigenvectors of the affiliation matrix.} In fact, the iterative (normalized sum of sums) approach is one way of computing the leading eigenvectors of a rectangular matrix (e.g., the ``power'' method of \citet{mises1929praktische}). 
 
 This exercise establishes that there is more than a superficial similarity between the HH ``reflective'' centralities and the Bonacich two-mode centralities. In fact, both can be seen as instantiating an underlying reflective model of how centrality is distributed in the two-mode network, with the Bonacich approach presuming that centrality points are distributed equally across nodes in each mode regardless of their own centrality (both large and small degree nodes distribute the same ``amount'' of centrality to others) and the HH reflective approach normalizing by the centrality of nodes in each mode, so that nodes distribute a given centrality quantum that is proportional to their first-order degree centrality, with large degree nodes having less centrality to distribute than low degree nodes. 
 
@@ -428,6 +438,23 @@ Now, as has been noted by two-mode data analysts in other contexts \citep[e.g.,]
 Degree-pre-weighting does not radically alter the nature of the data. Indeed, it corresponds to moving from sums to averages, thus ``adjusting'' for the influence of person-activity and group size---a seemingly perennial issue in two-mode data analysis \citep[159ff]{bonacich1991simultaneous}. This can be seen by the fact that Equations~\ref{eq:mealy1} and~\ref{eq:mealy2} show that, substantively, what the degree pre-weighting does is that, for people, co-memberships count for more in determining interpersonal similarity when the group in question is small than when it is large. On the group side, shared members who do not have many affiliations count more in determining intergroup similarity than those with many affiliations. 
 
 Accordingly, it would make no sense to call the Bonacich scores $C^B_p$ and $C^B_g$ from equations~\ref{eq:bon3} and~\ref{eq:bon4} ``centrality scores'' but fail to hold that designation from $C^R_p$ and $C^R_g$, given that the mathematics are not only ``similar'' \citep[162]{bonacich1991simultaneous} but formally identical. In the Bonacich case, an eigendecomposition of the one-mode projection of the two-mode network; in the reflective case, an eigendecomposition of the degree-weighted one-mode projection of the same network. Accordingly, the CA of a two-mode network will return---along the first dimension---a rank-ordered score for nodes in each mode that meets all the conditions for qualifying as a centrality measure for two-mode networks. Particularly, the CA centrality retains the duality property \citep[128]{faust2005using}, as the (average) centrality of people is a function of the (average) centrality of the groups they belong to. The (average) centrality of groups, in turn, is a function of their members' (average) centrality. The person and group score ranks given by the first CA dimension are thus better thought of as \textit{activity and group-size normalized} versions of the familiar Bonacich \citeyearpar{bonacich1991simultaneous} dual centralities for two-mode networks.
+
+\begin{figure}[ht!]
+    \captionsetup[subfigure]{font=footnotesize,labelfont=footnotesize}
+    \centering
+     \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/p-reflections-sw.png}
+            \caption{Reflective centrality trajectories of persons.}
+            \label{fig:p-refs}
+    \end{subfigure}
+     \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/g-reflections-sw.png}
+            \caption{Reflective centrality trajectories of groups.}
+            \label{fig:g-refs}
+    \end{subfigure}
+    \caption{Reflective centralities for persons and groups (even reflections)}
+    \label{fig:refs}
+\end{figure}
 
 \begin{figure}
     \centering
