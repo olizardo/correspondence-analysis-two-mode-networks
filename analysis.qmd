@@ -30,7 +30,8 @@ date: "`r Sys.Date()`"
 # Southern Women Data Table
 ```{r HTML data table}
    source(here("Functions", "sw.dat.R"))
-   A <- A[sort(rownames(sw.dat())), ]
+   A <- sw.dat()
+   A <- A[sort(rownames(A)), ]
    kbl(A, align = "c", format = "html") %>% 
       kable_minimal(full_width = F, font_size = 26) %>% 
       row_spec(1:18, extra_css = "border-bottom: 0px;line-height: 20px;") %>% 
@@ -132,11 +133,11 @@ date: "`r Sys.Date()`"
    dev.off()
 ```
 
+
 ```{r CA versus Reflections Scatter}
+   source(here("Functions", "TwoModeCA.R"))
    tm <- TwoModeCA(A)
-   mr <- reflections(A, iter = 26)
-   p.plot.dat <- data.frame(cbind(c = tm$ca.eigvec.r[, 1], 
-                                  r = mr$p.s[, 22]))
+   p.plot.dat <- data.frame(c = tm$ca.eigvec.r[, 1], r = a$p.s[, 26])
    p <- ggplot(data = p.plot.dat, aes(x = c, y = r))
    p <- p + geom_point(size = 3, color = "blue") 
    p <- p + geom_smooth(method = "lm", se=FALSE, formula = y ~ x, color = "gray")
@@ -148,12 +149,12 @@ date: "`r Sys.Date()`"
    p
    dev.off()
 
-   p.plot.dat <- data.frame(cbind(c = tm$ca.eigvec.c[, 1], 
-                                  r = mr$g.s[, 16]))
-   p <- ggplot(data = p.plot.dat, aes(x = c, y = r))
+   g.plot.dat <- data.frame(cbind(c = tm$ca.eigvec.c[, 1], 
+                                  r = a$g.s[, 26]))
+   p <- ggplot(data = g.plot.dat, aes(x = c, y = r))
    p <- p + geom_point(size = 3, color = "red") 
    p <- p + geom_smooth(method = "lm", se=FALSE, formula = y ~ x, color = "gray")
-   p <- p + geom_text_repel(aes(label = rownames(p.plot.dat)), 
+   p <- p + geom_text_repel(aes(label = rownames(g.plot.dat)), 
                             color = "blue", size = 6)
    p <- p + theme_minimal() + labs(x = "First CA Dimension", y = "14th Reflection (Standardized)")
    p <- p + theme(axis.text = element_text(size = 16),
@@ -162,25 +163,6 @@ date: "`r Sys.Date()`"
    p
    dev.off()
 ```
-
-```{r CA via SVD of two mode network}
-   Rp <- diag(sqrt(rowSums(A)))
-   Rc <- diag(sqrt(colSums(A)))
-
-   svd.res <- svd(Rp%*%A%*%Rc)
-   
-   t <- sum(rowSums(A))
-   r.rp <- t/rowSums(A)
-   r.cp <- t/colSums(A)
-   s.rp.cp <- sqrt(c(r.rp, r.cp))
-   tv <- t(svd.res$v)
-   x <- c(svd.res$u[, 3]*r.rp, tv[3, ]*r.cp) 
-   y <- c(svd.res$u[, 2]*r.rp, tv[2, ]*r.cp) 
-
-   d <- data.frame(x = x, y = y, l = c(rownames(A), colnames(A)))
-   ggscatter(d, x = "x", y = "y", label = "l", repel = TRUE)
-```
-
 
 ```{r CA versus Bonacich Re-ordered Affiliation Matrices}
    a <- TwoModeCA(A)
@@ -191,10 +173,6 @@ date: "`r Sys.Date()`"
    dev.off() 
    png(file = here("Plots", "bon-reord.png"), width=500, height=500)
    c
-   dev.off() 
-   png(file = here("Plots", "ca-v-bon-reord.png"), width=1000, height=700)
-      (b | c) + plot_annotation(tag_levels = "a") &
-      theme(plot.tag = element_text(size = 20))
    dev.off() 
 ```
 
@@ -207,16 +185,12 @@ date: "`r Sys.Date()`"
     a <- a + inset_element(c, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
     b <- b + inset_element(d, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
     
-   png(file = here("Plots", "ca-eigvec-p.png"), width=500, height=500)
+   png(file = here("Plots", "p-ca-eigvec-p.png"), width=500, height=500)
    a
    dev.off() 
-   png(file = here("Plots", "ca-eigvec-g.png"), width=500, height=500)
+   png(file = here("Plots", "g-ca-eigvec-g.png"), width=500, height=500)
    b
    dev.off() 
-    png(file = here("Plots", "ca-eigvec.png"), width=1000, height=600)
-        (a | b) + plot_annotation(tag_levels = "a") &
-      theme(plot.tag = element_text(size = 20))
-    dev.off() 
 ```
 
 ```{r Similarity and Correspondence Plot (CA)}
@@ -225,11 +199,11 @@ date: "`r Sys.Date()`"
     b <- tmCA.res$ca.sim.plot.c + theme(axis.text.x = element_blank())
     c <- tmCA.res$ca.corr.plot
     
-    png(file = here("Plots", "ca-sim-p.png"), width=600, height=625)
+    png(file = here("Plots", "p-ca-sim.png"), width=600, height=625)
     a + theme(axis.text.y = element_text(size = 18))
     dev.off()
     
-    png(file = here("Plots", "ca-sim-g.png"), width=600, height=625)
+    png(file = here("Plots", "g-ca-sim.png"), width=600, height=625)
     b + theme(axis.text.y = element_text(size = 22))
     dev.off()
     
@@ -243,11 +217,11 @@ date: "`r Sys.Date()`"
     a <- tmCA.res$bon.sim.plot.r + theme(axis.text.x = element_blank())
     b <- tmCA.res$bon.sim.plot.c + theme(axis.text.x = element_blank())
     c <- tmCA.res$bon.corr.plot
-    png(file = here("Plots", "bon-sim-p.png"), width=600, height=625)
+    png(file = here("Plots", "p-bon-sim.png"), width=600, height=625)
       a + theme(axis.text.y = element_text(size = 16))
     dev.off() 
     
-    png(file = here("Plots", "bon-sim-g.png"), width=600, height=625)
+    png(file = here("Plots", "g-bon-sim.png"), width=600, height=625)
       b + theme(axis.text.y = element_text(size = 16))
     dev.off() 
     
@@ -290,10 +264,10 @@ date: "`r Sys.Date()`"
                   annotate("text", x = -.2, y = .3, 
                            label = paste("r = ", cor), size = 6) 
 
-   png(file = here("Plots", "sr-plot-eigen-p.png"), width=600, height=625)
+   png(file = here("Plots", "p-sr-plot-eigen.png"), width=600, height=625)
    a
    dev.off()
-   png(file = here("Plots", "sr-plot-eigen-g.png"), width=600, height=625)
+   png(file = here("Plots", "g-sr-plot-eigen.png"), width=600, height=625)
    b
    dev.off()
    png(file = here("Plots", "sr-plot-reord.png"), width=600, height=625)
@@ -304,51 +278,5 @@ date: "`r Sys.Date()`"
    dev.off()
 ```
 
-```{r GRS Plot}
-   source(here("Functions", "TwoModeGRS.R"))
-   tmSR.res <- TwoModeGRS(A)
-    a <- tmSR.res$eigvec.plot.r 
-    b <- tmSR.res$eigvec.plot.c 
-    c <- tmSR.res$eigval.plot.r
-    d <- tmSR.res$eigval.plot.c
-    a <- a + inset_element(c, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
-    b <- b + inset_element(d, left = 0.01, right = 0.4, bottom = 0.55, top = 1)
-    e <- tmSR.res$A.plot
 
-   dat.r <- data.frame(ca = as.numeric(tm$ca.eigvec.r[,1])*-1,
-                       sr = tmSR.res$ev.r1,
-                       lab = rownames(A))
-   dat.c <- data.frame(ca = as.numeric(tm$ca.eigvec.c[,1])*-1,
-                       sr = tmSR.res$ev.c1,
-                       lab = colnames(A))
-   cor <- round(cor(dat.r[,c("ca", "sr")])[1, 2], 2)
-   g <- ggscatter(dat.r, x = "ca", y = "sr", font.label= 8, 
-                  label = "lab", repel = TRUE, 
-                  add = "reg.line", 
-                  add.params = list(color = "gray80", 
-                                    linewidth = 0.5, linetype = 2)) +
-                  annotate("text", x = -.2, y = .3, 
-                           label = paste("r = ", cor), size = 6) 
-   cor <- round(cor(dat.c[,c("ca", "sr")])[1, 2], 2)
-   h <- ggscatter(dat.c, x = "ca", y = "sr", font.label= 8, 
-                  label = "lab", repel = TRUE, 
-                  add = "reg.line",
-                  add.params = list(color = "gray80", 
-                                    linewidth = 0.5, linetype = 2)) +
-                  annotate("text", x = -.2, y = .3, 
-                           label = paste("r = ", cor), size = 6) 
-
-   png(file = here("Plots", "grs-plot-eigen-p.png"), width=600, height=625)
-   a
-   dev.off()
-   png(file = here("Plots", "grs-plot-eigen-g.png"), width=600, height=625)
-   b
-   dev.off()
-   png(file = here("Plots", "grs-plot-reord.png"), width=600, height=625)
-   e
-   dev.off()
-   png(file = here("Plots", "grs-corr-scatter.png"), width=350, height=625)
-   g / h
-   dev.off()
-```
 
