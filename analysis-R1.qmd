@@ -1,0 +1,39 @@
+---
+title: "Correspondence Analysis of Two Mode Networks"
+author: "Omar Lizardo"
+date: "`r Sys.Date()`"
+---
+
+# Setup
+```{r setup}
+   knitr::opts_chunk$set(include = TRUE, 
+                       echo = FALSE, 
+                       warning = FALSE, 
+                       message = FALSE)
+   library(FactoMineR)
+   library(here)
+   library(igraph)
+   library(kableExtra)
+   library(networkdata)
+```
+
+# Southern Women Data Table
+```{r HTML data table}
+   g <- southern_women
+   A <- as.matrix(as_biadjacency_matrix(g))
+   p.ord <- c("EVELYN", "LAURA", "THERESA", "BRENDA", "CHARLOTTE", "FRANCES", "ELEANOR", "RUTH", "VERNE", "MYRNA", "KATHERINE", "SYLVIA", "NORA", "HELEN", "OLIVIA", "FLORA", "PEARL", "DOROTHY")
+   A <- A[p.ord, ]
+   rownames(A) <- c("EVELYN", "LAURA", "THERESA", "BRENDA", "CHARLOTTE", "FRANCES", "ELEANOR", "RUTH", "VERNE", "MYRA", "KATHERINE", "SYLVIA", "NORA", "HELEN", "OLIVIA", "FLORA", "PEARL", "DOROTHY")
+   colnames(A) <- paste("E", 1:14, sep = "")
+   kbl(A, align = "c", format = "latex", 
+       booktabs = TRUE, linesep = "") %>% 
+      kable_minimal(full_width = F, font_size = 10) %>% 
+      save_kable(here("southern-women-corrected.tex"))
+```
+
+```{r}
+   png(file = here("Plots", "ca-southern-women.png"), width=700, height=700)
+   CA(A)
+   dev.off()
+```
+
