@@ -10,11 +10,13 @@ date: "`r Sys.Date()`"
                        echo = FALSE, 
                        warning = FALSE, 
                        message = FALSE)
+   library(conflicted)
    library(FactoMineR)
    library(here)
    library(igraph)
    library(kableExtra)
    library(networkdata)
+   conflicted::conflicts_prefer(dplyr::filter)
 ```
 
 # Southern Women Data Table
@@ -34,6 +36,79 @@ date: "`r Sys.Date()`"
 ```{r}
    png(file = here("Plots", "ca-southern-women.png"), width=700, height=700)
    CA(A)
+   dev.off()
+```
+
+```{r Reflections Bump Chart (Persons)}
+   source(here("Functions", "reflections.R"))
+   source(here("Functions", "ref.long.dat.R"))
+   evens <- function(x) subset(x, x %% 2 == 0)
+   odds <- function(x) subset(x, x %% 2 != 0)
+   a <- reflections(A, iter = 26)
+   p.e.r <- a$p.r[, evens(1:20)]
+   g.e.r <- a$g.r[, evens(1:20)]
+   b <- ref.long.dat(a = p.e.r, b = g.e.r, max.iter = 26)
+   plot.dat <- b$person
+   p <- ggplot(data = filter(plot.dat, n.iter < 18),
+               mapping = aes(x = n.iter, y = ref, color = person))
+   # geoms
+   p <- p + geom_bump(linewidth = 1.1, smooth = 8)
+   p <- p + geom_point(size = 5)
+   p <- p + geom_text_repel(data = filter(plot.dat, n.iter == 2), 
+                                    aes(x = n.iter, label = person), 
+                                    size = 5, nudge_x = -3)
+   p <-    p <- p + geom_text_repel(data = filter(plot.dat, n.iter == 18), 
+                              aes(x = n.iter, label = person), 
+                              size = 5, nudge_x = 0.01)
+
+   # fixings
+   p <- p + theme_minimal_grid(font_size = 14, line_size = 0)
+   p <- p + scale_x_continuous(limits = c(-2, 20), breaks = evens(2:16))
+   p <- p + labs(x = "Reflection")
+   p <- p + scale_y_reverse()
+   p <- p + theme(legend.position = "none",
+        panel.grid.major = element_blank(),
+        axis.text.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_text(size = 16)
+        )
+   set.seed(145)
+   c <- sample(cols25(25), 18, replace = FALSE)
+   p1 <- p + scale_color_manual(values=as.vector(c))
+   png(file = here("Plots", "p-reflections.png"), width=600, height=625)
+   p1
+   dev.off()
+```
+
+```{r Reflections Bump Chart (Groups)}
+   plot.dat <- b$group
+   p <- ggplot(data = filter(plot.dat, n.iter < 14),
+               mapping = aes(x = n.iter, y = ref, color = group))
+   #geoms
+   p <- p + geom_bump(linewidth = 1.1, smooth = 8)
+   p <- p + geom_point(size = 5)
+   p <- p + geom_text_repel(data = filter(plot.dat, n.iter == 2), 
+                                    aes(x = n.iter, label = group), 
+                                    size = 6, nudge_x = -1)
+   p <- p + geom_text_repel(data = filter(plot.dat, n.iter == 14), 
+                              aes(x = n.iter, label = group), 
+                              size = 6, nudge_x = -0.01)
+   #fixings
+   p <- p + theme_minimal_grid(font_size = 14, line_size = 0)
+   p <- p + scale_x_continuous(limits = c(1, 14), breaks = evens(2:12))
+   p <- p + labs(x = "Reflection")
+   p <- p + scale_y_reverse()
+   p <- p + theme(legend.position = "none",
+        panel.grid.major = element_blank(),
+        axis.text.y = element_blank(),
+        axis.title.y = element_blank(),
+        axis.text.x = element_text(size = 16)
+        )
+   set.seed(145)
+   c <- sample(cols25(25), 18, replace = FALSE)
+   p2 <- p + scale_color_manual(values=as.vector(c))
+   png(file = here("Plots", "g-reflections.png"), width=600, height=625)
+   p2
    dev.off()
 ```
 
