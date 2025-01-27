@@ -6,36 +6,65 @@ date: "`r Sys.Date()`"
 
 # Setup
 ```{r setup}
-   knitr::opts_chunk$set(include = TRUE, 
+     knitr::opts_chunk$set(include = TRUE, 
                        echo = FALSE, 
                        warning = FALSE, 
                        message = FALSE)
-   library(conflicted)
-   library(FactoMineR)
-   library(here)
-   library(igraph)
-   library(kableExtra)
-   library(networkdata)
-   conflicted::conflicts_prefer(dplyr::filter)
+     library(conflicted)
+     library(FactoMineR)
+     library(ggcorrplot)
+     library(ggplot2)
+     library(here)
+     library(igraph)
+     library(kableExtra)
+     library(networkdata)
+     library(stringr)
+     conflicted::conflicts_prefer(dplyr::filter)
 ```
 
 # Southern Women Data Table
 ```{r HTML data table}
-   g <- southern_women
-   A <- as.matrix(as_biadjacency_matrix(g))
-   p.ord <- c("EVELYN", "LAURA", "THERESA", "BRENDA", "CHARLOTTE", "FRANCES", "ELEANOR", "RUTH", "VERNE", "MYRNA", "KATHERINE", "SYLVIA", "NORA", "HELEN", "OLIVIA", "FLORA", "PEARL", "DOROTHY")
-   A <- A[p.ord, ]
-   rownames(A) <- c("EVELYN", "LAURA", "THERESA", "BRENDA", "CHARLOTTE", "FRANCES", "ELEANOR", "RUTH", "VERNE", "MYRA", "KATHERINE", "SYLVIA", "NORA", "HELEN", "OLIVIA", "FLORA", "PEARL", "DOROTHY")
-   colnames(A) <- paste("E", 1:14, sep = "")
-   kbl(A, align = "c", format = "latex", 
-       booktabs = TRUE, linesep = "") %>% 
-      kable_minimal(full_width = F, font_size = 10) %>% 
-      save_kable(here("southern-women-corrected.tex"))
+     A <- as.matrix(as_biadjacency_matrix(southern_women))
+     rownames(A) <- str_to_title(rownames(A))
+     colnames(A) <- str_replace(colnames(A), "/", "-")
+     wlab <- paste("W", 1:18, sep = "")
+     wlab <- paste(wlab, rownames(A), sep = " (")
+     wlab <- paste(wlab, ")", sep = "")
+     elab <- paste("E", 1:14, sep = "")
+     elab <- paste(elab, colnames(A), sep = " (")
+     elab <- paste(elab, ")", sep = "")
+     rownames(A) <- wlab
+     colnames(A) <- elab
+     p <- ggcorrplot(t(A), colors = c("white", "white", "red")) 
+     p <- p + theme(legend.position = "none", 
+                  axis.text.y = element_text(size = 16),
+                  axis.text.x = element_text(size = 16, angle = 45, hjust = -0.2),
+                  )
+     p <- p + scale_x_discrete(position = "top") 
+     p <- p + scale_y_discrete(limits = rev)
+     jpeg(file = here("Plots", "southern-women.jpg"), width=800, height=800)
+     p
+     dev.off()
 ```
 
-```{r}
-   png(file = here("Plots", "ca-southern-women.png"), width=700, height=700)
-   CA(A)
+```{r CA of affiliation matrix}
+   ca.res <- CA(A, graph = FALSE)
+   plot.dat <- data.frame(rbind(ca.res$row$coord, ca.res$col$coord)[, 1:2])
+   plot.dat <- cbind(plot.dat, mode = c(rep(1, 18), rep(2, 14)), names = rownames(plot.dat))
+   p <- ggplot(plot.dat, aes(y = Dim.2, x = Dim.1, 
+                             color = factor(mode), label = names))
+   p <- p + geom_vline(xintercept = 0, color = "gray")
+   p <- p + geom_hline(yintercept = 0, color = "gray")
+   p <- p + geom_text_repel(size = 4, max.overlaps = 50)
+   p <- p + theme_minimal() 
+   p <- p + theme(legend.position = "none",
+                  axis.text = element_text(size = 18),
+                  axis.title = element_text(size = 20)
+                  )
+   p <- p + labs(x = "Second Dimension", y = "First Dimension")
+   p <- p + scale_color_manual(values = c('red', 'blue'))
+   png(file = here("Plots", "ca-southern-women.png"), width=600, height=625)
+   p
    dev.off()
 ```
 
@@ -112,3 +141,32 @@ date: "`r Sys.Date()`"
    dev.off()
 ```
 
+```{r CA versus Reflections Scatter}
+   source(here("Functions", "TwoModeCA.R"))
+   tm <- TwoModeCA(A)
+   p.plot.dat <- data.frame(c = tm$ca.eigvec.r[, 1]*-1, r = a$p.s[, 26])
+   p <- ggplot(data = p.plot.dat, aes(x = c, y = r))
+   p <- p + geom_point(size = 3, color = "blue") 
+   p <- p + geom_smooth(method = "lm", se=FALSE, formula = y ~ x, color = "gray")
+   p <- p + geom_text_repel(aes(label = rownames(p.plot.dat)), color = "red")
+   p <- p + theme_minimal() + labs(x = "First CA Dimension", y = "26th Reflection (Standardized)")
+   p <- p + theme(axis.text = element_text(size = 16),
+                  axis.title = element_text(size = 16))
+   png(file = here("Plots", "p-ca-ref-corr.png"), width=600, height=625)
+   p
+   dev.off()
+
+   g.plot.dat <- data.frame(cbind(c = tm$ca.eigvec.c[, 1]*-1, 
+                                  r = a$g.s[, 26]))
+   p <- ggplot(data = g.plot.dat, aes(x = c, y = r))
+   p <- p + geom_point(size = 3, color = "red") 
+   p <- p + geom_smooth(method = "lm", se=FALSE, formula = y ~ x, color = "gray")
+   p <- p + geom_text_repel(aes(label = rownames(g.plot.dat)), 
+                            color = "blue", size = 6)
+   p <- p + theme_minimal() + labs(x = "First CA Dimension", y = "26th Reflection (Standardized)")
+   p <- p + theme(axis.text = element_text(size = 16),
+                  axis.title = element_text(size = 16))
+   png(file = here("Plots", "g-ca-ref-corr.png"), width=600, height=625)
+   p
+   dev.off()
+```
