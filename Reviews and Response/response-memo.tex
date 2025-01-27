@@ -1,4 +1,5 @@
-\documentclass[]{letter}
+\documentclass{article}
+\usepackage{graphicx}
 \begin{document}
 
 \textbf{Editors}
@@ -21,7 +22,13 @@
 
 \textbf{Reviewer}: \textit{Importantly, there are 4 errors in the matrix (``Southern Women data") that you analyze. For this dataset, you (in the note to Table 1) cite Doreian et al (2004, Table 4). Among the attendees at Event E4, you show Frances, Eleanor, and Ruth. However they did not attend this event. You also show Nora as absent from Event E8; however, Nora attended E8. These four errors are discrepant in comparison to your cited source (Doreian et al, 2004, Table 4), and they are discrepant as well in comparison to the original source (Davis, Gardener, and Gardener, 1941, p. 141, which has events in the same order as in your Table 1, and a slightly different order of women; this table is reproduced in Freeman, 2003, p. 42).}
 
-\textbf{Response}:
+\begin{figure}[h!]
+    \includegraphics[width=1.0\textwidth]{Reviews and Response/sw-original.png}
+\end{figure}
+
+\textbf{Response}: Thanks for calling attention to this---rather embarrassing---error; it's definitely a cautionary tale against manually copying data. I have corrected the data, and as you can see in the analysis file included as supplementary material, I now extract the Southern Women data directly from the \texttt{networkdata} package. My table now matches those in the references you mentioned exactly. Note, however, that while you are correct that Frances, Eleanor, and Ruth did not attend E4, Nora did not attend E8, at least according to the published tables in Doreian et al (2004), Kovacs (2010), and the Figure 1 from Freeman (2003), shown above; in these papers, as you can see, Nora's event set is \{E6, E7, E9, E10, E11, E12, E13, E14\}. I think the confusion comes from the fact that Freeman used a non-chronological order of events (as is evident from the date labels in the figure) that emphasizes the group structure of the women. This non-chronological ordering leads to a different labeling of events than when events are arranged in chronological order; this is the ordering of events used by Doreian et al. 2004 and Kovacs (2010). In this event labeling, Nora does not attend E8 (the event that took place on 9/16.) However, note that this is obviously \textit{not} the ordering of events in the original Breiger (1974)---nor for that matter the earlier Doreian (1979) piece in \textit{Social Networks} that used Q-Analysis. In this \textit{chronological} labeling of events, Nora does attend ``E8" (the event that took place on 5/19), as evident in Breiger (1974, p. 186, fig. 2a). In any case, to forestall any confusion, and given that the in the \texttt{networkdata} package, the \texttt{igraph} object containing the Southern Women data come ordered using the Freeman (2003) ordering, I'm sticking to the non-chronological event labeling. I include a very brief discussion in the paper clarifying this issue. 
+
+
 
 \underline{Appropriateness of the term ``reflective centrality''}:
 
