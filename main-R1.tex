@@ -371,9 +371,9 @@ More generally, and in parallel with equations~\ref{eq:Rq_p} and~\ref{eq:Rq_g}, 
    \label{eq:BRq_g}
 \end{equation} 
 
-This just says that the Bonacich reflective centrality at step $q$ is just the sum of the group centralities at step $q-1$ (for people) and the sum of the person centralities at step $q-1$ (for groups). 
+This says that the Bonacich reflective centrality at step $q$ is just the sum of the group centralities at step $q-1$ (for people) and the sum of the person centralities at step $q-1$ (for groups). 
 
-Of course, it is evident that these sum of sums would diverge to a bigger and bigger quantity at each step $q$. To prevent this and guarantee convergence, we normalize the vector of reflective Bonacich centralities for persons and groups at each step $q > 1$ before calculating the subsequent sum at step $q+1$ as follows:
+Of course, these sums of sums would diverge to a larger and larger quantity at each step $q$. To prevent this and guarantee convergence, we normalize the vector of reflective Bonacich centralities for persons and groups at each step $q > 1$ before calculating the subsequent sum at step $q+1$ as follows:
 
 \begin{equation}
    C^B_p(q) = \frac{C^B_p(q)}{||C^B_p(q)||_2}
@@ -425,18 +425,18 @@ To see this, consider the $|P| \times |P|$ matrix $Dp$, containing the ``first o
             \caption{Degree-weighted projection (Groups).}
             \label{fig:bon-reord}
     \end{subfigure}
-    \caption{}
+    \caption{Degree-weighted projection matrices of the Southern Women data.}
     \label{fig:dwproj}
 \end{figure}
 
-For the people, we can do this by taking the original affiliation matrix and pre-multiplying it by $\mathbf{D}p^{-1}$ (which now contains the \textit{inverse} of the first-order centralities of each person along the diagonals), yielding the row-stochastic matrix $\mathbf{P}_{pg}$ of dimensions $|P| \times |G|$:
+For the people, we can do this by taking the original affiliation matrix and pre-multiplying it by $\mathbf{D}p^{-1}$ (which now contains the \textit{inverse} of the first-order centralities of each person $C^R_p(1)$ along the diagonals), yielding the row-stochastic matrix $\mathbf{P}_{pg}$ of dimensions $|P| \times |G|$:
 
 \begin{equation}
     \mathbf{P}_{pg} = \mathbf{D}p^{-1}\mathbf{A}
     \label{eq:ca1}
 \end{equation}
 
-We can do the same with the groups, except that we pre-multiply the \textit{transpose} of the original affiliation matrix by $\mathbf{D}g^{-1}$ (which now contains the \textit{inverse} of the first-order centralities of each group along the diagonals) yielding the matrix $\mathbf{P}_{gp}$ of dimensions $|G| \times |P|$:
+We can do the same with the groups, except that we pre-multiply the \textit{transpose} of the original affiliation matrix by $\mathbf{D}g^{-1}$ (which now contains the \textit{inverse} of the first-order centralities of each group $C^R_g(1)$ along the diagonals) yielding the matrix $\mathbf{P}_{gp}$ of dimensions $|G| \times |P|$:
 
 \begin{equation}
     \mathbf{P}_{gp} = \mathbf{D}_G^{-1}\mathbf{A}^T
@@ -456,26 +456,30 @@ And for the groups:
 
 \begin{equation}
     \mathbf{P}_{gg} = \mathbf{P}_{gp}\mathbf{P}_{pg}
-    \label{eq:ca3}
+    \label{eq:ca4}
 \end{equation}
 
-Both $\mathbf{P}_{pp}$ and $\mathbf{P}_{gg}$ are square ($P \times |P|$ and $|G| \times |G|$) respectively) degree-normalized projection matrices linking people and groups. For the Southern Women data, they are shown in Figure~\ref{fig:dwproj}. 
+Both $\mathbf{P}_{pp}$ and $\mathbf{P}_{gg}$ are square ($P \times |P|$ and $|G| \times |G|$) respectively) degree-normalized projection matrices linking people and groups. For the Southern Women data, they are shown in Figure~\ref{fig:dwproj}. Interestingly, one way to interpret the entries in the degree-weighted projection matrices for people and groups is by giving the \textit{probabilities} that a random walker starting at the row node and, following any sequence of $person-group-person'-group'$ hops, will reach the column person. Thus, higher values indicate an affinity or proximity between the people (and the groups in the corresponding matrix).
 
-It can be shown \citep{van2021correspondence}, that in the limit ($q \rightarrow \infty$), the iterative HH reflective centralities can be obtained as a solution of the eigensystem\footnote{More specifically since both equations~\ref{eq:dam1} and~\ref{eq:dam2} produce row stochastic matrices (row sums are fixed to sum to 1.0), their largest (dominant) eigenvalue will also be 1.0, which will be associated with a trivial first eigenvector containing constant values for both the people and the groups. Accordingly, the scores we seek, which are the same as the CA scores and the HH reflective centrality scores, are those stored in the eigenvectors associated with the \textit{second} largest eigenvalue~\citep{van2021correspondence}.}:
+To get to the main point of all of this, it can be shown \citep{van2021correspondence}, that in the limit ($q \rightarrow \infty$), the iterative HH reflective centralities can be obtained as a solution of the eigensystem:
 
 \begin{equation}
-    \left(Dp^{-1}ADg^{-1}A^T\right)C^R_p = \lambda C^R_p
+    \mathbf{P}_{pp}C^R_p = \lambda_2C^R_p
+    %\left(Dp^{-1}ADg^{-1}A^T\right)C^R_p = \lambda C^R_p
     \label{eq:dam1}
 \end{equation}
 
 \begin{equation}
-    \left(Dg^{-1}A^TDp^{-1}A\right)C^R_g = \lambda C^R_g
+    \mathbf{P}_{gg}C^R_g = \lambda_2C^R_g
+    %\left(Dg^{-1}A^TDp^{-1}A\right)C^R_g = \lambda C^R_g
     \label{eq:dam2}
-\end{equation}
+\end{equation}\
 
-Note the formal similarity (and key differences) between these equations and the Bonacich two-mode centralities in equations~\ref{eq:bon3} and~\ref{eq:bon4}. Both extract individual and group centralities as eigenvectors of the one-mode projection of the original affiliation matrix: $AA^T$ for people and $A^TA$ for groups. The difference is that the reflective centralities pre-multiply the affiliation matrix and its transpose by the inverse of the first-order centralities of the nodes in each mode before computing the eigenvalue decomposition, essentially normalizing the one-mode projection by the degrees of both sets of nodes. 
+Note that the $C^R$ scores are obtained from the eigenvectors corresponding to the \textit{second} largest eigenvalue. This is because, as we have seen, both equations~\ref{eq:ca3} and~\ref{eq:ca4} produce row stochastic matrices; this means that their largest (dominant) eigenvalue will also be 1.0, which will be associated with a trivial first eigenvector containing constant values for both the people and the groups.  Accordingly, the scores we seek, which are the same as the CA scores and the limit HH reflective centrality scores, are those stored in the eigenvectors associated with the second largest eigenvalue \citep{van2021correspondence}; these will be equivalent to the row and column scores corresponding to the first non-trivial dimension (for people and groups respectively) obtained from a simple CA of the original affiliation matrix \citep[398, eq. 9.17]{fouss2016algorithms}. Note also that just like the eigenvector decomposition, the matrices implied by equations~\ref{eq:dam1} and~\ref{eq:dam2} have equivalent sets of (non-zero) eigenvalues. 
 
-This can be clearly seen if we express $\left(Dg^{-1}A^TDp^{-1}A\right)$ in~\ref{eq:dam1} in terms of each cell entry \cite[eq. 4]{mealy2019interpreting}:
+More importantly, because $\mathbf{P}_{pp} = Dp^{-1}ADg^{-1}A^T$ and $\mathbf{P}_{gg} = Dg^{-1}A^TDp^{-1}A$ there is a formal equivalence in the duality relations implied by equations ~\ref{eq:dam1} and~\ref{eq:dam2} and that implied by the Bonacich two-mode centralities in equations~\ref{eq:bon3} and~\ref{eq:bon4}. Both extract individual and group centralities as eigenvectors of the one-mode projection of the original affiliation matrix: $AA^T$ and $\mathbf{P}_{pp}$ for people and $A^TA$ and $\mathbf{P}_{gg}$ for groups. The key difference is that the reflective centralities pre-multiply the affiliation matrix and its transpose by the inverse of the first-order centralities of the nodes in each mode before computing the eigenvalue decomposition, essentially normalizing the one-mode projection by the degrees of both sets of nodes. 
+
+This can be clearly seen if we express $\left(Dg^{-1}\mathbf{A}^TDp^{-1}\mathbf{A}\right)$ in~\ref{eq:dam1} in terms of each cell entry \cite[eq. 4]{mealy2019interpreting}:
 
 \begin{equation}
     a_{pp'} = \sum_g\frac{a_{pg}a_{p'g}}{C^R_p(1)C^R_g(1)} = 
@@ -493,7 +497,7 @@ The same reasoning applies to groups in~\ref{eq:dam2}, whose entries are given b
     \label{eq:mealy2}
 \end{equation}
 
-Now, as has been noted by two-mode data analysts in other contexts \citep[e.g.,][]{faust2005using} it turns out that this ``double-pre-weighting'' of each cell entry by the degrees of each mode (e.g., the row and column sums of the original affiliation matrix) is precisely that used for the CA of a two-mode matrix.\footnote{More accurately, cells are weighted by the inverse of the square root of the product of the row, and column sums \citep[e.g.,][124]{faust2005using}.} And indeed, the limit reflective centralities obtained from equations~\ref{eq:dam1} and~\ref{eq:dam2}---which will be given by the eigenvectors corresponding to the \textit{second} largest eigenvalue of the resulting solution---will be equivalent to the row and column scores corresponding to the first non-trivial dimension (for people and groups respectively) obtained from a simple CA of the original affiliation matrix \citep[398, eq. 9.17]{fouss2016algorithms}.\footnote{As \citet[126]{faust2005using} notes, the first non-trivial CA dimension is also given by the eigenvector corresponding to the second-largest eigenvalue of $D_p^{-1/2}AD_g^{-1/2}$.} In fact, the method of ``reflections'' is just a re-discovery of the older idea of reciprocal averaging \citep{hill1973reciprocal}, which is yet another way of computing row and column scores for elements in a two-mode matrix that are substantively equivalent to those obtained by (the first non-trivial dimension of) CA \citep{mealy2019interpreting}. As we can see in Figure~\ref{fig:ca-ref-corr}, the scores computed via the iterative method of reflections ($q = 26$) correspond exactly ($r = 1.0$) to those obtained from the first dimension of the simple CA of the affiliation matrix for both the row and column objects. 
+Now, as has been noted by two-mode data analysts in other contexts \citep[e.g.,][]{faust2005using} it turns out that this ``double-pre-weighting'' of each cell entry by the degrees of each mode (e.g., the row and column sums of the original affiliation matrix) is precisely that used for the CA of a two-mode matrix.\footnote{More accurately, cells are weighted by the inverse of the square root of the product of the row, and column sums \citep[e.g.,][124]{faust2005using}.}.\footnote{As \citet[126]{faust2005using} notes, the first non-trivial CA dimension is also given by the eigenvector corresponding to the second-largest eigenvalue of $D_p^{-1/2}\mathbf{A}D_g^{-1/2}$.} In fact, the method of ``reflections'' is just a re-discovery of the older idea of reciprocal averaging \citep{hill1973reciprocal}, which is yet another way of computing row and column scores for elements in a two-mode matrix that are substantively equivalent to those obtained by (the first non-trivial dimension of) CA \citep{mealy2019interpreting}. As we can see in Figure~\ref{fig:ca-ref-corr}, the scores computed via the iterative method of reflections ($q = 26$) correspond exactly ($r = 1.0$) to those obtained from the first dimension of the simple CA of the affiliation matrix for both the row and column objects. 
 
 \begin{figure}
     \captionsetup[subfigure]{font=footnotesize,labelfont=footnotesize}
