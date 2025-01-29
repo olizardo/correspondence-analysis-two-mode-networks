@@ -16,7 +16,7 @@
 
 \textbf{Reviewer}: \textit{(For example, I would like to see a ``Highlights" bullet point that says that Bonacich centrality is useful for revealing the position of the nodes in a center-periphery pattern, to the extent one exists, whereas CA is useful for revealing the presence of different groups or communities in the data, to the extent that the dual network is not homogeneous.)}
 
-\textbf{Response}:
+\textbf{Response}: Thanks for this suggestion. I have now included a relevant highlight bulletpoint noting the relevant analytic contrast of Bonacich versus CA.
 
 \underline{Data errors in the Southern Women two-mode matrix}:
 
@@ -26,7 +26,7 @@
     \includegraphics[width=1.0\textwidth]{Reviews and Response/sw-original.png}
 \end{figure}
 
-\textbf{Response}: Thanks for calling attention to this---rather embarrassing---error; it's definitely a cautionary tale against manually copying data. I have corrected the data, and as you can see in the analysis file included as supplementary material, I now extract the Southern Women data directly from the \texttt{networkdata} package. My table now matches those in the references you mentioned exactly. Note, however, that while you are correct that Frances, Eleanor, and Ruth did not attend E4, Nora did not attend E8, at least according to the published tables in Doreian et al (2004), Kovacs (2010), and the Figure 1 from Freeman (2003), shown above; in these papers, as you can see, Nora's event set is \{E6, E7, E9, E10, E11, E12, E13, E14\}. I think the confusion comes from the fact that Freeman used a non-chronological order of events (as is evident from the date labels in the figure) that emphasizes the group structure of the women. This non-chronological ordering leads to a different labeling of events than when events are arranged in chronological order; this is the ordering of events used by Doreian et al. 2004 and Kovacs (2010). In this event labeling, Nora does not attend E8 (the event that took place on 9/16.) However, note that this is obviously \textit{not} the ordering of events in the original Breiger (1974)---nor for that matter the earlier Doreian (1979) piece in \textit{Social Networks} that used Q-Analysis. In this \textit{chronological} labeling of events, Nora does attend ``E8" (the event that took place on 5/19), as evident in Breiger (1974, p. 186, fig. 2a). In any case, to forestall any confusion, and given that the in the \texttt{networkdata} package, the \texttt{igraph} object containing the Southern Women data come ordered using the Freeman (2003) ordering, I'm sticking to the non-chronological event labeling. I include a very brief discussion in the paper clarifying this issue. 
+\textbf{Response}: Thanks for calling attention to this---rather embarrassing---error; it's definitely a cautionary tale against manually copying data. I have corrected the data, and as you can see in the analysis file included as supplementary material, I now extract the Southern Women data directly from the \texttt{networkdata} package. My table now matches those in the references you mentioned exactly. Note, however, that while you are correct that Frances, Eleanor, and Ruth did not attend E4, Nora did not attend E8, at least according to the published tables in Doreian et al (2004), Kovacs (2010), and the Figure 1 from Freeman (2003), shown above; in these papers, as you can see, Nora's event set is \{E6, E7, E9, E10, E11, E12, E13, E14\}. I think the confusion comes from the fact that Freeman used a non-chronological order of events (as is evident from the date labels in the figure) that emphasizes the group structure of the women. This non-chronological ordering leads to a different labeling of events than when events are arranged in chronological order; this is the ordering of events used by Doreian et al. 2004 and Kovacs (2010). In this event labeling, Nora does not attend E8 (the event that took place on 9/16.) However, note that this is obviously \textit{not} the ordering of events in the original Breiger (1974)---nor for that matter the earlier Doreian (1979) piece in \textit{Social Networks} that used Q-Analysis. In this \textit{chronological} labeling of events, Nora does attend ``E8" (the event that took place on 5/19), as evident in Breiger (1974, p. 186, fig. 2a). In any case, to forestall any confusion, and given that the in the \texttt{networkdata} package, the \texttt{igraph} object containing the Southern Women data come ordered using the Freeman (2003) ordering, I'm sticking to the non-chronological event labeling. I now include a brief discussion in the paper clarifying this issue. 
 
 
 
@@ -80,7 +80,7 @@
 
 \textbf{Response}:
 
-\underline{More extensive introduction and background regarding previous uses of CA and MCA}
+\underline{More extensive introduction and background}
 
 \textbf{Reviewer}: \textit{I suggest extending the introduction, enriching the discussion of the background as for CA in the context of two-mode networks. Given the importance of the technique and its variants (like MCA), it is surprising that the authors devote such a limited room to the relevant framework. Consider that the discussion of CA in the context of two-mode networks seems not comprehensive as it misses the use of MCA in the same context \ldots}
 
