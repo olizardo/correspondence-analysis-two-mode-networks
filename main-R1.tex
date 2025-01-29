@@ -166,7 +166,7 @@ The rest of the paper is organized as follows. In the next section, I motivate t
 
 \subsection{CA as a Data Visualization Tool}
 
-\citet{borgatti1997network} provided an early in-depth considerations of CA in the context of two-mode network data analysis with an emphasis on the visualization aspect. The discussion was placed in a section on ``visual representations of 2-mode data,'' and naturally focused almost exclusively on the uses of CA as visualization technique. According to \citet[246]{borgatti1997network}, CA ``can be seen as a method for representing points in a metric space such that distances between the points are meaningful.'' More specifically, \citet{borgatti1997network}, also using the Southern Women data as illustration,  claimed that in the CA map, points representing the women will appear closer if the women attend ``mostly the same events,'' and conversely points representing the events will be placed near one another if the events were attended by ``mostly the same women,'' and that women and events would appear closer in the plot if ``those women attended those events.'' \citet[247-249]{borgatti1997network} then went on to focus on various limitations of CA as visualization tool, noting that given the limiting range of dichotomous network data, two-dimensional representations ``will almost always be severely inaccurate or misleading.'' They also noted that since CA is a technique designed to deal with valued frequency data, its use with binary network data would lead to dimensional scores that would be either ``meaningless'' or ``difficult to interpret.'' Finally, they noted that since distances in the CA biplot are not Euclidean they would mislead interpreters who would try to impose such a metric to make sense of them. 
+\citet{borgatti1997network} provided an early in-depth consideration of CA in the context of two-mode network data analysis with an emphasis on the visualization aspect. The discussion was placed in a section on ``visual representations of 2-mode data,'' and naturally focused almost exclusively on the uses of CA as a visualization technique. According to \citet[246]{borgatti1997network}, CA ``can be seen as a method for representing points in a metric space such that distances between the points are meaningful.'' More specifically, \citet{borgatti1997network}, also using the Southern Women data as illustration,  claimed that in the CA map, points representing the women will appear closer if the women attend ``mostly the same events.'' Conversely, points representing the events will be placed near one another if the events were attended by ``mostly the same women,'' and that women and events would appear closer in the plot if ``those women attended those events.'' \citet[247-249]{borgatti1997network} then went on to focus on various limitations of CA as a visualization tool, noting that given the limiting range of dichotomous network data, two-dimensional representations ``will almost always be severely inaccurate or misleading.'' They also noted that since CA is a technique designed to deal with valued frequency data, its use with binary network data would lead to dimensional scores that would be either ``meaningless'' or ``difficult to interpret.'' Finally, they noted that since distances in the CA biplot are not Euclidean they would mislead interpreters who would try to impose such a metric to make sense of them. 
 
 In a paper published shortly thereafter \citet{roberts2000correspondence}, responded to some of the criticisms that \citet{borgatti1997network} levied at the use of CA for analyzing two-mode networks in their original piece. First, \citet{roberts2000correspondence} noted that there were many examples in the standing of using CA to analyze binary non-frequency data, and that therefore the uses of CA are not constrained by the nature or provenance of the numerical quantities recorded in each cell of a two-mode network affiliation matrix. \citet{roberts2000correspondence} also challenged the contention that the two-dimensional representation of the data was unduly limiting in its capacity to produce a faithful representation of the original data, noting a high correlation between the distances between the women and and the event points in the two-dimensional representation and one that used all thirteen dimensions. Finally, \citet{roberts2000correspondence} also noted that the Euclidean distance interpretation of the separation of women and events points in the joint display is partially appropriate, as this Euclidean distances as actually low-dimensional approximations (to a high degree of accuracy in the first few dimensions) to the $\mathcal{X}^2$ distances between row profiles (for the women) and column profiles (for events) where the row profiles for a given woman is equal to the entry in the original affiliation matrix divided by the square root of the product of the number of events attended by that woman and the number of women who attended that even (and similarly for column profiles corresponding to events). Thus, the point distances are indeed interpretable as a kind of degree-weighted similarity between objects in each mode.  
 
@@ -412,13 +412,29 @@ Typically, when CA is presented as the solution to an eigenvalue problem, this i
 
 To see this, consider the $|P| \times |P|$ matrix $Dp$, containing the ``first order'' reflective centralities of each person $C^R(1)_p$ (activity) along the diagonals and zeroes in every other cell. In the same way, consider the $|G| \times |G|$ matrix $Dg$, which contains the ``first order'' (degree) centralities of each group $C^R(1)_g$ (size) along the diagonals and zeroes in every other cell. Using these matrices, we can compute \textit{row stochastic} versions of the affiliation matrix and its transpose (recall that a matrix is row stochastic if its rows sum to one).
 
+\begin{figure}[ht!]
+    \captionsetup[subfigure]{font=footnotesize,labelfont=footnotesize}
+    \centering
+     \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/p-norm.png}
+            \caption{Degree-weighted projection (People).}
+            \label{fig:ca-reord}
+    \end{subfigure}
+     \begin{subfigure}[b]{0.45\textwidth}
+        \includegraphics[width=1.0\textwidth]{Plots/g-norm.png}
+            \caption{Degree-weighted projection (Groups).}
+            \label{fig:bon-reord}
+    \end{subfigure}
+    \caption{}
+    \label{fig:dwproj}
+\end{figure}
+
 For the people, we can do this by taking the original affiliation matrix and pre-multiplying it by $\mathbf{D}p^{-1}$ (which now contains the \textit{inverse} of the first-order centralities of each person along the diagonals), yielding the row-stochastic matrix $\mathbf{P}_{pg}$ of dimensions $|P| \times |G|$:
 
 \begin{equation}
     \mathbf{P}_{pg} = \mathbf{D}p^{-1}\mathbf{A}
     \label{eq:ca1}
 \end{equation}
-
 
 We can do the same with the groups, except that we pre-multiply the \textit{transpose} of the original affiliation matrix by $\mathbf{D}g^{-1}$ (which now contains the \textit{inverse} of the first-order centralities of each group along the diagonals) yielding the matrix $\mathbf{P}_{gp}$ of dimensions $|G| \times |P|$:
 
@@ -443,7 +459,7 @@ And for the groups:
     \label{eq:ca3}
 \end{equation}
 
-Both $\mathbf{P}_{pp}$ and $\mathbf{P}_{gg}$ are square ($P \times |P|$ and $|G| \times |G|$) respectively) degree-normalized projection matrices linking people and groups. For the Southern Women data, they are show in Figure~\ref{fig:p-norm} and~\ref{fig:g-norm}. 
+Both $\mathbf{P}_{pp}$ and $\mathbf{P}_{gg}$ are square ($P \times |P|$ and $|G| \times |G|$) respectively) degree-normalized projection matrices linking people and groups. For the Southern Women data, they are shown in Figure~\ref{fig:dwproj}. 
 
 It can be shown \citep{van2021correspondence}, that in the limit ($q \rightarrow \infty$), the iterative HH reflective centralities can be obtained as a solution of the eigensystem\footnote{More specifically since both equations~\ref{eq:dam1} and~\ref{eq:dam2} produce row stochastic matrices (row sums are fixed to sum to 1.0), their largest (dominant) eigenvalue will also be 1.0, which will be associated with a trivial first eigenvector containing constant values for both the people and the groups. Accordingly, the scores we seek, which are the same as the CA scores and the HH reflective centrality scores, are those stored in the eigenvectors associated with the \textit{second} largest eigenvalue~\citep{van2021correspondence}.}:
 
