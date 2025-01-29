@@ -28,8 +28,6 @@
 
 \textbf{Response}: Thanks for calling attention to this---rather embarrassing---error; it's definitely a cautionary tale against manually copying data. I have corrected the data, and as you can see in the analysis file included as supplementary material, I now extract the Southern Women data directly from the \texttt{networkdata} package. My table now matches those in the references you mentioned exactly. Note, however, that while you are correct that Frances, Eleanor, and Ruth did not attend E4, Nora did not attend E8, at least according to the published tables in Doreian et al (2004), Kovacs (2010), and the Figure 1 from Freeman (2003), shown above; in these papers, as you can see, Nora's event set is \{E6, E7, E9, E10, E11, E12, E13, E14\}. I think the confusion comes from the fact that Freeman used a non-chronological order of events (as is evident from the date labels in the figure) that emphasizes the group structure of the women. This non-chronological ordering leads to a different labeling of events than when events are arranged in chronological order; this is the ordering of events used by Doreian et al. 2004 and Kovacs (2010). In this event labeling, Nora does not attend E8 (the event that took place on 9/16.) However, note that this is obviously \textit{not} the ordering of events in the original Breiger (1974)---nor for that matter the earlier Doreian (1979) piece in \textit{Social Networks} that used Q-Analysis. In this \textit{chronological} labeling of events, Nora does attend ``E8" (the event that took place on 5/19), as evident in Breiger (1974, p. 186, fig. 2a). In any case, to forestall any confusion, and given that the in the \texttt{networkdata} package, the \texttt{igraph} object containing the Southern Women data come ordered using the Freeman (2003) ordering, I'm sticking to the non-chronological event labeling. I now include a brief discussion in the paper clarifying this issue. 
 
-
-
 \underline{Appropriateness of the term ``reflective centrality''}:
 
 \textbf{Reviewer}: \textit{I have some resistance to your term "reflective centrality" (Section 2 title) to characterize the scores of the respective modes - precisely because, as you importantly show, in the limit the reflective scores are first dimensions of a CA, and (as you also importantly emphasize) the first CA dimension is about finding groups, not about ordering nodes. Hidalgo and Hausmann (2009) do not use the term "centrality" for the reflective scores they define and compute. I wonder whether ``reflective scores" might be a better term; I'm not sure, and simply ask you to think about it.}
@@ -52,19 +50,19 @@
 
 \textbf{Reviewer}: \textit{(In Fig. 2, both parts (a) and (b), nothing substantive or mathematical would change if you keep the row ordering you show, but reverse the column ordering. However, reversing the column ordering would help the reader to see, in panel (a), the groups, and, in panel (b), the center and the periphery. A similar comment applies to several of your other figures.)}
 
-\textbf{Response}:
+\textbf{Response}: Thanks for this suggestion. I have re-plotted the figures using the suggested column ordering. 
 
 \underline{Confusing equations}:
 
 \textbf{Reviewer}: \textit{What confused me about eqs. (23) and (24) is that I don't think the (respective) expressions in parentheses are symmetric matrices, and so I don't see how to take an eigenvector. (Each of the rows, but not the columns, sum to 1.)}
 
-\textbf{Response}:
+\textbf{Response}: Thanks for this observation. You are correct that I did not adequately explain where the eigenvectors corresponding to the CA (and HH) scores come from. You are right that the equations result in row-stochastic matrices (row sums equal 1.0) that are square but not symmetric. You can still do an eigenvector decomposition of each of these matrices, but the first (dominant) eigenvalue will be 1.0, and the associated eigenvectors will be filled with constant values. So the relevant eigenvector we seek, which is the first CA dimension, is that associated with the \textit{second} largest eigenvalue (and the second CA dimension is that associated with the third, and so forth). Another way of saying it is that we can perform the usual eigendecomposition of the matrices produced by (23) and (24), discard the first trivial eigenvalue and eigenvector and treat the second as the first, the third as the second, etc., and that will be equivalent to the CA solution (the same scores that simple CA of the original rectangular Affiliation matrix would yield). The relevant section of the paper has been rewritten to clarify these issues. 
 
 \underline{Confusing Figures}:
 
 \textbf{Reviewer}: \textit{Figs 3, 4, 5, and 6 each have multiple panels (referred to as a, b, c, etc), but, in the current version of the paper, it is difficult or impossible to figure out which part of the figure has which label (a, b, c, …). Hopefully the formatting here can be improved.}
 
-\textbf{Response}:
+\textbf{Response}: 
 
 
 \underline{Missing Freeman citation}
