@@ -6,26 +6,34 @@ date: "`r Sys.Date()`"
 
 # Setup
 ```{r setup}
-     knitr::opts_chunk$set(include = TRUE, 
+      knitr::opts_chunk$set(include = TRUE, 
                        echo = FALSE, 
                        warning = FALSE, 
                        message = FALSE)
-     library(conflicted)
-     library(FactoMineR)
-     library(ggcorrplot)
-     library(ggplot2)
-     library(here)
-     library(igraph)
-     library(kableExtra)
-     library(networkdata)
-     library(stringr)
-     conflicted::conflicts_prefer(dplyr::filter)
+      library(conflicted)
+      library(cowplot)
+      library(FactoMineR)
+      library(ggcorrplot)
+      library(ggbump)
+      library(ggplot2)
+      library(ggpubr)
+      library(ggrepel)
+      library(here)
+      library(factoextra)
+      library(igraph)
+      library(kableExtra)
+      library(networkdata)
+      library(pals)
+      library(stringr)
+      conflicted::conflicts_prefer(dplyr::filter)
 ```
 
 # Southern Women Data Table
-```{r HTML data table}
+```{r Southern Women Data Matrix}
      A <- as.matrix(as_biadjacency_matrix(southern_women))
-     rownames(A) <- str_to_title(rownames(A))
+     p.names <- str_to_title(rownames(A))
+     p.names[which(p.names == "Myrna")] <- "Myra"
+     rownames(A) <- p.names
      colnames(A) <- str_replace(colnames(A), "/", "-")
      wlab <- paste("W", 1:18, sep = "")
      wlab <- paste(wlab, rownames(A), sep = " (")
@@ -47,7 +55,7 @@ date: "`r Sys.Date()`"
      dev.off()
 ```
 
-```{r CA of affiliation matrix}
+```{r CA of Aaffiliation Matrix}
    ca.res <- CA(A, graph = FALSE)
    plot.dat <- data.frame(rbind(ca.res$row$coord, ca.res$col$coord)[, 1:2])
    plot.dat <- cbind(plot.dat, mode = c(rep(1, 18), rep(2, 14)), names = rownames(plot.dat))
@@ -142,8 +150,8 @@ date: "`r Sys.Date()`"
 ```
 
 ```{r CA versus Reflections Scatter}
-   source(here("Functions", "TwoModeCA.R"))
-   tm <- TwoModeCA(A)
+   source(here("Functions", "TwoModeEig.R"))
+   tm <- TwoModeEig(A)
    p.plot.dat <- data.frame(c = tm$ca.eigvec.r[, 1]*-1, r = a$p.s[, 26])
    p <- ggplot(data = p.plot.dat, aes(x = c, y = r))
    p <- p + geom_point(size = 3, color = "blue") 
@@ -169,4 +177,16 @@ date: "`r Sys.Date()`"
    png(file = here("Plots", "g-ca-ref-corr.png"), width=600, height=625)
    p
    dev.off()
+```
+
+```{r CA versus Bonacich Re-ordered Affiliation Matrices}
+   a <- TwoModeCA(A)
+   b <- a$ca.A
+   c <- a$bon.A
+   png(file = here("Plots", "ca-reord.png"), width=500, height=500)
+   b
+   dev.off() 
+   png(file = here("Plots", "bon-reord.png"), width=500, height=500)
+   c
+   dev.off() 
 ```
