@@ -136,7 +136,6 @@ date: "`r Sys.Date()`"
    dev.off()
 ```
 
-
 ```{r CA versus Reflections Scatter}
    source(here("Functions", "TwoModeCA.R"))
    tm <- TwoModeCA(A)
