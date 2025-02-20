@@ -457,15 +457,15 @@ Both $\mathbf{P}_{pp}$ and $\mathbf{P}_{gg}$ are square ($|P| \times |P|$ and $|
 \begin{figure}[ht!]
     \captionsetup[subfigure]{font=footnotesize,labelfont=footnotesize}
     \centering
-     \begin{subfigure}[b]{0.45\textwidth}
+     \begin{subfigure}[b]{0.55\textwidth}
         \includegraphics[width=1.0\textwidth]{Plots/p-norm.png}
-            \caption{Degree-weighted projection (People).}
-            \label{fig:ca-reord}
-    \end{subfigure}
-     \begin{subfigure}[b]{0.45\textwidth}
+            %\caption{Degree-weighted projection (People).}
+            %\label{fig:ca-reord}
+    \end{subfigure} \\
+     \begin{subfigure}[b]{0.55\textwidth}
         \includegraphics[width=1.0\textwidth]{Plots/g-norm.png}
-            \caption{Degree-weighted projection (Groups).}
-            \label{fig:bon-reord}
+            %\caption{Degree-weighted projection (Groups).}
+            %\label{fig:bon-reord}
     \end{subfigure}
     \caption{Degree-weighted projection matrices of the Southern Women data.}
     \label{fig:dwproj}
@@ -514,12 +514,12 @@ Now, as has been noted by two-mode data analysts in other contexts \citep[e.g.,]
     \centering
      \begin{subfigure}[b]{0.45\textwidth}
         \includegraphics[width=1.0\textwidth]{Plots/p-ca-ref-corr.png}
-            \caption{CA/Reflection Correlation (Persons).}
+            \caption{}
             \label{fig:p-ca-ref}
     \end{subfigure}
      \begin{subfigure}[b]{0.45\textwidth}
         \includegraphics[width=1.0\textwidth]{Plots/g-ca-ref-corr.png}
-            \caption{CA/Reflection Correlation (Groups)}
+            \caption{}
             \label{fig:g-ca-ref}
     \end{subfigure}
     \caption{Scatter plot of the scores computed by the method of reflections ($q = 26$) on the y-axis and the first dimension of the Correspondence Analysis of the two-mode affiliation matrix on the x-axis, for both persons (a) and groups (b). }
@@ -535,17 +535,17 @@ Accordingly, it would make no sense to call the Bonacich scores $C^B_p$ and $C^B
     \centering
      \begin{subfigure}[b]{0.45\textwidth}
         \includegraphics[width=1.0\textwidth]{Plots/ca-reord.png}
-            \caption{Re-ordered Affiliation matrix (CA First Dimension).}
+            \caption{}
             \label{fig:ca-reord}
     \end{subfigure}
      \begin{subfigure}[b]{0.45\textwidth}
         \includegraphics[width=1.0\textwidth]{Plots/bon-reord1.png}
-            \caption{Re-ordered Affiliation matrix (Bonacich Centrality).}
+            \caption{}
             \label{fig:bon-reord1}
     \end{subfigure}
      \begin{subfigure}[b]{0.45\textwidth}
         \includegraphics[width=1.0\textwidth]{Plots/bon-reord2.png}
-            \caption{Re-ordered Affiliation matrix (Bonacich Second Dimension).}
+            \caption{}
             \label{fig:bon-reord2}
     \end{subfigure}
     \caption{Southern Women Affiliation matrix with re-ordered rows and columns: (a) row and columns re-ordered according to the person and group score on the first CA dimension, (b) row and columns re-ordered according to person and group Eigenvector centrality score, (c) row and columns re-ordered according to person and group score on the second Bonacich dimension.}
@@ -562,19 +562,10 @@ The traditional eigenvector centrality re-ordering, on the other hand, reveals a
 We can confirm that the first CA axis points toward the underlying community partitioning of the two-mode network by looking at Figure~\ref{fig:ca-eigvec}(a) and~\ref{fig:ca-eigvec}(c), which shows the $C^R$ score of persons and groups on the x-axis against the score's rank order on the y-axis. If a two-mode network has no discernible community structure, the first dimension CA scores would be distributed as a continuous logistic curve; when community structure is present, we should observe discernible breaks in this distribution \citep{van2021correspondence}. The Southern Women data clearly belong to the second category. In the people mode, we have $\left[Frances, Laura, Brenda, Charlotte, Evenly, Theresa, Elanor, Ruth, Pearl\right]$ on one side, $\left[Dorothy, Nora, Katherine, Sylvia, Flora, Olivia, Myra, Helen, Verne\right]$ on the other. Among events, we have $\left[E1, E2, E3, E4, E5, E6\right]$ on side $\left[E9, E10, E11, E12, E13, E14\right]$ on the other and $\left[E7, E8\right]$ in an ambiguous middle position. Note that this is the canonical consensus partitioning (for the people) highlighted by \citet{freeman2003finding} across twenty-one different methods and subsequently reproduced by \citet{kovacs2010generalized} and \citet{lizardo2024two} using a generalized relational similarity (GRS) approach. This indicates that persons and groups receive similar scores in the first dimension of CA only when they have similar connectivity similar to \textit{similar} groups, where group similarity is defined dually as having members in common who are themselves similar. 
 
 \begin{figure}
-    \captionsetup[subfigure]{font=footnotesize,labelfont=footnotesize}
     \centering
-     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=1.0\textwidth]{Plots/p-ca-eigvec.png}
-            \caption{Eigenvector plot (Persons).}
-            \label{fig:p-eigvec}
-    \end{subfigure}
-     \begin{subfigure}[b]{0.45\textwidth}
-        \includegraphics[width=1.0\textwidth]{Plots/g-ca-eigvec.png}
-            \caption{Eigenvector plot (Groups).}
-            \label{fig:g-eigvec}
-    \end{subfigure}
-    \caption{CA Eigenvector plot for persons (a) and groups (b). The first CA score is on the x-axis, and the rank order of persons and groups is on the y-axis. Insets show the eigenvalue orderings on the x-axis ($k$) for persons and groups.}
+        \includegraphics[width=1.0\textwidth]{Plots/ca-eigvec.png}            
+        \label{fig:eigvec}
+    \caption{CA Eigenvector plot for persons (a) and groups (b). The first CA score is on the x-axis, and the rank order of persons and groups is on the y-axis. The inset plot (c) shows the eigenvalue orderings on the x-axis ($k$) for persons and groups.}
     \label{fig:ca-eigvec}
 \end{figure}
 
