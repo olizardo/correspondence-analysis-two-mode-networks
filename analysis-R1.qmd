@@ -58,19 +58,17 @@ date: "`r Sys.Date()`"
 ```
 
 ```{r Faust-Style Direct CA}
-   ca.res <- svd(diag(1/sqrt(rowSums(A))) %*% A %*% diag(1/sqrt(colSums(A))))
-   d1.r <- ca.res$d[2] * ca.res$u[, 2] * sqrt(N/rowSums(A))
-   d1.c <- ca.res$d[2] * ca.res$v[, 2] * sqrt(N/colSums(A))
-   d1 <- c(d1.r, d1.c)
-   d2.r <- ca.res$d[3] * ca.res$u[, 3] * sqrt(N/rowSums(A))
-   d2.c <- ca.res$d[3] * ca.res$v[, 3] * sqrt(N/colSums(A))
-   d2 <- c(d2.r, d2.c)
-   d3.r <- ca.res$d[4] * ca.res$u[, 4] * sqrt(N/rowSums(A))
-   d3.c <- ca.res$d[4] * ca.res$v[, 4] * sqrt(N/colSums(A))
-   d3 <- c(d3.r, d3.c)
-   d4.r <- ca.res$d[5] * ca.res$u[, 5] * sqrt(N/rowSums(A))
-   d4.c <- ca.res$d[5] * ca.res$v[, 5] * sqrt(N/colSums(A))
-   d4 <- c(d4.r, d4.c)
+   FCA <- svd(diag(1/sqrt(rowSums(A))) %*% A %*% diag(1/sqrt(colSums(A))))
+   w.r <- sqrt(sum(A)/rowSums(A))
+   w.c <- sqrt(sum(A)/colSums(A))
+   FCA$d <- FCA$d[2:14]
+   FCA$u <- FCA$u[, 2:14]
+   FCA$v <- FCA$v[, 2:14]
+   #FCA$u <- FCA$u * FCA$d * w.r
+   #FCA$v <- FCA$v * FCA$d * w.c
+   FCA.d <- rbind(FCA$u, FCA$v)
+   rownames(FCA.d) <- c(rownames(A), colnames(A))
+   round(FCA.d, 3)
 ```
 
 ```{r Dual Projection CA}
@@ -95,7 +93,7 @@ date: "`r Sys.Date()`"
    rownames(SCA.c$vectors) <- colnames(A)
 ```
 
-```{Two Dual Projection Eigenvector Scores}
+```{r Dual Projection Eigenvector Scores}
    eig.r <- eigen(A %*% t(A))$vectors
    eig.c <- eigen(t(A) %*% A)$vectors
    rownames(eig.r) <- rownames(A)
@@ -172,7 +170,8 @@ date: "`r Sys.Date()`"
 ```
 
 ```{r CA versus Reflections Scatter}
-   p.plot.dat <- data.frame(c = tm$ca.eigvec.r[, 1]*-1, r = a$p.s[, 26])
+   p.plot.dat <- data.frame(c = CA.r$vectors[, 2]*-1, 
+                            r = a$p.s[, 26])
    p <- ggplot(data = p.plot.dat, aes(x = c, y = r))
    p <- p + geom_smooth(method = "lm", se=FALSE, formula = y ~ x, color = "gray")
    p <- p + geom_point(size = 3, color = "blue") 
@@ -184,7 +183,8 @@ date: "`r Sys.Date()`"
    p
    dev.off()
 
-   g.plot.dat <- data.frame(cbind(c = tm$ca.eigvec.c[, 1]*-1, r = a$g.s[, 26]))
+   g.plot.dat <- data.frame(cbind(c = CA.c$vectors[, 2]*-1, 
+                                  r = a$g.s[, 26]))
    p <- ggplot(data = g.plot.dat, aes(x = c, y = r))
    p <- p + geom_smooth(method = "lm", se=FALSE, formula = y ~ x, color = "gray")
    p <- p + geom_point(size = 3, color = "red") 
@@ -231,44 +231,43 @@ date: "`r Sys.Date()`"
 ```
 
 ```{r Row Stochastic Matrices for CA Projections Plot}
-   D.p <- diag(1/rowSums(A)) #inverse of degree matrix of persons
-   P.pg <- D.p %*% A
+   P.pg <- diag(1/rowSums(A)) %*% A
    rownames(P.pg) <- rownames(A) 
-   D.g <- diag(1/colSums(A)) #inverse of degree matrix of groups
-   P.gp <- D.g %*% t(A)
+   P.gp <- diag(1/colSums(A)) %*% t(A)
    rownames(P.gp) <- colnames(A)
    P.pp <- P.pg %*% P.gp
    P.gg <- P.gp %*% P.pg
    rownames(P.pp) <- substr(colnames(P.pp), start = 1, stop = 3)
    rownames(P.gg) <- substr(colnames(P.gg), start = 1, stop = 3)
-   P.p <- ggcorrplot(P.pp, lab = TRUE) +
+   P.p <- ggcorrplot(P.pp, lab = TRUE, lab_size = 5,
+                     colors = c(rep("white", 3))) +
       theme(legend.position = "none", 
-            axis.text.x = element_text(hjust = -0.2)) + 
-      scale_x_discrete(position = "top") + scale_y_discrete(limits=rev) +
-      scale_fill_gradient2(breaks = c(0, .5), limit = c(0, .5))
-   P.g <- ggcorrplot(P.gg, lab = TRUE) +
+            axis.text.x = element_text(hjust = -0.2, size = 16),
+            axis.text.y = element_text(size = 16)) + 
+      scale_x_discrete(position = "top") + scale_y_discrete(limits=rev) 
+   P.g <- ggcorrplot(P.gg, lab = TRUE, lab_size = 5,
+                     colors = c(rep("white", 3))) +
       theme(legend.position = "none", 
-            axis.text.x = element_text(hjust = -0.2)) + 
-      scale_x_discrete(position = "top") + scale_y_discrete(limits=rev) +
-      scale_fill_gradient2(breaks = c(0, .5), limit = c(0, .5))
-   png(file = here("Plots", "p-norm.png"), width=600, height=500)
+            axis.text.x = element_text(hjust = -0.2, size = 16),
+            axis.text.y = element_text(size = 16)) + 
+      scale_x_discrete(position = "top") + scale_y_discrete(limits=rev) 
+   png(file = here("Plots", "p-norm.png"), width=900, height=900)
    P.p
    dev.off() 
-   png(file = here("Plots", "g-norm.png"), width=600, height=500)
+   png(file = here("Plots", "g-norm.png"), width=900, height=900)
    P.g
    dev.off() 
 ```
 
 ```{r CA Eigenvector Plot} 
-      eigvec.dat.r <- data.frame(rank = rank(d1.r), 
-                             value = as.numeric(d1.r),
-                             lab = names(d1.r))
-      eigvec.dat.c <- data.frame(rank = rank(d1.c), 
-                             value = as.numeric(d1.c),
-                             lab = names(d1.c))
-      eigval.dat.r <- data.frame(k = 1:nrow(A)-1, value = as.numeric(CA.r$values)) %>% 
-             mutate(value = value / max(value))
-      eigval.dat.c <- data.frame(k = 1:ncol(A)-1, value = as.numeric(CA.c$values)) %>% 
+      eigvec.dat.r <- data.frame(rank = rank(CA.r$vectors[,2]), 
+                             value = as.numeric(CA.r$vectors[,2]),
+                             lab = names(CA.r$vectors[,2]))
+      eigvec.dat.c <- data.frame(rank = rank(CA.c$vectors[,2]), 
+                             value = as.numeric(CA.c$vectors[,2]),
+                             lab = names(CA.c$vectors[,2]))
+      eigval.dat.c <- data.frame(k = 1:ncol(A)-1, 
+                                 value = as.numeric(CA.c$values)) %>% 
              mutate(value = value / max(value))
       
       # Eigenvector plot for the people
@@ -289,40 +288,32 @@ date: "`r Sys.Date()`"
                  axis.line.x = element_blank(),
                  axis.line.y = element_blank(),
                  axis.ticks = element_blank(),
+                 plot.margin = margin(l = 100),
                  legend.position = "none")
       p <- p + labs(y = "Rank", x = "First Axis") 
       b <- p + geom_vline(xintercept = 0, linewidth = 0.5, linetype = 2, color = "gray")
       
-      # Eigenvalue plot for the people
-      p <- ggscatter(eigval.dat.r, x = "k", y = "value", size = 2, color = "black")
+      # Eigenvalue plot for the groups
+      p <- ggscatter(eigval.dat.c, x = "k", y = "value", size = 2, color = "black")
       p <- p + labs(y = "", x = "k") 
       c <- p + theme(axis.text.x = element_blank(),
                     axis.text.y = element_text(size = 8),
                     axis.line.y = element_blank(),
                     axis.line.x = element_blank())
-      
-      # Eigenvalue plot for the groups
-      p <- ggscatter(eigval.dat.c, x = "k", y = "value", size = 2, color = "black")
-      p <- p + labs(y = "", x = "k") 
-      d <- p + theme(axis.text.x = element_blank(),
-                    axis.text.y = element_text(size = 8),
-                    axis.line.y = element_blank(),
-                    axis.line.x = element_blank())
-      a <- a + inset_element(c, left = 0.7, right = 1, bottom = 0, top = 0.45)
-      b <- b + inset_element(d, left = 0.7, right = 1, bottom = 0, top = 0.45)
-      png(file = here("Plots", "p-ca-eigvec.png"), width=500, height=500)
-      a
-      dev.off() 
-      png(file = here("Plots", "g-ca-eigvec.png"), width=500, height=500)
-      b
+      b <- b + inset_element(c, left = 0.6, right = 1, bottom = 0, top = 0.45)
+      png(file = here("Plots", "ca-eigvec.png"), width=1000, height=600)
+      a + b + plot_annotation(tag_levels = 'a', tag_suffix = ')') & 
+         theme(plot.tag = element_text(size = 20))
       dev.off() 
 ```
 
 ```{r CA Similarity and Correspondence Plot}
-      norm.sim.r <- as.matrix(S.r/max(S.r))
-      norm.sim.c <- as.matrix(S.c/max(S.c))
-      norm.sim.r <- norm.sim.r[order(d1.r), order(d1.r)]
-      norm.sim.c <- norm.sim.c[order(d1.c), order(d1.c)]
+      norm.sim.r <- as.matrix(P.pp/max(P.pp))
+      norm.sim.c <- as.matrix(P.gg/max(P.gg))
+      norm.sim.r <- norm.sim.r[order(CA.r$vectors[,2]), 
+                               order(CA.r$vectors[,2])]
+      norm.sim.c <- norm.sim.c[order(CA.c$vectors[,2]), 
+                               order(CA.c$vectors[,2])]
       
       # CA Similarity Plot (People)
       p <- ggcorrplot(norm.sim.r)
@@ -335,12 +326,13 @@ date: "`r Sys.Date()`"
       p <- ggcorrplot(norm.sim.c)
       p <- p + scale_x_discrete(position = "top")
       p <- p + scale_y_discrete(limits = rev)
-      b <- p + theme(legend.position = "none", plot.margin = margin(l = 100), 
+      b <- p + theme(legend.position = "none", 
+                     plot.margin = margin(l = 100), 
                     axis.text.x = element_text(hjust = -0.2, size = 10)) 
       
       # CA Correspondence Plot
-      plot.dat <- data.frame(a = d3, 
-                             b = d1, 
+      plot.dat <- data.frame(a = FCA.d[, 2], 
+                             b = FCA.d[, 1], 
                              mode = c(rep(1, 18), rep(2, 14)))
       p <- ggplot(plot.dat, aes(y = a, x = b, color = factor(mode), label = rownames(plot.dat)))
       p <- p + geom_vline(xintercept = 0, color = "gray")
@@ -351,10 +343,26 @@ date: "`r Sys.Date()`"
                      axis.text = element_text(size = 18),
                      axis.title = element_text(size = 20)
                      )
-      p <- p + labs(x = "Second Dimension", y = "First Dimension")
+      p <- p + labs(x = "First Dimension", y = "Second Dimension")
       c <- p + scale_color_manual(values = c('red', 'blue'))
-      png(file = here("Plots", "ca-corr-plot.png"), width=1200, height=900)
-      (a + b) / c + 
+      
+      plot.dat <- data.frame(a = FCA.d[, 3], 
+                             b = FCA.d[, 1], 
+                             mode = c(rep(1, 18), rep(2, 14)))
+      p <- ggplot(plot.dat, aes(y = a, x = b, color = factor(mode), label = rownames(plot.dat)))
+      p <- p + geom_vline(xintercept = 0, color = "gray")
+      p <- p + geom_hline(yintercept = 0, color = "gray")
+      p <- p + geom_text_repel(size = 4, max.overlaps = 50)
+      p <- p + theme_minimal() 
+      p <- p + theme(legend.position = "none",
+                     axis.text = element_text(size = 18),
+                     axis.title = element_text(size = 20)
+                     )
+      p <- p + labs(x = "First Dimension", y = "Third Dimension")
+      d <- p + scale_color_manual(values = c('red', 'blue'))
+      
+      png(file = here("Plots", "ca-corr-plot.png"), width=1200, height=1200)
+      (a + b) / c / d + 
          plot_annotation(tag_levels = 'a', tag_suffix = ')') & 
          theme(plot.tag = element_text(size = 26))
       dev.off()
