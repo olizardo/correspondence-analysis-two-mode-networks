@@ -322,7 +322,7 @@ date: "`r Sys.Date()`"
       p <- p + scale_x_discrete(position = "top")
       p <- p + scale_y_discrete(limits = rev)
       p <- p + scale_fill_gradient2(limit = c(0, max(norm.sim.r+0.02)), 
-                                    low = "lightblue", 
+                                    low = "white", 
                                     high =  "darkred", 
                                     mid = "red", 
                                     midpoint = max(norm.sim.r)/2)
@@ -333,7 +333,7 @@ date: "`r Sys.Date()`"
       p <- p + scale_x_discrete(position = "top")
       p <- p + scale_y_discrete(limits = rev)
       p <- p + scale_fill_gradient2(limit = c(0, max(norm.sim.c+0.02)), 
-                                    low = "lightblue", 
+                                    low = "white", 
                                     high =  "darkred", 
                                     mid = "red", 
                                     midpoint = max(norm.sim.c)/2)
@@ -391,7 +391,7 @@ date: "`r Sys.Date()`"
       p <- p + scale_x_discrete(position = "top")
       p <- p + scale_y_discrete(limits = rev)
       p <- p + scale_fill_gradient2(limit = c(0, max(norm.sim.r+1)), 
-                                    low = "lightblue", 
+                                    low = "white", 
                                     high =  "darkred", 
                                     mid = "red",  
                                     midpoint = max(norm.sim.r)/2)
@@ -403,7 +403,7 @@ date: "`r Sys.Date()`"
       p <- p + scale_x_discrete(position = "top")
       p <- p + scale_y_discrete(limits = rev)
       p <- p + scale_fill_gradient2(limit = c(0, max(norm.sim.c+1)), 
-                                    low = "lightblue", 
+                                    low = "white", 
                                     high =  "darkred", 
                                     mid = "red",  
                                     midpoint = max(norm.sim.c)/2)
@@ -411,9 +411,9 @@ date: "`r Sys.Date()`"
                     axis.text.x = element_text(hjust = -0.2, size = 10)) 
       
       # Bonacich Correspondence Plot
-      eig.d1 <- c(eig.r[, 1], eig.c[, 1])
-      eig.d2 <- c(eig.r[, 2], eig.c[, 2])
-      plot.dat <- data.frame(eig.d1*-1, eig.d2, mode = c(rep(1, 18), rep(2, 14)))
+      eig.d1 <- c(eig.r[, 1], eig.c[, 1])*-1
+      eig.d2 <- c(eig.r[, 2], eig.c[, 2])*-1
+      plot.dat <- data.frame(eig.d1, eig.d2, mode = c(rep(1, 18), rep(2, 14)))
       p <- ggplot(plot.dat, aes(y = eig.d2, x = eig.d1, color = factor(mode), 
                                 label = c(rownames(A), colnames(A))))
       p <- p + geom_vline(xintercept = 0, color = "gray")
@@ -426,8 +426,8 @@ date: "`r Sys.Date()`"
                      )
       p <- p + labs(x = "First Dimension", y = "Second Dimension")
       c <- p + scale_color_manual(values = c('red', 'blue'))
-      png(file = here("Plots", "bon-corr-plot.png"), width=1200, height=900)
-      (a + b) / c + 
+      png(file = here("Plots", "bon-corr-plot.png"), width=1500, height=1000)
+      (a + b) / (c) + 
          plot_annotation(tag_levels = 'a', tag_suffix = ')') & 
          theme(plot.tag = element_text(size = 26))
       dev.off()
