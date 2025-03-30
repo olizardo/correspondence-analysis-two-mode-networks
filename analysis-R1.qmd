@@ -198,39 +198,6 @@ date: "`r Sys.Date()`"
    dev.off()
 ```
 
-```{r CA versus Bonacich Re-ordered Affiliation Matrices}
-      # Affiliation matrix plot (CA ordering)
-      A.ord <- as.matrix(A[order(CA.r$vectors[, 2]), order(CA.c$vectors[, 2])])
-      p <- ggcorrplot(t(A.ord)) 
-      p <- p + scale_x_discrete(position = "top")
-      p <- p + scale_y_discrete(limits = rev)
-      p1 <- p + theme(legend.position = "none",
-                               axis.text.x = element_text(hjust = -0.2))
-      # Affiliation matrix plot (Bonacich ordering)
-      A.ord <- as.matrix(A[order(eig.r[, 1]), order(eig.c[, 1])])
-      p <- ggcorrplot(t(A.ord)) 
-      p <- p + scale_x_discrete(position = "top")
-      p <- p + scale_y_discrete(limits = rev)
-      p2 <- p + theme(legend.position = "none",
-                               axis.text.x = element_text(hjust = -0.2)) 
-     # Affiliation matrix plot (Bonacich ordering)
-      A.ord <- as.matrix(A[order(eig.r[, 2]), order(eig.c[, 2])])
-      p <- ggcorrplot(t(A.ord)) 
-      p <- p + scale_x_discrete(position = "top")
-      p <- p + scale_y_discrete(limits = rev)
-      p3 <- p + theme(legend.position = "none",
-                               axis.text.x = element_text(hjust = -0.2)) 
-      png(file = here("Plots", "ca-reord.png"), width=500, height=500)
-      p1
-      dev.off() 
-      png(file = here("Plots", "bon-reord1.png"), width=500, height=500)
-      p2
-      dev.off() 
-      png(file = here("Plots", "bon-reord2.png"), width=500, height=500)
-      p3
-      dev.off()
-```
-
 ```{r Row Stochastic Matrices for CA Projections Plot}
    P.pg <- diag(1/rowSums(A)) %*% A
    rownames(P.pg) <- rownames(A) 
@@ -270,6 +237,7 @@ date: "`r Sys.Date()`"
       eigval.dat.c <- data.frame(k = 1:13, 
                              value = CA.c$values[2:14]/max(CA.c$values[2:14])) %>% 
              mutate(value = value / max(value))
+      
       # Eigenvector plot for the people
       p <- ggscatter(eigvec.dat.r, y = "rank", x = "value", point = FALSE,
                  font.label =  10, label = "lab", repel = TRUE)
@@ -316,7 +284,13 @@ date: "`r Sys.Date()`"
                                order(CA.r$vectors[,2])]
       norm.sim.c <- norm.sim.c[order(CA.c$vectors[,2]), 
                                order(CA.c$vectors[,2])]
-      
+      # CA Spectral Clustering
+      ca.dat <- data.frame(rbind(CA.r$vectors[,2:4], CA.c$vectors[,2:4]))
+      ca.clus.p <- kmeans(ca.dat[1:18, ], centers = 3, nstart = 25)
+      ca.clus.g <- kmeans(ca.dat[19:32, ], centers = 3, nstart = 25)
+      ca.clus <- kmeans(ca.dat, centers = 3, nstart = 25)
+
+
       # CA Similarity Plot (People)
       p <- ggcorrplot(norm.sim.r)
       p <- p + scale_x_discrete(position = "top")
@@ -410,22 +384,30 @@ date: "`r Sys.Date()`"
       b <- p + theme(legend.position = "none", plot.margin = margin(l = 100),
                     axis.text.x = element_text(hjust = -0.2, size = 10)) 
       
+      # K-means clustering of Bonacich solution
+      eig.dat <- data.frame(d1 = eig.d1, d2 = eig.d2)
+      eig.clus.p <- kmeans(eig.dat[1:18,], centers = 3, nstart = 25)$cluster
+      eig.clus.g <- kmeans(eig.dat[19:32,], centers = 3, nstart = 25)$cluster
+      
       # Bonacich Correspondence Plot
       eig.d1 <- c(eig.r[, 1], eig.c[, 1])*-1
       eig.d2 <- c(eig.r[, 2], eig.c[, 2])*-1
-      plot.dat <- data.frame(eig.d1, eig.d2, mode = c(rep(1, 18), rep(2, 14)))
-      p <- ggplot(plot.dat, aes(y = eig.d2, x = eig.d1, color = factor(mode), 
+      plot.dat <- data.frame(eig.d1, eig.d2, 
+                             mode = c(rep(1, 18), rep(2, 14)),
+                             clus = c(eig.clus.p, eig.clus.g+3)
+                             )
+      p <- ggplot(plot.dat, aes(y = eig.d2, x = eig.d1, color = factor(clus), 
                                 label = c(rownames(A), colnames(A))))
       p <- p + geom_vline(xintercept = 0, color = "gray")
       p <- p + geom_hline(yintercept = 0, color = "gray")
-      p <- p + geom_text_repel(size = 4, max.overlaps = 50)
+      p <- p + geom_text_repel(size = 4, max.overlaps = 50, fontface = "bold")
       p <- p + theme_minimal() 
       p <- p + theme(legend.position = "none",
                      axis.text = element_text(size = 18),
                      axis.title = element_text(size = 20)
                      )
-      p <- p + labs(x = "First Dimension", y = "Second Dimension")
-      c <- p + scale_color_manual(values = c('red', 'blue'))
+      c <- p + labs(x = "First Dimension", y = "Second Dimension")
+      #c <- p + scale_color_manual(values = c('red', 'blue'))
       png(file = here("Plots", "bon-corr-plot.png"), width=1500, height=1000)
       (a + b) / (c) + 
          plot_annotation(tag_levels = 'a', tag_suffix = ')') & 
@@ -433,61 +415,145 @@ date: "`r Sys.Date()`"
       dev.off()
 ```
 
+```{r SimRank Similarity Matrices}
+   SR.res <- SimRank(A)
+   SR.p <- SR.res$Sr
+   SR.g <- SR.res$Sc
+   rownames(SR.p) <- substr(colnames(SR.p), start = 1, stop = 3)
+   rownames(SR.g) <- substr(colnames(SR.g), start = 1, stop = 3)
+   a <- ggcorrplot(SR.p, lab = TRUE, lab_size = 5,
+                     colors = c(rep("white", 3))) +
+      theme(legend.position = "none", 
+            axis.text.x = element_text(hjust = -0.2, size = 16),
+            axis.text.y = element_text(size = 16)) + 
+      scale_x_discrete(position = "top") + scale_y_discrete(limits=rev) 
+   b <- ggcorrplot(SR.g, lab = TRUE, lab_size = 5,
+                     colors = c(rep("white", 3))) +
+      theme(legend.position = "none", 
+            axis.text.x = element_text(hjust = -0.2, size = 16),
+            axis.text.y = element_text(size = 16)) + 
+      scale_x_discrete(position = "top") + scale_y_discrete(limits=rev) 
+   png(file = here("Plots", "p-SimRank.png"), width=900, height=900)
+   P.p
+   dev.off() 
+   png(file = here("Plots", "g-SimRank.png"), width=900, height=900)
+   P.g
+   dev.off() 
+```
+
 ```{r CA versus SimRank}
-      res <- SimRank(A)
-      Sr <- res$Sr
-      Sc <- res$Sc
-      s1.r <- eigen(Sr)$vectors[, 2]
-      s1.c <- eigen(Sc)$vectors[, 2]
-      diag(Sr) <- 0
-      diag(Sc) <- 0
-      Sr <- Sr[order(d1.r), order(d1.r)]
-      Sc <- Sc[order(d1.c), order(d1.c)]
-      rownames(Sr) <- substr(colnames(P.pp), start = 1, stop = 3)
-      rownames(Sc) <- substr(colnames(P.gg), start = 1, stop = 3)
-      a <- ggcorrplot(Sr, lab = TRUE, show.diag = FALSE, lab_size = 3) +
-         theme(legend.position = "none", 
-               axis.text.x = element_text(hjust = -0.2)) + 
-         scale_x_discrete(position = "top") + scale_y_discrete(limits=rev) +
-         scale_fill_gradient2(breaks = c(0, .5), limit = c(0, .5), 
-                              low = "white", mid = "yellow", high = "purple")
+      # SimRank Eigenvector plot data
+      SR.eig.p <- eigen(SR.res$Sr)$vectors
+      SR.eig.g <- eigen(SR.res$Sc)$vectors
+      eigvec.dat.r <- data.frame(rank = rank(SR.eig.p[, 2]), 
+                             value = as.numeric(SR.eig.p[, 2]),
+                             lab = rownames(A))
+      eigvec.dat.c <- data.frame(rank = rank(SR.eig.g[, 2]), 
+                             value = as.numeric(SR.eig.g[, 2]),
+                             lab = colnames(A))
       
-      b <- ggcorrplot(Sc, lab = TRUE, show.diag = FALSE, lab_size = 3) +
-         theme(legend.position = "none", 
-               axis.text.x = element_text(hjust = -0.2)) + 
-         scale_x_discrete(position = "top") + scale_y_discrete(limits=rev) +
-         scale_fill_gradient2(breaks = c(0, .5), limit = c(0, .5), 
-                              low = "white", mid = "yellow", high = "purple")
+      # Eigenvector plot for the people
+      p <- ggscatter(eigvec.dat.r, y = "rank", x = "value", point = FALSE,
+                 font.label =  10, label = "lab", repel = TRUE)
+      p <- p + theme(axis.text.y = element_blank(),
+                 axis.line.x = element_blank(),
+                 axis.line.y = element_blank(),
+                 axis.ticks = element_blank(),
+                 legend.position = "none")
+      p <- p + labs(y = "Rank", x = "First Axis") 
+      a <- p + geom_vline(xintercept = 0, linewidth = 0.5, linetype = 2, color = "gray")
       
-      dat.r <- data.frame(ca = d1.r,
-                          sr = s1.r,
+      # Eigenvector plot for the groups
+      p <- ggscatter(eigvec.dat.c, y = "rank", x = "value", point = FALSE,
+                 font.label =  10, label = "lab", repel = TRUE)
+      p <- p + theme(axis.text.y = element_blank(),
+                 axis.line.x = element_blank(),
+                 axis.line.y = element_blank(),
+                 axis.ticks = element_blank(),
+                 plot.margin = margin(l = 100),
+                 legend.position = "none")
+      p <- p + labs(y = "Rank", x = "First Axis") 
+      b <- p + geom_vline(xintercept = 0, linewidth = 0.5, linetype = 2, color = "gray")
+      
+      # Data for scatterplot
+      dat.p <- data.frame(ca = CA.r$vectors[, 2],
+                          sr = SR.eig.p[, 2],
                           lab = rownames(A))
-      dat.c <- data.frame(ca = d1.c,
-                          sr = s1.c,
+      dat.g <- data.frame(ca = CA.c$vectors[, 2],
+                          sr = SR.eig.g[, 2],
                           lab = colnames(A))
-      cor <- round(cor(dat.r[,c("ca", "sr")])[1, 2], 2)
       
-      c <- ggscatter(dat.r, x = "ca", y = "sr", font.label= 8, 
+      # SimRank versus CA (People)
+      cor <- round(cor(dat.p[,c("ca", "sr")])[1, 2], 2)
+      c <- ggscatter(dat.p, x = "ca", y = "sr", font.label= 8, 
                      label = "lab", repel = TRUE, 
                      add = "reg.line", 
                      add.params = list(color = "gray80", 
                                        linewidth = 0.5, linetype = 2)) +
                      annotate("text", x = -.2, y = .3, 
-                              label = paste("r = ", cor), size = 6) 
-      cor <- round(cor(dat.c[,c("ca", "sr")])[1, 2], 2)
+                              label = paste("r = ", cor), size = 6) +
+                     labs(x = "CA Scores", y = "SimRank Scores")
       
-      d <- ggscatter(dat.c, x = "ca", y = "sr", font.label= 8, 
+      # SimRank versus CA (Groups)
+      cor <- round(cor(dat.g[,c("ca", "sr")])[1, 2], 2)
+      d <- ggscatter(dat.g, x = "ca", y = "sr", font.label= 8, 
                      label = "lab", repel = TRUE, 
                      add = "reg.line",
                      add.params = list(color = "gray80", 
                                        linewidth = 0.5, linetype = 2)) +
                      annotate("text", x = -.2, y = .3, 
-                              label = paste("r = ", cor), size = 6) 
+                              label = paste("r = ", cor), size = 6) +
+                     labs(x = "CA Scores", y = "SimRank Scores")
+      
+      # Composite Plot
       png(file = here("Plots", "simrank-v-ca.png"), width=1000, height=900)
-      (a + c + plot_layout(widths = c(2, 1))) / (b + d + plot_layout(widths = c(2, 1))) + 
-         plot_annotation(tag_levels = 'a', tag_suffix = ')') & 
+         (a + b)/(c + d) + plot_annotation(tag_levels = 'a', tag_suffix = ')') & 
          theme(plot.tag = element_text(size = 26))
       dev.off() 
+```
+
+```{r Blocked Affiliation Matrices}
+      # First CA Dimension
+      A.ord <- as.matrix(A[order(CA.r$vectors[, 2]), order(CA.c$vectors[, 2])])
+      p <- ggcorrplot(t(A.ord)) 
+      p <- p + scale_x_discrete(position = "top")
+      p <- p + scale_y_discrete(limits = rev)
+      p1 <- p + theme(legend.position = "none",
+                               axis.text.x = element_text(hjust = -0.2))
+      # First Bonacich Dimension
+      A.ord <- as.matrix(A[order(eig.r[, 1]), order(eig.c[, 1])])
+      p <- ggcorrplot(t(A.ord)) 
+      p <- p + scale_x_discrete(position = "top")
+      p <- p + scale_y_discrete(limits = rev)
+      p2 <- p + theme(legend.position = "none",
+                               axis.text.x = element_text(hjust = -0.2)) 
+     # Second Bonacich Dimension
+      A.ord <- as.matrix(A[order(eig.r[, 2]), order(eig.c[, 2])])
+      p <- ggcorrplot(t(A.ord)) 
+      p <- p + scale_x_discrete(position = "top")
+      p <- p + scale_y_discrete(limits = rev)
+      p3 <- p + theme(legend.position = "none",
+                               axis.text.x = element_text(hjust = -0.2)) 
+     # Second SimRank Eigenvector
+      A.ord <- as.matrix(A[order(s2.r), order(s2.c)])
+      p <- ggcorrplot(t(A.ord)) 
+      p <- p + scale_x_discrete(position = "top")
+      p <- p + scale_y_discrete(limits = rev)
+      p4 <- p + theme(legend.position = "none",
+                               axis.text.x = element_text(hjust = -0.2))
+      # Saving plots
+      png(file = here("Plots", "ca-reord1.png"), width=500, height=500)
+      p1
+      dev.off() 
+      png(file = here("Plots", "bon-reord1.png"), width=500, height=500)
+      p2
+      dev.off() 
+      png(file = here("Plots", "bon-reord2.png"), width=500, height=500)
+      p3
+      dev.off()
+      png(file = here("Plots", "SR-reord1.png"), width=500, height=500)
+      p4
+      dev.off()
 ```
 
 
