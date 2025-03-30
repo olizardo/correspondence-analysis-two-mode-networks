@@ -1,0 +1,495 @@
+%% 
+%% Copyright 2019-2020 Elsevier Ltd
+%% 
+%% This file is part of the 'CAS Bundle'.
+%% --------------------------------------
+%% 
+%% It may be distributed under the conditions of the LaTeX Project Public
+%% License, either version 1.2 of this license or (at your option) any
+%% later version.  The latest version of this license is in
+%%    http://www.latex-project.org/lppl.txt
+%% and version 1.2 or later is part of all distributions of LaTeX
+%% version 1999/12/01 or later.
+%% 
+%% The list of all files belonging to the 'CAS Bundle' is
+%% given in the file `manifest.txt'.
+%% 
+%% Template article for cas-dc documentclass for 
+%% double column output.
+
+%\documentclass[a4paper,fleqn,longmktitle]{cas-dc}
+\documentclass[a4paper,fleqn]{cas-sc}
+
+%\usepackage[numbers]{natbib}
+%\usepackage[authoryear]{natbib}
+\usepackage[authoryear,longnamesfirst]{natbib}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{longtable}
+
+%%%Author definitions
+\def\tsc#1{\csdef{#1}{\textsc{\lowercase{#1}}\xspace}}
+\tsc{WGM}
+\tsc{QE}
+\tsc{EP}
+\tsc{PMS}
+\tsc{BEC}
+\tsc{DE}
+%%%
+
+% Uncomment and use as if needed
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newdefinition{rmk}{Remark}
+%\newproof{pf}{Proof}
+%\newproof{pot}{Proof of Theorem \ref{thm}}
+
+\begin{document}
+\let\WriteBookmarks\relax
+\def\floatpagepagefraction{1}
+\def\textpagefraction{.001}
+
+% Short title
+\shorttitle{Correspondence Analysis of Two-Mode Networks}
+
+% Short author
+%\shortauthors{O. Lizardo}
+
+% Main title of the paper
+\title [mode = title]{The Correspondence Analysis of Two-Mode Networks Revisited}                      
+% Title footnote mark
+% eg: \tnotemark[1]
+%\tnotemark[1,2]
+
+% Title footnote 1.
+% eg: \tnotetext[1]{Title footnote text}
+% \tnotetext[<tnote number>]{<tnote text>} 
+%\tnotetext[1]{}
+
+%\tnotetext[2]{.}
+
+
+% First author
+%
+% Options: Use if required
+% eg: \author[1,3]{Author Name}[type=editor,
+%       style=chinese,
+%       auid=000,
+%       bioid=1,
+%       prefix=Sir,
+       %orcid=0000-0002-5405-3007,
+%       facebook=<facebook id>,
+%       twitter=<twitter id>,
+%       linkedin=<linkedin id>,
+%       gplus=<gplus id>]
+%\author[1]{Omar Lizardo}[orcid=0000-0002-5405-3007]
+
+% Corresponding author indication
+%\cormark[1]
+
+% Footnote of the first author
+%\fnmark[1]
+
+% Email id of the first author
+%\ead{olizardo@soc.ucla.edu}
+
+% URL of the first author
+%\ead[url]{http://olizardo.bol.ucla.edu/}
+
+%  Credit authorship
+%\credit{Conceptualization of this study, Methodology, Software}
+
+%Address/affiliation
+%\affiliation[1]{organization={University of California, Los Angeles},
+   % addressline={264 Haines Hall}, 
+   % city={Los Angeles},
+    %citysep={},  Uncomment if no comma needed between city and postcode
+    % postcode={90095}, 
+    % state={CA},
+    % country={USA}}
+
+ %Corresponding author text
+%\cortext[cor1]{Corresponding author}
+%\cortext[cor2]{Principal corresponding author}
+
+%Footnote text
+%\fntext[fn1]{This paper was written while the author was partially supported by National Science Foundation grant HNDS-R \#2214215.}
+ % author as well.}
+%\fntext[fn2]{Another author footnote, this is a very long footnote and
+ % it should be a really long footnote. But this footnote is not yet
+ % sufficiently long enough to make two lines of footnote text.}
+
+% For a title note without a number/mark
+%\nonumnote{This note has no numbers. In this work we demonstrate $a_b$
+%  the formation Y\_1 of a new type of polariton on the interface
+ % between a cuprous oxide slab and a polystyrene micro-sphere placed
+ % on the slab.
+ % }
+% Here goes the abstract
+\begin{abstract}
+This paper reconsiders the status of Correspondence Analysis (CA) as a tool for analyzing two-mode networks, comparing it with the Bonacich dual centrality approach and revealing their mathematical linkages as eigenvector-based methods. While Bonacich centrality identifies core-periphery structures and is helpful for clustering nodes based on the criterion of similarity via structural equivalence, CA is best at detecting subsets of actors and events based on a generalized relational similarity criterion, thus coming closer to clustering via regular equivalence. In the end, both CA and Bonacich centrality emerge as valuable, but distinct strategies for the dual projection analysis of two-mode networks, emphasizing the duality between actors and events.
+\end{abstract}
+
+% Use if graphical abstract is present
+% \begin{graphicalabstract}
+% \includegraphics{figs/grabs.pdf}
+% \end{graphicalabstract}
+
+%Research highlights
+\begin{highlights}
+    \item Correspondence Analysis (CA) and Bonacich centrality are mathematically related, both being eigenvector-based methods applied to one-mode projections of two-mode networks.
+    \item Bonacich centrality is better suited for identifying core-periphery structures and structural equivalence-based clustering of nodes in the two-mode network.
+    \item CA excels at revealing clusters of nodes in both modes based on regular equivalence or ``generalized relational similarity.''
+    \item Both CA and Bonacich centrality are valuable, but distinct, tools for analyzing two-mode networks through a ``dual projection'' approach.
+\end{highlights}
+
+% Keywords
+% Each keyword is separated by \sep
+\begin{keywords}
+Correspondence Analysis \sep Bonacich Centrality \sep Duality \sep Two-mode networks \sep Clustering 
+\end{keywords}
+
+\maketitle
+
+\newpage
+\section{Introduction} \label{sec:1intro}
+Despite not being a frequently used tool for analyzing two-mode network data, Correspondence Analysis---hereafter CA---has had a somewhat rocky and distinctive career in the social networks literature. Initially criticized by \citet{borgatti1997network} as a relatively limited and perhaps even inapplicable tool, CA has found various proponents who see it as an important component of the SNA arsenal for two-mode network data analysis, particularly regarding its ability to economically provide synoptic (e.g., ``joint'') graphical representations of structural connectivity patterns across the two-modes \citep{roberts2000correspondence, breiger2000tool, faust2005using}, with the primary aim being to use CA---or its variants like Multiple Correspondence Analysis (MCA)---to ``visually explore'' such networks \citep{desposito2014use}. 
+
+This paper reconsiders the uses of CA as a tool in the analysis of the two-mode networks, clarifying its similarities and differences to other widely used approaches, such as Bonacich's \citeyearpar{bonacich1991simultaneous} dual centrality scoring. I show that both CA and Bonacich centrality analysis are close mathematical cousins, and can be thought of as eigenvector-based decomposition strategies of proximity matrices extracted from the one-mode projection of the original two-mode affiliation matrix. The key differences between CA and the Bonacich approach concern the type of underlying structure in the two-mode network that they are sensitive two, with the Bonacich approach more useful for detecting primary and secondary core-periphery partitions---and when used as a blocking tool revealing clustering of nodes based on structural equivalence---and CA more useful for revealing clusters of similar nodes, where similarity relations obey a logic closer to that of regular equivalence, or ``generalized relational similarity'' \citep{kovacs2010generalized}. In this respect, both Correspondence Analysis and Bonacich dual centrality analysis emerge as equally useful but distinct strategies in the extended toolkit of options useful for analyzing two-mode networks from a ``dual projection'' perspective \citep{everett2013dual}. 
+
+\subsection{Organization of the Paper} \label{subsec:org}
+The rest of the paper is organized as follows. In Section~\ref{sec:prevuses}, I review previous SNA work dealing with the uses of CA to analyze two-mode network data. Then, in Section~\ref{sec:ref2mode}, I consider a recent re-invention of CA (the economic complexity index) used to produce a type of Bonacich-style dual scoring via iterative scoring across the two modes of the affiliation matrix. This leads naturally to an abbreviated way of computing the same scores---CA and Bonacich---via spectral decomposition of the one-mode projection of the affiliation matrix for each set of nodes (degree-weighted in the case of CA and unweighted in the case of Bonacich). Section~\ref{sec:comparing} uses the classic Southern Women dataset to show the payoff of this approach, focusing on the distinct substantive insights extracted by CA and Bonacich scoring in a venerable dataset, showing that the CA-blocked affiliation matrix reveals a dual block partition between the two node sets (similar to that recovered by previous analyses of the same data using other methods), while the Bonacich-blocked affiliation recovers a core-periphery structure instead. In addition, I show that considering higher dimensions of the Bonacich-style decomposition allows us to discover secondary core-periphery structures in the two-mode network, while also leading to a meaningful clustering of the nodes based on structural equivalence. Section~\ref{sec:cagensim} considers the hanging question of the exact substantive interpretation of the node clusters revealed by CA-style blocking, which are shown to be fairly close to those obtained by a computationally unrelated approach based on the idea of ``generalized relational similarity,'' suggesting that the CA blocks are distinct from those obtained following the logic of structural equivalence. Finally, Section~\ref{sec:disc} closes with a summary of key points in the argument and suggestions for future development of the linkages between CA and positional and centrality analysis in two-mode networks.  
+
+
+\section{Previous uses of CA in Two-Mode Network Data Analysis} \label{sec:prevuses}
+
+For reasons of space and relevance, my discussion of previous work is circumscribed in four ways, focusing on (1) pieces discussing primarily \textit{methodological} or interpretive aspects of CA, (2) regarding the analysis of \textit{two-mode network} data or affiliation networks,\footnote{There are, of course, various substantive applications of CA for the analysis of two-mode networks~\citep[e.g.,][]{breiger2000tool, faust2002scaling, schweizer1991power, serino2024mapping, ragozini2018analysis} as well as substantive and methodological applications of CA to the analysis of one-mode network data~\citep[e.g.,][]{noma1985scaling, kumbasar1994systematic, lizardo2020correspondence}; these will not be part of the discussion here.} (3) analyzing the usual \textit{binary} affiliation matrix measuring a single relation between persons and groups at one point in time, where links are observed only between persons and groups,\footnote{As such, recent work dealing with the application of CA or other factoring approaches to time-varying, multiplex, multilevel, or valued two-mode network data \citep{ragozini2014correspondence, ragozini2015multiple, zhu2016correspondence} will also be outside the scope of my discussion.} using \textit{simple CA} of the affiliation matrix.\footnote{There has been a spate of recent work focusing on the uses and advantages of using Multiple Correspondence Analysis or MCA---a variant of CA applied to a disjunctively-coded, doubly-centered version of the original affiliation matrix) to analyze and visualize two-mode networks \citep[e.g.,][]{dramalidis2016subset, desposito2014use, ragozini2014correspondence}. Because much of what I have to say deals with the uses and interpretation of the scores obtained from simple CA applied directly to the affiliation matrix (or its one-mode projections), my discussion will not be directly relevant to this line of work, except for a recent paper directly comparing the substantive interpretation of the $\chi^2$ distances in simple CA and MCA with regard to their substantive interpretation as indexes of structural similarity, which bears more directly to some of the subsequent discussion \citep{desposito2014comparison}.}
+
+%With these restrictions in mind, the literature on CA, duality, and two-mode networks can be divided into two streams. The first contributions focus on the usefulness of CA as a tool for the visualization or ``joint display'' of the two sets of entities in an affiliation network. Secondly, some contributions focus on the similarities and differences between CA and factoring---those based on a spectral decomposition of a suitable matrix---techniques for assigning scores to the nodes of a two-mode network, where the scores exploit the duality between the two sets of entities and could be, under some circumstances, interpreted as ``centrality'' scores. 
+
+One of the earliest considerations of CA as a data-analytic tool for examining duality relations in two-mode networks was provided by \citet[163-165]{bonacich1991simultaneous} in his classic paper on dual centralities for affiliation networks. In that paper, \citet{bonacich1991simultaneous} noted that since the usual affiliation matrix is a ``cross-classification of people by the groups to which they belong,'' then it would seem that CA would be a relevant analytic technique. According to \citet{bonacich1991simultaneous}, the basic goal of correspondence analysis is to create a multidimensional space encoding geometric ``distances'' (scare quotes in the original) between row and column categories, with the distances capturing the best low-dimensional representation---in the least-squared error sense---of the similarities between row and column objects.  Bonacich's discussion of CA came after his influential introduction of the Eigenvector centrality approach for two-mode network analysis. Intriguingly, \citet[163]{bonacich1991simultaneous} noted that ``[a]lthough the goals of correspondence analysis and centrality analysis are different, their mathematics are similar,'' because both rely on a version of the spectral decomposition of the affiliation matrix---namely, the Singular Value Decomposition (SVD) to obtain scores for the row and column objects in the two-mode network. As we will see in section~\ref{subsec:refeigen}, CA and centrality analysis are mathematically linked in a second way not noted by Bonacich, as they are also based on the spectral decomposition of the dual one-mode \textit{projections} of the original rectangular affiliation matrix. In this particular respect, the mathematical connection between the Eigenvector approach to centrality analysis and CA is more similar than even Bonacich appreciated. 
+
+For Bonacich, the main differences between CA and Eigenvector centrality analysis stemmed from ``the different ways in which the cross-classifications are treated before the SVD is applied.'' For Bonacich, the ``most powerful and useful dimensions'' of CA are designed to highlight and describe \textit{similarities} in row or column patterns of affiliation and membership, and therefore ``[b]efore the SVD is used, the cross-classification is modified so that these dimensions of similarity will be the most powerful.'' Nevertheless, Bonacich is not quite clear as to what this pre-modification amounts to, noting that given the fact that less ``powerful'' dimensions are usually discarded, it could be that among these ``there may be a dimension corresponding to centrality,'' but ``correspondence analysis is not designed to highlight this dimension.'' Interestingly, Bonacich went on to compute both the Eigenvector and CA scores for the canonical Southern Women data---which we will also do later in this paper---noting that ``[r]ather than centrality what\ldots[the CA scores] seem to capture is membership in the two cliques that attended different sets of events,'' with the magnitude of each woman and event score in the main dimension seeming to indicate the ``purity'' of their membership in each of the two cliques and for events; that is, the likelihood of being attended by their most representative members  \citep[164]{bonacich1991simultaneous}. 
+
+In an influential paper on centrality in two-mode networks, \citet{faust1997centrality} returned to the issue of the connection between eigenvector centrality, CA, and dual relations between actors and events in two-mode networks. Faust noted that one thing both techniques had in common was that they both produced scores that truly exploited the duality of the two modes in the data. In the eigenvector case, this duality is strict, as the eigenvector centrality of a given person is the sum of the eigenvector scores of the event she attends; for events, their scores are given by the sum of the eigenvector centralities of their members. Importantly, \citet{faust1997centrality} noted that an exact parallel dual additive relationship was obtained between the CA scores corresponding to persons and groups. The CA score of a given person on a given dimension is the (weighted) sum of the scores in the same dimension of the events she attends. Similarly, for groups, the score on a given CA dimension is the (weighted) sum of the scores of the women who attend that event, a classic case of duality via mutual definition. %\citet{faust1997centrality} also specified the particular way that the affiliation matrix $\mathbf{A}$ had to be modified before applying the SVD (recall this is the step that creates the difference between CA and Eigenvector centrality), noting that each cell of the affiliation matrix is divided by the square root of the product of the number of events the row woman attends and the number of people attending the column event.
+
+\citet{borgatti1997network} provided another early and influential in-depth consideration of CA in the context of two-mode network data analysis with an emphasis on the visualization aspect of actors and events in a single space. The discussion was placed in a section of the paper titled ``visual representations of 2-mode data,'' and naturally focused almost exclusively on the uses of CA as a visualization technique. According to \citet[246]{borgatti1997network}, CA ``can be seen as a method for representing points in a metric space such that distances between the points are meaningful.'' More specifically, \citet{borgatti1997network}, also using the Southern Women data as illustration,  claimed that in the CA map, points representing the women will appear closer if the women attend ``mostly the same events.'' Conversely, points representing the events will be placed near one another if the events were attended by ``mostly the same women,'' and that women and events would appear closer in the plot if ``those women attended those events.'' \citet[247-249]{borgatti1997network} then went on to focus on various limitations of CA as a visualization tool, noting that given the limiting range of dichotomous network data, two-dimensional representations ``will almost always be severely inaccurate or misleading.'' They also noted that since CA is a technique designed to deal with valued frequency data, its use with binary network data would lead to dimensional scores that would be either ``meaningless'' or ``difficult to interpret.'' Finally, they noted that since distances in the CA biplot are not Euclidean, they would mislead interpreters who would try to impose such a metric to make sense of them. 
+
+In a paper published shortly thereafter, \citet{roberts2000correspondence} responded to some of the criticisms \citet{borgatti1997network} levied at the use of CA for analyzing two-mode networks. First, \citet{roberts2000correspondence} noted that there were many examples in the standing of using CA to analyze binary non-frequency data and that, therefore, the uses of CA are not constrained by the nature or provenance of the numerical quantities recorded in each cell of a two-mode network affiliation matrix. \citet{roberts2000correspondence} also challenged the contention that the two-dimensional representation of the data was unduly limiting in its capacity to produce a faithful representation of the original data, noting a high correlation between the distances between the women and the event points in the two-dimensional representation and one that used all thirteen dimensions.\footnote{In CA, the maximum number of dimensions is one minus the rank of the affiliation matrix, which in this case is fourteen, corresponding to the number of events.} Finally, \citet{roberts2000correspondence} also noted that the Euclidean distance interpretation of the separation of women and events points in the joint display is partially appropriate, as this Euclidean distances as actually low-dimensional approximations (to a high degree of accuracy in the first few dimensions) to the $\mathcal{X}^2$ distances between row profiles (for the women) and column profiles (for events) where the row profiles for a given woman is equal to the entry in the original affiliation matrix divided by the square root of the product of the number of events attended by that woman and the number of women who attended that event (and similarly for column profiles corresponding to events). Thus, the point distances are indeed interpretable as a kind of \textit{degree-weighted similarity} between objects in each mode. This is a point that we will return to later.   
+
+Perhaps the most thorough discussion of the uses of CA as a tool for the dual ``joint display'' of affiliation networks is that provided by \citet{faust2005using}. According to \citet[118]{faust2005using}, previous debates regarding the usefulness---or lack thereof---of CA as a visualization tool were marred by imprecision and lack of ``formal specification'' regarding the exact substantive meaning of the scores obtained via the procedure and a related lack of sustained discussion as to the exact ``relationship between the model and the input data.'' Faust's basic point is that CA provides a way to both place actors and events in an affiliation network in a joint space such that the inter-point distances are interpretable and such that the link to the original data (e.g., the affiliation network matrix) is transparent. Along the way, \citet{faust2005using} established several important points. First, Faust specifies the exact matrix that is subject to the singular value decomposition when CA is applied directly to the affiliation matrix of a two-mode network $\mathbf{A}$; namely, a scaled version where $\mathbf{A}$ is pre-multiplied by a diagonal matrix containing the square root of its row sums and post-multiplied by a diagonal matrix containing the square root of its column sums. This is equivalent, as both \citet{faust1997centrality} and \citet{roberts2000correspondence} had noted before, to dividing every non-zero entry of $a_{pg}$ by the square root of the product of the number of memberships of person $p$ and the number of members of group $g$ before applying the SVD. Second, Faust specifies the exact relationship linking the resulting row and column CA scores and the original affiliation matrix input, providing the ``reconstruction equation'' that takes us from the left and right singular vectors and eigenvalues to the former. Thirdly, as she did in the 1997 paper, Faust clarifies the duality linking the row and column scores, noting that the scores for the people are (activity) weighted sums of the scores that the groups they join, and the scores for the groups are (group size) weighted sums of the scores of their members. Finally, \citet[128ff]{faust2005using} clarifies the link between the CA scores---and different normalizations thereof---assigned to persons and events in an affiliation network on each dimension and (same node-set) inter-point distance in a joint space. Like \citet{roberts2000correspondence} before her, Faust specifies that in the low (usually two) dimensional representation, inter-point distances are best (least squares) approximations of the chi-square distance between the membership profiles of pairs of people (or groups), where the profile of a given person-row or group-column is equal to the non-zero entries of the affiliation matrix divided by the corresponding row or column sum (people's activities and group sizes).\footnote{Note that because the chi-square distances are defined on these degree-weighted entries, they define a kind of \textit{degree-weighted similarity} between pairs of people and pairs of groups, but not an exact similarity score as would be obtained, for instance, by using a criterion such as the proportion of matches in the affiliation matrix \citep[208]{everett2013dual}.}
+
+In a recent paper, \citet{desposito2014comparison} compare CA and MCA as tools for representing the structural similarity between nodes in a two-mode network (actors in their case). Specifically, they analyze the significance of the typical $\chi^2$ distances defined from the scores obtained from the simple CA of the affiliation matrix as compared to the MCA of the indicator matrix of persons by groups with events treated as disjunctively coded binary variables measured over the actors (as just described). The focus of the analysis is the extent to which the $\chi^2$ distance of actor profiles obtained from the affiliation matrix $\mathbf{A}$ or the disjunctively coded indicator matrix $\mathbf{Z}$ best approaches a criterion for computing approximate structural equivalence between nodes (such as the Euclidean distance computed from the binary entries in the affiliation matrix).\footnote{In the case of MCA applied to the binary affiliation matrix, the latter is transformed into a new matrix $\mathbf{Z}$ with the same number of rows (persons) as the original and with twice the number of columns representing either membership ($z_{pg+} = 1$) or non-membership ($z_{pg-} = 1$) in that a group (disjunctive coding). The MCA scores are obtained via SVD of a centered and doubly normalized---with respect to person activity and group sizes---version of $\mathbf{Z}$ \citep{desposito2014use}.}  That is, \citet{desposito2014comparison} seek to ascertain whether CA or MCA is the best analytic tool to identify sets of \textit{structurally equivalent} actors in a two-mode network. 
+
+Interestingly, \citet[115]{desposito2014comparison} note that just by examining the respective formulas defining the profile distances in CA versus MCA, we can verify that CA is \textit{not} a good tool for revealing clusters of structurally equivalent actors. As \citet{desposito2014comparison} put it, the reason is that the CA profile distance ``adopts a peculiar and more complex weighting system that could lead to a distorted representation of the actual relational patterns'' because the CA ``distance between actors (events) depends, not only on the pattern of participation (attendance)'' but also on the actor's \textit{degree} and the event \textit{sizes}. In addition, they note that because of this weighting scheme, in CA, ``small size events...are associated to larger weights...[and therefore] differences...related to such small size events have [a] stronger impact on the overall...distance than differences related to larger size events.'' \citet{desposito2014comparison} also point out that, in contrast, the MCA definition of inter-profile distance between actors based on $\mathbf{Z}$ is not affected by the degree-weighting aspect, and that in this respect, ``[I]t turns out that MCA [distances] closely resembles the Euclidean distance,'' which is a straightforward criterion for structural equivalence. This is a conclusion that is supported by computational experiments conducted later in the paper, and which leads \citet{desposito2014comparison} to conclude that the MCA defined  $\chi^2$ distances ``better reproduces the \textit{actual} relational pattern embedded in affiliation networks'' (122, italics added).
+
+
+
+%% Loading bibliography style file]
+%\bibliographystyle{model1-num-names}
+\bibliographystyle{cas-model2-names}
+% Loading bibliography database
+\bibliography{ca}
+\end{document}
+
+
+The Elsevier cas-dc class is based on the
+standard article class and supports almost all of the functionality of
+that class. In addition, it features commands and options to format the
+\begin{itemize} \item document style \item baselineskip \item front
+matter \item keywords and MSC codes \item theorems, definitions and
+proofs \item labels of enumerations \item citation style and labeling.
+\end{itemize}
+
+This class depends on the following packages
+for its proper functioning:
+
+\begin{enumerate}
+\itemsep=0pt
+\item {natbib.sty} for citation processing;
+\item {geometry.sty} for margin settings;
+\item {fleqn.clo} for left aligned equations;
+\item {graphicx.sty} for graphics inclusion;
+\item {hyperref.sty} optional packages if hyperlinking is
+  required in the document;
+\end{enumerate}  
+
+All the above packages are part of any
+standard \LaTeX{} installation.
+Therefore, the users need not be
+bothered about downloading any extra packages.
+
+\section{Installation}
+
+The package is available at author resources page at Elsevier
+(\url{http://www.elsevier.com/locate/latex}).
+The class may be moved or copied to a place, usually,\linebreak
+\verb+$TEXMF/tex/latex/elsevier/+, %$%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+or a folder which will be read                   
+by \LaTeX{} during document compilation.  The \TeX{} file
+database needs updation after moving/copying class file.  Usually,
+we use commands like \verb+mktexlsr+ or \verb+texhash+ depending
+upon the distribution and operating system.
+
+\section{Front matter}
+
+The author names and affiliations could be formatted in two ways:
+\begin{enumerate}[(1)]
+\item Group the authors per affiliation.
+\item Use footnotes to indicate the affiliations.
+\end{enumerate}
+See the front matter of this document for examples. 
+You are recommended to conform your choice to the journal you 
+are submitting to.
+
+\section{Bibliography styles}
+
+There are various bibliography styles available. You can select the
+style of your choice in the preamble of this document. These styles are
+Elsevier styles based on standard styles like Harvard and Vancouver.
+Please use Bib\TeX\ to generate your bibliography and include DOIs
+whenever available.
+
+Here are two sample references: 
+\cite{Fortunato2010}
+\cite{Fortunato2010,NewmanGirvan2004}
+\cite{Fortunato2010,Vehlowetal2013}
+
+\section{Floats}
+{Figures} may be included using the command,\linebreak 
+\verb+\includegraphics+ in
+combination with or without its several options to further control
+graphic. \verb+\includegraphics+ is provided by {graphic[s,x].sty}
+which is part of any standard \LaTeX{} distribution.
+{graphicx.sty} is loaded by default. \LaTeX{} accepts figures in
+the postscript format while pdf\LaTeX{} accepts {*.pdf},
+{*.mps} (metapost), {*.jpg} and {*.png} formats. 
+pdf\LaTeX{} does not accept graphic files in the postscript format. 
+
+\begin{figure}
+	\centering
+		\includegraphics[scale=.75]{figs/Fig1.pdf}
+	\caption{The evanescent light - $1S$ quadrupole coupling
+	($g_{1,l}$) scaled to the bulk exciton-photon coupling
+	($g_{1,2}$). The size parameter $kr_{0}$ is denoted as $x$ and
+	the \PMS is placed directly on the cuprous oxide sample ($\delta
+	r=0$, See also Table \protect\ref{tbl1}).}
+	\label{FIG:1}
+\end{figure}
+
+
+The \verb+table+ environment is handy for marking up tabular
+material. If users want to use {multirow.sty},
+{array.sty}, etc., to fine control/enhance the tables, they
+are welcome to load any package of their choice and
+{cas-dc.cls} will work in combination with all loaded
+packages.
+
+\begin{table}[width=.9\linewidth,cols=4,pos=h]
+\caption{This is a test caption. This is a test caption. This is a test
+caption. This is a test caption.}\label{tbl1}
+\begin{tabular*}{\tblwidth}{@{} LLLL@{} }
+\toprule
+Col 1 & Col 2 & Col 3 & Col4\\
+\midrule
+12345 & 12345 & 123 & 12345 \\
+12345 & 12345 & 123 & 12345 \\
+12345 & 12345 & 123 & 12345 \\
+12345 & 12345 & 123 & 12345 \\
+12345 & 12345 & 123 & 12345 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+\section[Theorem and ...]{Theorem and theorem like environments}
+
+{cas-dc.cls} provides a few shortcuts to format theorems and
+theorem-like environments with ease. In all commands the options that
+are used with the \verb+\newtheorem+ command will work exactly in the same
+manner. {cas-dc.cls} provides three commands to format theorem or
+theorem-like environments: 
+
+\begin{verbatim}
+ \newtheorem{theorem}{Theorem}
+ \newtheorem{lemma}[theorem]{Lemma}
+ \newdefinition{rmk}{Remark}
+ \newproof{pf}{Proof}
+ \newproof{pot}{Proof of Theorem \ref{thm2}}
+\end{verbatim}
+
+
+The \verb+\newtheorem+ command formats a
+theorem in \LaTeX's default style with italicized font, bold font
+for theorem heading and theorem number at the right hand side of the
+theorem heading.  It also optionally accepts an argument which
+will be printed as an extra heading in parentheses. 
+
+\begin{verbatim}
+  \begin{theorem} 
+   For system (8), consensus can be achieved with 
+   $\|T_{\omega z}$ ...
+     \begin{eqnarray}\label{10}
+     ....
+     \end{eqnarray}
+  \end{theorem}
+\end{verbatim}  
+
+
+\newtheorem{theorem}{Theorem}
+
+\begin{theorem}
+For system (8), consensus can be achieved with 
+$\|T_{\omega z}$ ...
+\begin{eqnarray}\label{10}
+....
+\end{eqnarray}
+\end{theorem}
+
+The \verb+\newdefinition+ command is the same in
+all respects as its \verb+\newtheorem+ counterpart except that
+the font shape is roman instead of italic.  Both
+\verb+\newdefinition+ and \verb+\newtheorem+ commands
+automatically define counters for the environments defined.
+
+The \verb+\newproof+ command defines proof environments with
+upright font shape.  No counters are defined. 
+
+
+\section[Enumerated ...]{Enumerated and Itemized Lists}
+{cas-dc.cls} provides an extended list processing macros
+which makes the usage a bit more user friendly than the default
+\LaTeX{} list macros.   With an optional argument to the
+\verb+\begin{enumerate}+ command, you can change the list counter
+type and its attributes.
+
+\begin{verbatim}
+ \begin{enumerate}[1.]
+ \item The enumerate environment starts with an optional
+   argument `1.', so that the item counter will be suffixed
+   by a period.
+ \item You can use `a)' for alphabetical counter and '(i)' 
+  for roman counter.
+  \begin{enumerate}[a)]
+    \item Another level of list with alphabetical counter.
+    \item One more item before we start another.
+    \item One more item before we start another.
+    \item One more item before we start another.
+    \item One more item before we start another.
+\end{verbatim}
+
+Further, the enhanced list environment allows one to prefix a
+string like `step' to all the item numbers.  
+
+\begin{verbatim}
+ \begin{enumerate}[Step 1.]
+  \item This is the first step of the example list.
+  \item Obviously this is the second step.
+  \item The final step to wind up this example.
+ \end{enumerate}
+\end{verbatim}
+
+\section{Cross-references}
+In electronic publications, articles may be internally
+hyperlinked. Hyperlinks are generated from proper
+cross-references in the article.  For example, the words
+\textcolor{black!80}{Fig.~1} will never be more than simple text,
+whereas the proper cross-reference \verb+\ref{tiger}+ may be
+turned into a hyperlink to the figure itself:
+\textcolor{blue}{Fig.~1}.  In the same way,
+the words \textcolor{blue}{Ref.~[1]} will fail to turn into a
+hyperlink; the proper cross-reference is \verb+\cite{Knuth96}+.
+Cross-referencing is possible in \LaTeX{} for sections,
+subsections, formulae, figures, tables, and literature
+references.
+
+\section{Bibliography}
+
+Two bibliographic style files (\verb+*.bst+) are provided ---
+{model1-num-names.bst} and {model2-names.bst} --- the first one can be
+used for the numbered scheme. This can also be used for the numbered
+with new options of {natbib.sty}. The second one is for the author year
+scheme. When  you use model2-names.bst, the citation commands will be
+like \verb+\citep+,  \verb+\citet+, \verb+\citealt+ etc. However when
+you use model1-num-names.bst, you may use only \verb+\cite+ command.
+
+\verb+thebibliography+ environment.  Each reference is a\linebreak
+\verb+\bibitem+ and each \verb+\bibitem+ is identified by a label,
+by which it can be cited in the text:
+
+\noindent In connection with cross-referencing and
+possible future hyperlinking it is not a good idea to collect
+more that one literature item in one \verb+\bibitem+.  The
+so-called Harvard or author-year style of referencing is enabled
+by the \LaTeX{} package {natbib}. With this package the
+literature can be cited as follows:
+
+\begin{enumerate}[\textbullet]
+\item Parenthetical: \verb+\citep{WB96}+ produces (Wettig \& Brown, 1996).
+\item Textual: \verb+\citet{ESG96}+ produces Elson et al. (1996).
+\item An affix and part of a reference:\break
+\verb+\citep[e.g.][Ch. 2]{Gea97}+ produces (e.g. Governato et
+al., 1997, Ch. 2).
+\end{enumerate}
+
+In the numbered scheme of citation, \verb+\cite{<label>}+ is used,
+since \verb+\citep+ or \verb+\citet+ has no relevance in the numbered
+scheme.  {natbib} package is loaded by {cas-dc} with
+\verb+numbers+ as default option.  You can change this to author-year
+or harvard scheme by adding option \verb+authoryear+ in the class
+loading command.  If you want to use more options of the {natbib}
+package, you can do so with the \verb+\biboptions+ command.  For
+details of various options of the {natbib} package, please take a
+look at the {natbib} documentation, which is part of any standard
+\LaTeX{} installation.
+
+\appendix
+\section{My Appendix}
+Appendix sections are coded under \verb+\appendix+.
+
+\verb+\printcredits+ command is used after appendix sections to list 
+author credit taxonomy contribution roles tagged using \verb+\credit+ 
+in frontmatter.
+
+\printcredits
+
+
+
+
+%\vskip3pt
+
+\bio{}
+Author biography without author photo.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+\endbio
+
+\bio{figs/pic1}
+Author biography with author photo.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+\endbio
+
+\bio{figs/pic1}
+Author biography with author photo.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+Author biography. Author biography. Author biography.
+\endbio
+
