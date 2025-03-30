@@ -169,6 +169,46 @@ date: "`r Sys.Date()`"
    dev.off()
 ```
 
+```{r Correlation between odds and even reflections and Bonacich Score}
+   a <- reflections(A, iter = 42)
+   p.e.r <- a$p.r[, evens(1:40)]
+   g.e.r <- a$g.r[, evens(1:40)]
+   p.o.r <- a$p.r[, odds(3:41)]
+   g.o.r <- a$g.r[, odds(3:41)]
+   plot.dat.p <- data.frame(p.o = as.vector(abs(cor(eig.r[, 1], p.o.r))),
+                            p.e = as.vector(abs(cor(eig.r[, 1], p.e.r))),
+                            ref.o = seq(3, 41, by = 2),
+                            ref.e = seq(2, 40, by = 2)
+                            )
+   p <- ggplot(plot.dat.p, aes(x = ref.e, y = p.e))
+   p <- p + geom_point(size = 2) + geom_line()
+   p <- p + ylim(0, 1) + labs(x = "Even Reflection", y = "Bonacich Correlation")
+   p1 <- p + scale_x_continuous(breaks = seq(2, 40, by = 4))
+   p <- ggplot(plot.dat.p, aes(x = ref.o, y = p.o))
+   p <- p + geom_point(size = 2) + geom_line()
+   p <- p + ylim(0, 1) + labs(x = "Odd Reflection", y = "Bonacich Correlation")
+   p2 <- p + scale_x_continuous(breaks = seq(3, 41, by = 4))
+   png(file = here("Plots", "bon-ref-corr-p.png"), width=800, height=400)
+      p1 + p2 & theme_minimal()
+   dev.off()
+   plot.dat.g <- data.frame(p.o = as.vector(abs(cor(eig.c[, 1], g.o.r))),
+                            p.e = as.vector(abs(cor(eig.c[, 1], g.e.r))),
+                            ref.o = seq(3, 41, by = 2),
+                            ref.e = seq(2, 40, by = 2)
+                            )
+   p <- ggplot(plot.dat.g, aes(x = ref.e, y = p.e))
+   p <- p + geom_point(size = 2) + geom_line()
+   p <- p + ylim(0, 1) + labs(x = "Even Reflection", y = "Bonacich Correlation")
+   p1 <- p + scale_x_continuous(breaks = seq(2, 40, by = 4))
+   p <- ggplot(plot.dat.g, aes(x = ref.o, y = p.o))
+   p <- p + geom_point(size = 2) + geom_line()
+   p <- p + ylim(0, 1) + labs(x = "Odd Reflection", y = "Bonacich Correlation")
+   p2 <- p + scale_x_continuous(breaks = seq(3, 41, by = 4))
+   png(file = here("Plots", "bon-ref-corr-g.png"), width=800, height=400)
+      p1 + p2 & theme_minimal()
+   dev.off()
+```
+
 ```{r CA versus Reflections Scatter}
    p.plot.dat <- data.frame(c = CA.r$vectors[, 2]*-1, 
                             r = a$p.s[, 26])
@@ -354,49 +394,49 @@ date: "`r Sys.Date()`"
 ```
 
 ```{r Bonacich Similarity and Correspondence Plot}
-      norm.sim.r <- A %*% t(A)
-      norm.sim.c <- t(A) %*% A
+      sim.p <- A %*% t(A)
+      sim.g <- t(A) %*% A
       diag(norm.sim.r) <- 0
       diag(norm.sim.c) <- 0
-      norm.sim.r <- norm.sim.r[order(eig.r[, 1]), order(eig.r[ ,1])]
-      norm.sim.c <- norm.sim.c[order(eig.c[, 1]), order(eig.c[ ,1])]
+      sim.p <- sim.p[order(eig.r[, 1]), order(eig.r[ ,1])]
+      sim.g <- sim.g[order(eig.c[, 1]), order(eig.c[ ,1])]
       # Bonacich Similarity Plot (People)
-      p <- ggcorrplot(norm.sim.r)
+      p <- ggcorrplot(sim.p)
       p <- p + scale_x_discrete(position = "top")
       p <- p + scale_y_discrete(limits = rev)
-      p <- p + scale_fill_gradient2(limit = c(0, max(norm.sim.r+1)), 
+      p <- p + scale_fill_gradient2(limit = c(0, max(sim.p+1)), 
                                     low = "white", 
                                     high =  "darkred", 
                                     mid = "red",  
-                                    midpoint = max(norm.sim.r)/2)
+                                    midpoint = max(sim.p)/2)
       a <- p + theme(legend.position = "none",
                     axis.text.x = element_text(hjust = -0.2, size = 10)) 
       
       # Bonacich Similarity Plot (Groups)
-      p <- ggcorrplot(norm.sim.c)
+      p <- ggcorrplot(sim.g)
       p <- p + scale_x_discrete(position = "top")
       p <- p + scale_y_discrete(limits = rev)
-      p <- p + scale_fill_gradient2(limit = c(0, max(norm.sim.c+1)), 
+      p <- p + scale_fill_gradient2(limit = c(0, max(sim.g+1)), 
                                     low = "white", 
                                     high =  "darkred", 
                                     mid = "red",  
-                                    midpoint = max(norm.sim.c)/2)
+                                    midpoint = max(sim.g)/2)
       b <- p + theme(legend.position = "none", plot.margin = margin(l = 100),
                     axis.text.x = element_text(hjust = -0.2, size = 10)) 
       
       # K-means clustering of Bonacich solution
-      eig.dat <- data.frame(d1 = eig.d1, d2 = eig.d2)
+      eig.dat <- data.frame(d1 = c(eig.r[, 1], eig.c[, 1]), 
+                            d2 = c(eig.r[, 2], eig.c[, 2]))
       eig.clus.p <- kmeans(eig.dat[1:18,], centers = 3, nstart = 25)$cluster
       eig.clus.g <- kmeans(eig.dat[19:32,], centers = 3, nstart = 25)$cluster
       
       # Bonacich Correspondence Plot
-      eig.d1 <- c(eig.r[, 1], eig.c[, 1])*-1
-      eig.d2 <- c(eig.r[, 2], eig.c[, 2])*-1
-      plot.dat <- data.frame(eig.d1, eig.d2, 
+      plot.dat <- data.frame(cbind(eig.dat), 
                              mode = c(rep(1, 18), rep(2, 14)),
                              clus = c(eig.clus.p, eig.clus.g+3)
                              )
-      p <- ggplot(plot.dat, aes(y = eig.d2, x = eig.d1, color = factor(clus), 
+      p <- ggplot(plot.dat, aes(y = d2, x = d1*-1, 
+                                color = factor(clus), 
                                 label = c(rownames(A), colnames(A))))
       p <- p + geom_vline(xintercept = 0, color = "gray")
       p <- p + geom_hline(yintercept = 0, color = "gray")
