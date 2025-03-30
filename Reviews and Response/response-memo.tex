@@ -1,130 +1,97 @@
 \documentclass{article}
 \usepackage{graphicx}
+\usepackage[left=1in, right=1in, top=1in, bottom=1in]{geometry}
 \begin{document}
 
-\textbf{Editors}
+\section*{Editors}
 
-\textsc{Reviewer 1}
+Thanks to the editors for the opportunity to revise and resubmit the previous version of the manuscript. I have attended to all of yours and the reviewers's recommendations for revision, and I believe the result is a stronger, clearer, and potentially more impactful manuscript. Here I note my responses to the editors' suggestions, more detailed responses to the reviewer suggestions follow below.
 
-\underline{State key points and conclusions at the beginning}:
+\subsection*{Major Points}
+\begin{itemize}
+    \item Regarding errors in the Southern Women data matrix, these are now fixed, and the data analyzed are the canonical data set. See response to Reviewer 1 below.
+    \item I also addressed R1's insightful point about the differences between odd and even iterations with regard to their correlation with the Bonacich centrality; see response to the reviewer below. 
+    \item Regarding R2's call for a more effective statement of the novelty of the argument and key contributions, see various responses to the reviewer's suggestions below, which I took seriously and became the basis of a thorough rewrite of the manuscript. 
+    \item With regard to broadening the coverage of the work, I have added a section on previous work as background (section 2). This version of the paper now incorporates Everett and Borgatti's 2013 piece throughout, and reframes CA (and Bonacich centrality analysis) as options within the ``dual projection'' framework they outline in that article, while making new connections between higher order axes in the Bonacich decomposition and their proposed approach to finding sets of structurally equivalent actors in two-mode networks. 
+    \item With regard to strengthening the linkages between the paper's argument and Breiger's duality idea, see the response to R2's suggestions below. 
+\end{itemize}
 
-\textbf{Reviewer}: \textit{In terms of its overall organization, your paper is (probably, necessarily) complicated. For me, the discussion/conclusion (Section 5) is much more clear and powerfully written than is the abstract and Introduction (Section 1). As you think about improving the paper, I hope you will find ways to assert the main Section 5 points crisply at the beginning of the paper.} 
+\subsection*{Minor Points}
+\begin{itemize}
+    \item - \underline{Editors}: \textit{p. 4 of ``the sum of the q-1 centralities'' is a little confusing. If we correctly understand your point, q-1 refers to the iteration rather than how many centralities are being summed. Perhaps this could be that could be reworded.''} \textbf{Response}: The relevant passage has been reworded to improve clarity and accuracy. 
+    \item -  \underline{Editors}: \textit{Notation in eq. 19 and 20 seems slightly awkward - the left-hand side should somehow show that those are the transformed values, not the same as on the right-hand side (which currently is written the same way).} \textbf{Response}: I have added a single apostrophe (prime) symbol to indicate that the left hand side quantity is a transformed value.
+    \item - \underline{Editors}: \textit{For eq. 21 and 22, it might be helpful to note how the eigenanalysis of the two product matrices relates to the SVD of the original.} \textbf{Response}: I have added some wording noting the links between eq. 21 and 22 and eq. 9 and 10.
+\end{itemize}
 
-\textbf{Response}: 
+\newpage
+\section*{Reviewer 1}
 
-\underline{Add distinction between Bonacich and CA to the highlights}:
+\noindent\textbf{State key points and conclusions at the beginning}\newline
+\textit{Response}: Thanks for this comment. Given the newly added material, I streamlined the introduction in this version of the paper. However, the introductory paragraphs have been rewritten to highlight the key points and conclusions, which are also summarized in the rewritten abstract and highlights. \newline
 
-\textbf{Reviewer}: \textit{(For example, I would like to see a ``Highlights" bullet point that says that Bonacich centrality is useful for revealing the position of the nodes in a center-periphery pattern, to the extent one exists, whereas CA is useful for revealing the presence of different groups or communities in the data, to the extent that the dual network is not homogeneous.)}
+\noindent\textbf{Add distinction between Bonacich and CA to the highlights}\newline
+\textit{Response}: Thanks for this suggestion. I have now included a relevant highlight bullet point noting the relevant analytic contrast of Bonacich versus CA. \newline
 
-\textbf{Response}: Thanks for this suggestion. I have now included a relevant highlight bulletpoint noting the relevant analytic contrast of Bonacich versus CA.
+\noindent\textbf{Data errors in the Southern Women two-mode matrix}\newline
+\textit{Response}: Thanks for calling attention to this---rather embarrassing---error; it's definitely a cautionary tale against manually copying data. I have corrected the data, and as you can see in the analysis file included as supplementary material, I now extract the Southern Women data directly from the \texttt{networkdata} package.\footnote{\texttt{https://www.rdocumentation.org/packages/networkdata/versions/0.1.6}} My table now matches those in the references you mentioned exactly. Note, however, that while you are correct that Frances, Eleanor, and Ruth did not attend E4, Nora did not attend E8, at least according to the published tables in Doreian et al (2004), Kovacs (2010), and the Figure 1 from Freeman (2003), shown above; in these papers, as you can see, Nora's event set is \{E6, E7, E9, E10, E11, E12, E13, E14\}. I think the confusion comes from the fact that Freeman used a non-chronological order of events (as is evident from the date labels in the figure) that emphasizes the group structure of the women. This non-chronological ordering leads to a different labeling of events than when events are arranged in chronological order; this is the ordering of events used by Doreian et al. 2004 and Kovacs (2010). In this event labeling, Nora does not attend E8 (the event that took place on 9/16.) However, note that this is obviously \textit{not} the ordering of events in the original Breiger (1974)---nor for that matter the earlier Doreian (1979) piece in \textit{Social Networks} that used Q-Analysis. In this \textit{chronological} labeling of events, Nora does attend ``E8" (the event that took place on 5/19), as evident in Breiger (1974, p. 186, fig. 2a). In any case, to forestall any confusion, and given that, in the \texttt{networkdata} package, the columns of the biadjacency matrix corresponding to the \texttt{southern\_women} object containing the Southern Women data come ordered using the Freeman (2003) ordering, I'm sticking to the non-chronological event labeling. I now include a brief discussion in the paper clarifying this issue.\newline 
 
-\underline{Data errors in the Southern Women two-mode matrix}:
 
-\textbf{Reviewer}: \textit{Importantly, there are 4 errors in the matrix (``Southern Women data") that you analyze. For this dataset, you (in the note to Table 1) cite Doreian et al (2004, Table 4). Among the attendees at Event E4, you show Frances, Eleanor, and Ruth. However they did not attend this event. You also show Nora as absent from Event E8; however, Nora attended E8. These four errors are discrepant in comparison to your cited source (Doreian et al, 2004, Table 4), and they are discrepant as well in comparison to the original source (Davis, Gardener, and Gardener, 1941, p. 141, which has events in the same order as in your Table 1, and a slightly different order of women; this table is reproduced in Freeman, 2003, p. 42).}
-
-\begin{figure}[h!]
+\begin{figure}
     \includegraphics[width=1.0\textwidth]{Reviews and Response/sw-original.png}
 \end{figure}
 
-\textbf{Response}: Thanks for calling attention to this---rather embarrassing---error; it's definitely a cautionary tale against manually copying data. I have corrected the data, and as you can see in the analysis file included as supplementary material, I now extract the Southern Women data directly from the \texttt{networkdata} package. My table now matches those in the references you mentioned exactly. Note, however, that while you are correct that Frances, Eleanor, and Ruth did not attend E4, Nora did not attend E8, at least according to the published tables in Doreian et al (2004), Kovacs (2010), and the Figure 1 from Freeman (2003), shown above; in these papers, as you can see, Nora's event set is \{E6, E7, E9, E10, E11, E12, E13, E14\}. I think the confusion comes from the fact that Freeman used a non-chronological order of events (as is evident from the date labels in the figure) that emphasizes the group structure of the women. This non-chronological ordering leads to a different labeling of events than when events are arranged in chronological order; this is the ordering of events used by Doreian et al. 2004 and Kovacs (2010). In this event labeling, Nora does not attend E8 (the event that took place on 9/16.) However, note that this is obviously \textit{not} the ordering of events in the original Breiger (1974)---nor for that matter the earlier Doreian (1979) piece in \textit{Social Networks} that used Q-Analysis. In this \textit{chronological} labeling of events, Nora does attend ``E8" (the event that took place on 5/19), as evident in Breiger (1974, p. 186, fig. 2a). In any case, to forestall any confusion, and given that the in the \texttt{networkdata} package, the \texttt{igraph} object containing the Southern Women data come ordered using the Freeman (2003) ordering, I'm sticking to the non-chronological event labeling. I now include a brief discussion in the paper clarifying this issue. 
 
-\underline{Appropriateness of the term ``reflective centrality''}:
+\noindent\textbf{Appropriateness of the term ``reflective centrality''}\newline
+\textit{Response}: Thanks for this comment, which I thought was very helpful. The term centrality introduces a level of conceptual imprecision that is best avoided. I liked your suggestion of using the more neutral term ``scores'' instead, which I implemented throughout the paper.\newline
 
-\textbf{Reviewer}: \textit{I have some resistance to your term "reflective centrality" (Section 2 title) to characterize the scores of the respective modes - precisely because, as you importantly show, in the limit the reflective scores are first dimensions of a CA, and (as you also importantly emphasize) the first CA dimension is about finding groups, not about ordering nodes. Hidalgo and Hausmann (2009) do not use the term ``centrality" for the reflective scores they define and compute. I wonder whether ``reflective scores" might be a better term; I'm not sure, and simply ask you to think about it.}
+\noindent\textbf{Differences between odd and even iterations}\newline
+\underline{Reviewer}: \textit{What complicates things, as you know, is the difference between odd and even iterations of the reflective algorithm (see your comments in the first paragraph on p. 4, as well as comments of H \& H). One point you might consider adding is that, for the first even iterations (iterations 2, 4, 6, 8, and 10), the magnitude (absolute value) of the correlation of reflected scores with Bonacich centrality (for persons, and for groups) tends to increase with subsequent iterations (and, in the limit, is .682 for persons by iteration 40 for persons), whereas, for the first odd iterations (iterations 3, 5, 7, 9, 11), the magnitude of the correlation decreases (toward a limiting value, once again, of .682 by iteration 41). Can you relate this to the differences between odd and even iterations that you (and H\&H) discuss?}
 
-\textbf{Response}:
+\noindent\textit{Response}: Thanks for this very insightful observation. I think that indeed there is a link between how the even and odd iterations are defined mathematically and their different patterns of correlations with the Bonacich centrality. Indeed, the early definitions of the odd iterations are closest to Bonacich's dual centrality idea, whereby people are central if they belong to central groups (and the centrality of groups is a function of the centrality of people who belong to them), which explains why we see a stronger correlation between the third reflection and Bonacich centrality which attenuates to the equilibrium value after higher reflections, and a lower correlation between the second iteration and the same quantity, which increases to the same value as the two rankings converge. This is now noted and explained in footnote 9 of the main text, along with an acknowledgment. Note, however, that I get a different value than you for the equilibrium correlation (see attached replication materials). \newline
 
-\underline{Differences between odd and even iterations}:
+\noindent\textbf{Missed connection between Bonacich and CA regarding ``groupiness''}\newline
+\textit{Response}: Thanks very much for raising this point, which made me think about and consider issues that I missed in the first version of the paper. You are right that the second dimension of the Bonacich centrality reveals a dimension of ``groupiness'' in the data; however, this dimension is not quite the same as that of CA. In fact, it became clear to me that what it reveals are continuous approximations to structural equivalence in the data, which makes sense if, indeed, the CA scores are continuous approximations to a regular equivalence style criterion (or generalized relational similarity). We can check this claim by comparing the blocking obtained from the second Bonacich dimension and that produced by Everett and Borgatti (2013, Table 5) using a proportion-matching criterion for structural equivalence, and see that they agree quite closely, a discussion that I now include in the paper. The groupings in the second Bonacich dimension end up being secondary core-periphery partitions, net of the main one. This reinforces my previous claim, which was poorly argued for in the previous version of the paper, that the Bonacich decomposition comes closer to reproducing the original ``input data'' than the CA decomposition. \newline
 
-\textbf{Reviewer}: \textit{What complicates things, as you know, is the difference between odd and even iterations of the reflective algorithm (see your comments in the first paragraph on p. 4, as well as comments of H \& H). One point you might consider adding is that, for the first even iterations (iterations 2, 4, 6, 8, and 10), the magnitude (absolute value) of the correlation of reflected scores with Bonacich centrality (for persons, and for groups) tends to increase with subsequent iterations (and, in the limit, is .682 for persons by iteration 40 for persons), whereas, for the first odd iterations (iterations 3, 5, 7, 9, 11), the magnitude of the correlation decreases (toward a limiting value, once again, of .682 by iteration 41). Can you relate this to the differences between odd and even iterations that you (and H\&H) discuss?}
+\noindent\textbf{Reversing column ordering on some figures}\newline
+\textit{Response}: Thanks for this suggestion. I have re-plotted the figures using the suggested column ordering. \newline
 
-\textbf{Response}:
+\noindent\textbf{Confusing equations}\newline
+\underline{Reviewer}: \textit{What confused me about eqs. (23) and (24) is that I don't think the (respective) expressions in parentheses are symmetric matrices, and so I don't see how to take an eigenvector. (Each of the rows, but not the columns, sum to 1.)}
 
-\underline{Missed connection between Bonacich and CA}:
+\noindent \textit{Response}: Thanks for this observation. You are correct that I did not adequately explain where the eigenvectors corresponding to the CA (and HH) scores come from. You are right that the equations result in row-stochastic matrices (row sums equal 1.0) that are square but not symmetric. You can still do a spectral decomposition of each of these matrices, but the first (dominant) eigenvalue will be 1.0, and the associated eigenvectors will be filled with constant values. So the relevant eigenvector we seek, which is the first CA dimension, is that associated with the \textit{second} largest eigenvalue, and the second CA dimension is that associated with the third, and so forth. Another way of saying it is that we can perform the usual eigendecomposition of the row-stochastic projection matrices, discard the first trivial eigenvalue and eigenvector and treat the second as the first, the third as the second, etc., and that will be equivalent to the CA solution, the same scores that simple CA of the original rectangular Affiliation matrix would yield (but note that we run into a similar situation when computing CA via SVD of the row and column mass normalized affiliation matrix, which results in a solution with a first eigenvalue of 1.0 and associated trivial eigenvectors with person and event scores proportional to the row and column masses, which need to be discarded with the focus being on the second, third, eigenvalues and eigenvectors as Faust 2005, p. 126 notes). The relevant section of the paper has been rewritten to clarify these issues.\newline
 
-\textbf{Reviewer}: \textit{One of the high points of your paper - bringing great clarity, and of great usefulness to practitioners - is your Fig. 2, showing how the first (person and group) dimensions of the CA reveal ``groupiness" (my poor word choice), whereas the dual Bonacich centrality scores reveal the extent to which a center-periphery pattern obtains in the data. A point you miss here (however, I apologize if you do say this somewhere) is that the second dimension of Bonacich centrality (that is, the second dimension of the SVD of an affiliation matrix like Table 1) looks very much like the first CA dimension, emphasizing communities rather than center-periphery. This comment, like that of the previous paragraph, I think helps you to show how highly entangled are the concepts of reflective scores and centrality, and (therefore) how important it is to recognize when each is appropriate.}
+\noindent\textbf{Confusing labeling of figures across multiple panels}\newline
+\textit{Response}: I have re-rendered the figures so that the labeling is clearer. \newline
 
-\textbf{Response}: Thanks very much for raising this point, which made me think about and consider issues that I missed in the first version of the paper. You are right that the second dimension of the Bonacich centrality reveals a dimension of ``groupiness'' in the data; however, this dimension is not quite the same as that of CA. In fact, it became clear to me that what it reveals are continuous approximations to structural equivalence in the data, which makes sense if, indeed, the CA scores are continuous approximations to a regular equivalence style criterion. We can check this claim by comparing the blocking obtained from the second Bonacich dimension and that produced by Everett and Borgatti (2013, Table 5) using a proportion-matching criterion for structural equivalence and see that they agree closely. This reinforces my previous claim, which was poorly argued for in the previous version of the paper, that the Bonacich decomposition comes closer to reproducing the original ``input data'' than the CA decomposition. 
-
-\underline{Reversing column ordering on some figures}:
-
-\textbf{Reviewer}: \textit{(In Fig. 2, both parts (a) and (b), nothing substantive or mathematical would change if you keep the row ordering you show, but reverse the column ordering. However, reversing the column ordering would help the reader to see, in panel (a), the groups, and, in panel (b), the center and the periphery. A similar comment applies to several of your other figures.)}
-
-\textbf{Response}: Thanks for this suggestion. I have re-plotted the figures using the suggested column ordering. 
-
-\underline{Confusing equations}:
-
-\textbf{Reviewer}: \textit{What confused me about eqs. (23) and (24) is that I don't think the (respective) expressions in parentheses are symmetric matrices, and so I don't see how to take an eigenvector. (Each of the rows, but not the columns, sum to 1.)}
-
-\textbf{Response}: Thanks for this observation. You are correct that I did not adequately explain where the eigenvectors corresponding to the CA (and HH) scores come from. You are right that the equations result in row-stochastic matrices (row sums equal 1.0) that are square but not symmetric. You can still do a spectral decomposition of each of these matrices, but the first (dominant) eigenvalue will be 1.0, and the associated eigenvectors will be filled with constant values. So the relevant eigenvector we seek, which is the first CA dimension, is that associated with the \textit{second} largest eigenvalue, and the second CA dimension is that associated with the third, and so forth. Another way of saying it is that we can perform the usual eigendecomposition of the row-stochastic projection matrices, discard the first trivial eigenvalue and eigenvector and treat the second as the first, the third as the second, etc., and that will be equivalent to the CA solution, the same scores that simple CA of the original rectangular Affiliation matrix would yield (but note that we run into a similar situation when computing CA via SVD of the row and column mass normalized affiliation matrix, which results in a solution with a first eigenvalue of 1.0 and associated trivial eigenvectors with person and event scores proportional to the row and column masses, which need to be discarded with the focus being on the second, third, eigenvalues and eigenvectors as Faust 2005, p. 126 notes). The relevant section of the paper has been rewritten to clarify these issues. 
-
-\underline{Confusing Figures}:
-
-\textbf{Reviewer}: \textit{Figs 3, 4, 5, and 6 each have multiple panels (referred to as a, b, c, etc), but, in the current version of the paper, it is difficult or impossible to figure out which part of the figure has which label (a, b, c, …). Hopefully the formatting here can be improved.}
-
-\textbf{Response}: 
-
-
-\underline{Missing Freeman citation}
-
-\textbf{Response}:
+\noindent\textbf{Missing Freeman citation}\newline
+\textit{Response}: Freeman citation is now added and discussed in the paper. \newline
 
 \newpage
-\textsc{Reviewer 2}
+\section*{Reviewer 2}
 
-\underline{Insufficient engagement with the duality idea}
+\textbf{Insufficient engagement with Breiger's duality idea}\newline
+\textit{Response}: Thanks for this comment, which proved pivotal in my revision efforts for this draft. In this version of the paper, I have endeavored to make the linkages between CA, Bonacich centrality analysis, and duality clearer in the text. I have also incorporated a more in-depth discussion of Everett and Borgatti's dual projection approach, and re-framed both CA and centrality analysis as two distinct but related options within that wider framework, which also helps to make the link to the duality notion crisper. \newline
 
-\textbf{Reviewer}: \textit{In my opinion, though, the paper does not take Breiger's argument in due consideration, even more as the piece is aimed at contributing to a special issue on ``Duality in social networks". The latter principle seems to remain in the background, while it should explicitly inform most of the analyses presented in this work.}
+\noindent\textbf{More extensive introduction and background}\newline
+\textit{Response}: Thanks also for this comment, which informed most of the new material that has been added to this version of the paper, particularly the new section 2. I believe that with this background in hand, the paper's arguments and contribution can be more clearly stated and appreciated. \newline
 
-\textbf{Response}:
+\noindent\textbf{More even-handed consideration of the visualization aspects of the CA/MCA}\newline
+\textit{Response}: Thanks for this comment, which made me realize that perhaps my previous comments regarding the focus on visualization on previous uses of CA and MCA for two-mode network analysis were coming off as overly dismissive. I have tried to rewrite the relevant sections in this draft to remove these connotations. My key point was more in reference to Borgatti and Everett's original 1997 piece, which seemed to think of CA primarily as a visualization tool, but was ignoring its usefulness for other network-analytic tasks such as clustering and ``a posteriori blockmodeling'' (in Wasserman and Anderson's terms). I hope that these points come out clearer in this version of the paper.  \newline
 
-\underline{More extensive introduction and background}
+\noindent\textbf{Concerns over the interpretation of CA biplot distances}\newline
+\textit{Response}: Thanks for this comment. In this version of the paper I provide a more in-depth discussion of what the inter-point distances in the usual CA correspondence plot get at. The rewritten section now ties the correspondence plot distances directly to the information in the degree-adjusted projection matrices, which leads to a more straightforward interpretation of the CA correspondence plot as a low-rank representation of the degree-adjusted proximity matrix, which makes the contrast to the Bonacich ``correspondence plot'' also clearer. \newline
 
-\textbf{Reviewer}: \textit{I suggest extending the introduction, enriching the discussion of the background as for CA in the context of two-mode networks. Given the importance of the technique and its variants (like MCA), it is surprising that the authors devote such a limited room to the relevant framework. Consider that the discussion of CA in the context of two-mode networks seems not comprehensive as it misses the use of MCA in the same context \ldots}
+\noindent\textbf{Insufficient discussion of positional equivalence and other blockmodeling approaches}\newline
+\textit{Response}: Thanks for this comment, which I took to heart in rewriting key portions of the paper. As you can see, I contrasted different conceptions of positional equivalence (e.g., structural versus regular) central to my contrast between what CA does versus what the Bonacich decomposition does, also drawing on some of the literature that you suggested I look at (particularly D'Esposito et al's 2014 piece the contrast between CA and MCA distances), and previous work by Everett and Borgatti. While I did not engage in a full-on review of previous work on positional analyses of two-mode networks for reasons of relevance and space, the emphasis on the usefulness of CA for positional analysis (e.g., aka, ``spectral clustering'' in other fields) is evident throughout. Note that in the different flavors of blockmodeling, CA (or even Bonacich centrality) is closer to indirect or ``a posteriori'' blockmodeling (e.g., data-driven rather than model-driven) so the emphasis is different from optimization-based methods like Doreian, Batagelj, and Ferligoj's direct blockmodeling approach. Hopefully, what is new in the current approach relative to this previous work can be more clearly appreciated in this draft. \newline
 
-\textbf{Response}:
+\noindent\textbf{Insufficient discussion of other CA-based analytic strategies}\newline
+\textit{Response}: Thanks for the reference to D’Ambrosio et al's work, which I read with great interest. In the end, when crafting the new background section, I realized that I couldn't cover all previous uses of CA and related techniques for two-mode network analysis. As a result, I decided to just focus on previous work that dealt with the simple-CA of the affiliation matrix, since that's what the core discussion of the paper is relevant for. However, I do note that this previous work focuses on MCA and related techniques (which your reference led me to) in various footnotes. \newline
 
-\underline{More consideration of the visualization aspects of the CA/MCA}
+\noindent\textbf{Better highlights section}\newline
+\textit{Response}: Thanks for this comment, which along with a similar observation by the other review informed by revision of the highlights section. \newline
 
-\textbf{Reviewer}: \textit{Further, as the introduction states, there is an attempt at seemingly diminishing the power of visualization as a key feature of CA, as if it were a secondary concern in this domain. I think the authors should first consider carefully the actual utility of data visualization via CA/MCA and then also mind that, although their work aims to move ``beyond the focus on data visualization" (p. 2), they in fact make use of visual representation quite heavily in this paper. This seems to me rather misleading.} 
-
-\textbf{Response}:
-
-\underline{Concerns over the interpretation of CA biplot distances}
-
-\textbf{Reviewer}: \textit{As regards CA and its ``conventional" - so to speak - interpretation which the authors criticize and want to go beyond, I disagree on the idea that using CA in a way different than the authors' would be less useful/informative or, even worse, ``off the mark". Here I specifically refer to a passage on p. 12 \ldots While I would agree that one can interpret the distances between units - and, even more aptly, between the units and the axes origin - on a CA plot in terms of distances from an independence condition, I would not dismiss the importance of evaluating, in the above fashion, how ``people who share memberships in small groups will be closer in the diagram than people who share memberships in big groups". This has clear substantive value for interpretation of the data thanks to use of CA.}
-
-\textbf{Response}:
-
-\underline{Insufficient discussion of positional equivalence}
-
-\textbf{Reviewer}: \textit{As for the paper's argument, one may ask what's new in the current proposal and what's the point in it, beyond already known things. This issue appears to affect, for example, the opportunity to analyse the forms of structural or regular equivalence in two-mode networks. This theme is paid very little attention, though. And yet, it is very relevant to the paper - as the authors seem at least to know, as they mention it (one time only, on p. 14). In the course of the paper there are some passages where the point would be relevant, as is the case with the bottom of p. 10, when the authors recall the works of Doreian, Batagelj and Ferligoj (2004), Kovács (2010) and Lizardo (2024), and assert that their own results are comparable to the latter's \ldots This is clearly a matter of positional equivalence, which deserves more room in the paper, in my opinion.}
-
-\textbf{Response}:
-
-\underline{Insufficient discussion of blockmodeling approaches}
-
-\textbf{Reviewer}: \textit{In addition, I would like to stress that the article sets forth an argument that, in the beginning, revolves around centrality, but ends with a more detailed discussion about how to assess relational similarity in two-mode networks. Here, there seems to be a lack of consideration regarding other relevant approaches. Blockmodeling, for instance, is not duly considered, although it is well known as a sort of gold standard in the analysis of equivalences - particularly generalized equivalences (I suggest seeing the book by Doreian, Batagelj, and Ferligoj, 2005, in addition to the Social Networks article by the same authors that is cited in the paper) \ldots I would like the authors to pay more attention to this absence in their discussion. More explicitly, what does the authors' proposal add to the analysis of structural/regular/generalized equivalences as it is already treated via blockmodeling (and also via MCA)?}
-
-\textbf{Response}:
-
-\underline{Other analytic strategies}
-
-\textbf{Reviewer}: \textit{I also think about other analytic strategies like Cluster Correspondence Analysis (Cluster CA) applied to two-mode networks, for which I may suggest reading and referencing relevant works (such as D'Ambrosio, Serino and Ragozini, 2021).}
-
-\textbf{Response}:
-
-\underline{Better highlights section}
-
-\textbf{Reviewer}: \textit{- The Highglights section should be improved in the sense that it looks now like a sort of abstract, while it needs to appear as a bullet-like summary of the paper that will make its argument better understood at the first glance}
-
-\textbf{Response}:
-
-\underline{Unclear figure}
-
-\textbf{Reviewer}: \textit{- Figure 3 is not clear, in particular it should have a proper layout where the content of the current insets would be shown separately (now it is a bit confusing)}
-
-\textbf{Response}:
+\noindent\textbf{Unclear figure}\newline
+\textit{Response}: I have redone the old Figure 3 to remove any remaining confusion. \newline
 
 \end{document}
 
