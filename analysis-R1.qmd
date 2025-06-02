@@ -554,28 +554,28 @@ date: "`r Sys.Date()`"
 
 ```{r Blocked Affiliation Matrices}
       # First CA Dimension
-      A.ord <- as.matrix(A[order(CA.r$vectors[, 2]), order(CA.c$vectors[, 2])])
+      A.ord <- A[order(CA.r$vectors[, 2]), order(CA.c$vectors[, 2])]
       p <- ggcorrplot(t(A.ord)) 
       p <- p + scale_x_discrete(position = "top")
       p <- p + scale_y_discrete(limits = rev)
       p1 <- p + theme(legend.position = "none",
                                axis.text.x = element_text(hjust = -0.2))
       # First Bonacich Dimension
-      A.ord <- as.matrix(A[order(eig.r[, 1]), order(eig.c[, 1])])
+      A.ord <- A[order(eig.r[, 1]), order(eig.c[, 1])]
       p <- ggcorrplot(t(A.ord)) 
       p <- p + scale_x_discrete(position = "top")
       p <- p + scale_y_discrete(limits = rev)
       p2 <- p + theme(legend.position = "none",
                                axis.text.x = element_text(hjust = -0.2)) 
      # Second Bonacich Dimension
-      A.ord <- as.matrix(A[order(eig.r[, 2]), order(eig.c[, 2])])
+      A.ord <- A[order(eig.r[, 2]), order(eig.c[, 2])]
       p <- ggcorrplot(t(A.ord)) 
       p <- p + scale_x_discrete(position = "top")
       p <- p + scale_y_discrete(limits = rev)
       p3 <- p + theme(legend.position = "none",
                                axis.text.x = element_text(hjust = -0.2)) 
      # Second SimRank Eigenvector
-      A.ord <- as.matrix(A[order(s2.r), order(s2.c)])
+      A.ord <- A[order(SR.eig.p[, 2]), order(SR.eig.g[, 2])]
       p <- ggcorrplot(t(A.ord)) 
       p <- p + scale_x_discrete(position = "top")
       p <- p + scale_y_discrete(limits = rev)
@@ -594,6 +594,15 @@ date: "`r Sys.Date()`"
       png(file = here("Plots", "SR-reord1.png"), width=500, height=500)
       p4
       dev.off()
+```
+
+```{r}
+   # 1. Identify files with .txt extension
+   files_to_move <- list.files(path = here("Plots"), pattern = "\\.png$", full.names = TRUE)
+   
+   
+   # 3. Move the files
+   file.copy(files_to_move, basename(files_to_move))
 ```
 
 
