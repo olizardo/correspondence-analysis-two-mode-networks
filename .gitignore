@@ -1,4 +1,33 @@
+# R files
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
+
+# Quarto and RMarkdown
+.quarto/
+*_files/
+*_cache/
+site_libs/
+*.html
+
+# Posit Assistant
+.posit/
+
+# LaTeX compilation artifacts
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.bbl
+*.blg
+*.pdf
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.run.xml
+-blx.bib
+*-blx.bib
+EOF
