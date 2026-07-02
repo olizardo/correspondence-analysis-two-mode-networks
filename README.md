@@ -80,10 +80,13 @@ install.packages(c(
 If you use the materials or code in this repository, please cite the paper:
 
 ```bibtex
-@article{lizardo2026correspondence,
-  title={The Correspondence Analysis of Two-Mode Networks Revisited},
+@article{lizardo2025correspondence,
+  title={The Correspondence Analysis of two-mode networks revisited},
   author={Lizardo, Omar},
-  year={2026},
-  journal={Social Networks}
+  journal={Social Networks},
+  volume={83},
+  pages={134--151},
+  year={2025},
+  publisher={Elsevier}
 }
 ```
