@@ -1,5 +1,6 @@
 ref.long.dat <- function(a, b, max.iter) {
-     library(tidyverse)
+     library(dplyr)
+     library(tidyr)
      pr.long <- data.frame(a)
      pr.long <- pr.long %>% 
           mutate(person = rownames(pr.long)) %>% 
