@@ -30,4 +30,12 @@ site_libs/
 *.run.xml
 -blx.bib
 *-blx.bib
+
+# Manuscript, slides, reviews (kept locally / on Overleaf, not in repo)
+main-final.tex
+main-R1.tex
+ca.bib
+old/
+Reviews and Response/
+slides/
 EOF
